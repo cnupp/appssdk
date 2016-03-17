@@ -19,7 +19,7 @@ type AppRepository interface {
 	SetEnv(app App, kvs map[string]interface{}) (error)
 	UnsetEnv(app App, keys []string) (error)
 	SwitchStack(id string, params UpdateStackParams) (apiErr error)
-	GetLog(appId, gitSha, logType string, lines int) (string, error)
+	GetLog(appId, buildId, logType string, lines int, startTimeStamp string) (string, error)
 }
 
 type CloudControllerAppRepository struct {
@@ -151,7 +151,7 @@ func (cc CloudControllerAppRepository) GetRoutesByURI(uri string) (routes AppRou
 	return
 }
 
-func (cc CloudControllerAppRepository) GetLog(appId, gitSha, logType string, lines int) (log string, err error) {
-	log, err = cc.gateway.GetPlainResponse(fmt.Sprintf("/apps/%s/builds/log?gitSha=%s&lines=%d&logType=%s", appId, gitSha, lines, logType))
+func (cc CloudControllerAppRepository) GetLog(appId, buildId, logType string, lines int, timestamp string) (log string, err error) {
+	log, err = cc.gateway.GetPlainResponse(fmt.Sprintf("/apps/%s/builds/log?build=%s&lines=%d&logType=%s&timestamp=%s", appId, buildId, lines, logType, timestamp))
 	return
 }
