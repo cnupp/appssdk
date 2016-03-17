@@ -47,6 +47,18 @@ func (g *Gateway) Get(path string, value interface{}) (getErr error) {
 	return
 }
 
+func (g *Gateway) GetPlainResponse(path string) (response string, getErr error) {
+	res, err := g.request("GET", path, nil, "text/plain")
+	if err != nil {
+		getErr = err
+		return
+	}
+
+	bodyInBytes, err := ioutil.ReadAll(res.Body)
+	response = string(bodyInBytes)
+	return
+}
+
 func (g *Gateway) Delete(path string, value interface{}) (getErr error) {
 	res, err := g.Request("DELETE", path, nil)
 	if err != nil {
@@ -75,42 +87,7 @@ func (g *Gateway) PUT(path string, value interface{}) (apiErr error) {
 
 
 func (g *Gateway) Request(method string, path string, body []byte) (*http.Response, error) {
-	u, err := url.Parse(path)
-	if err != nil {
-		return nil, err
-	}
-
-	var uri string
-	if "" == u.Scheme {
-		uri = g.config.ApiEndpoint() + path
-	} else {
-		uri = path
-	}
-
-	req, err := http.NewRequest(method, uri, bytes.NewBuffer(body))
-
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	req.Header.Add("Accept", contentType)
-	req.Header.Add("User-Agent", userAgent)
-	req.Header.Add("Authorization", g.config.Auth())
-
-	client := http.Client{}
-
-	res, err := client.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err = checkForErrors(res, ""); err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return g.request(method, path, body, contentType)
 }
 
 func checkForErrors(res *http.Response, body string) error {
@@ -158,4 +135,41 @@ func checkForErrors(res *http.Response, body string) error {
 	}
 
 	return errors.New(errorMessage)
+}
+
+func (g *Gateway) request(method string, path string, body []byte, contentType string) (*http.Response, error) {
+	u, err := url.Parse(path)
+	if err != nil {
+		return nil, err
+	}
+
+	var uri string
+	if "" == u.Scheme {
+		uri = g.config.ApiEndpoint() + path
+	} else {
+		uri = path
+	}
+	req, err := http.NewRequest(method, uri, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Accept", contentType)
+	req.Header.Add("User-Agent", userAgent)
+
+	client := http.Client{}
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = checkForErrors(res, ""); err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
