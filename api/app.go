@@ -32,6 +32,7 @@ type App interface {
 	BindWithRoute(params AppRouteParams) (error)
 	UnbindRoute(routeId string) (error)
 	SwitchStack(params UpdateStackParams) (error)
+	GetLog(gitSha, logType string, lines int) (string, error)
 }
 
 type AppModel struct {
@@ -117,6 +118,10 @@ func (a AppModel) GetRoutes() (AppRoutes, error) {
 
 func (a AppModel) SwitchStack(params UpdateStackParams) (error) {
 	return a.AppMapper.SwitchStack(a.ID, params)
+}
+
+func (a AppModel) GetLog(gitSha, logType string, lines int) (string, error) {
+	return a.AppMapper.GetLog(a.ID, gitSha, logType, lines)
 }
 
 type AppRef interface {

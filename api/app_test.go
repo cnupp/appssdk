@@ -9,6 +9,7 @@ import (
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 )
 
 var _ = Describe("App", func() {
@@ -278,6 +279,20 @@ var _ = Describe("App", func() {
 		},
 	}
 
+	var logBody = "2016-03-17 05:38:19 DEBUG PooledDataSource:316  - PooledDataSource forcefully closed/removed all connections."
+
+	var getAppBuildLog = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/apps/ketsu/builds/log",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"text/plain"},
+			},
+			Body: logBody,
+		},
+	}
+
 	var unbindRouteWithAppRequest = testnet.TestRequest{
 		Method: "DELETE",
 		Path:   "/apps/ketsu/routes/test.tw.com/path",
@@ -449,6 +464,19 @@ var _ = Describe("App", func() {
 		}
 		err = app.SwitchStack(newStack)
 		Expect(err).To(BeNil())
+
+	})
+
+	It("should able to get build logs", func() {
+		ts, _, repo := createAppRepository([]testnet.TestRequest{getAppRequest, getAppBuildLog})
+		defer ts.Close()
+
+		app, err := repo.GetApp("ketsu")
+		Expect(err).To(BeNil())
+
+		log, err := app.GetLog("e02848f", "build", 15)
+		Expect(err).To(BeNil())
+		Expect(strings.TrimSpace(log)).To(Equal(logBody))
 
 	})
 })
