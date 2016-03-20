@@ -283,7 +283,7 @@ var _ = Describe("App", func() {
 
 	var getAppBuildLog = testnet.TestRequest{
 		Method: "GET",
-		Path:   "/apps/ketsu/builds/log",
+		Path:   "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45/log",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -474,7 +474,7 @@ var _ = Describe("App", func() {
 		app, err := repo.GetApp("ketsu")
 		Expect(err).To(BeNil())
 
-		log, err := app.GetLog("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45", "build", 15, "2016-03-16T09:53:23.594Z")
+		log, err := app.GetLogForTests("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45", "build", 15, "2016-03-16T09:53:23.594Z")
 		Expect(err).To(BeNil())
 		Expect(strings.TrimSpace(log)).To(Equal(logBody))
 

@@ -152,6 +152,6 @@ func (cc CloudControllerAppRepository) GetRoutesByURI(uri string) (routes AppRou
 }
 
 func (cc CloudControllerAppRepository) GetLog(appId, buildId, logType string, lines int, timestamp string) (log string, err error) {
-	log, err = cc.gateway.GetPlainResponse(fmt.Sprintf("/apps/%s/builds/log?build=%s&lines=%d&logType=%s&timestamp=%s", appId, buildId, lines, logType, timestamp))
+	log, err = cc.gateway.GetPlainResponse(fmt.Sprintf("/apps/%s/builds/%s/log?lines=%d&logType=%s&timestamp=%s", appId, buildId, lines, logType, timestamp))
 	return
 }

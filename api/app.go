@@ -32,7 +32,7 @@ type App interface {
 	BindWithRoute(params AppRouteParams) (error)
 	UnbindRoute(routeId string) (error)
 	SwitchStack(params UpdateStackParams) (error)
-	GetLog(buildId, logType string, lines int, startTimeStamp string) (string, error)
+	GetLogForTests(buildId, logType string, lines int, startTimeStamp string) (string, error)
 }
 
 type AppModel struct {
@@ -120,7 +120,7 @@ func (a AppModel) SwitchStack(params UpdateStackParams) (error) {
 	return a.AppMapper.SwitchStack(a.ID, params)
 }
 
-func (a AppModel) GetLog(buildId, logType string, lines int, startTimeStamp string) (string, error) {
+func (a AppModel) GetLogForTests(buildId, logType string, lines int, startTimeStamp string) (string, error) {
 	return a.AppMapper.GetLog(a.ID, buildId, logType, lines, startTimeStamp)
 }
 
