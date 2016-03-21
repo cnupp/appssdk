@@ -158,6 +158,7 @@ func (g *Gateway) request(method string, path string, body []byte, contentType s
 	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", contentType)
 	req.Header.Add("User-Agent", userAgent)
+	req.Header.Add("Authorization", g.config.Auth())
 
 	client := http.Client{}
 
