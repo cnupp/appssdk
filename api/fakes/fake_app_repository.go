@@ -460,7 +460,7 @@ func (fake *FakeAppRepository) SwitchStackReturns(result1 error) {
 	}{result1}
 }
 
-func (fake *FakeAppRepository) GetLog(appId, buildId, logType string, lines int, startTimeStamp string) (string, error) {
+func (fake *FakeAppRepository) GetLog(appId, buildId, logType string, lines int, startTimeStamp, logId string) (string, error) {
 	return "", nil
 }
 
