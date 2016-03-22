@@ -3,8 +3,8 @@ package util_test
 import (
 	. "github.com/sjkyspa/stacks/controller/api/util"
 
-	. "github.com/sjkyspa/stacks/Godeps/_workspace/src/github.com/onsi/ginkgo"
-	. "github.com/sjkyspa/stacks/Godeps/_workspace/src/github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Util", func() {

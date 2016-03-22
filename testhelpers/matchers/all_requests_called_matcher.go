@@ -3,7 +3,7 @@ package matchers
 import (
 	"fmt"
 
-	"github.com/sjkyspa/stacks/Godeps/_workspace/src/github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 )
 
