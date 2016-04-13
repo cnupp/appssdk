@@ -1,22 +1,22 @@
 package api
+
 import (
 )
 
-
 type StackParams struct {
-	Name string `json:"name"`
+	Name    string `json:"name"`
 	Content string `json:"content"`
 }
 
 type Image struct {
 	Name string `json:"image"`
-	Mem int `json:"mem"`
+	Mem  int `json:"mem"`
 	Cpus float64 `json:"cpus"`
 }
 
 type Meta struct {
-	VerifyImageField Image `json:"verify"`
-	BuildImageField Image `json:"build"`
+	VerifyImageField  Image `json:"verify"`
+	BuildImageField   Image `json:"build"`
 	TemplateCodeField string `json:"template"`
 }
 
@@ -34,9 +34,9 @@ type Stack interface {
 }
 
 type StackModel struct {
-	IDField    string `json:"id"`
-	NameField  string `json:"name"`
-	LinksField []Link `json:"links"`
+	IDField             string `json:"id"`
+	NameField           string `json:"name"`
+	LinksField          []Link `json:"links"`
 	StackStructureField StackStructure
 }
 
@@ -58,11 +58,11 @@ func (a StackModel) GetBuildImage() Image {
 	return a.StackStructureField.MetaField.BuildImageField
 }
 
-func (a StackModel) GetVerifyImage() Image  {
+func (a StackModel) GetVerifyImage() Image {
 	return a.StackStructureField.MetaField.VerifyImageField
 }
 
-func (a StackModel) GetTemplateCode() string  {
+func (a StackModel) GetTemplateCode() string {
 	return a.StackStructureField.MetaField.TemplateCodeField
 }
 
