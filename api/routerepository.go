@@ -30,6 +30,9 @@ func (repo DefaultRouteRepository) Create(params RouteParams) (apiErr error) {
 	}
 
 	res, apiErr := repo.gateway.Request("POST", "/routes", data)
+	if(apiErr != nil){
+		return
+	}
 	location := res.Header.Get("Location")
 	fmt.Println(location)
 	return
