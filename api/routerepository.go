@@ -1,4 +1,5 @@
 package api
+
 import (
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
@@ -30,7 +31,7 @@ func (repo DefaultRouteRepository) Create(params RouteParams) (apiErr error) {
 	}
 
 	res, apiErr := repo.gateway.Request("POST", "/routes", data)
-	if(apiErr != nil){
+	if (apiErr != nil) {
 		return
 	}
 	location := res.Header.Get("Location")
@@ -45,10 +46,10 @@ func (repo DefaultRouteRepository) GetRoutes() (routes Routes, apiErr error) {
 	return
 }
 
-func (repo DefaultRouteRepository) 	GetAppsForRoute(routeId string) (apps Apps, apiErr error) {
+func (repo DefaultRouteRepository)       GetAppsForRoute(routeId string) (apps Apps, apiErr error) {
 	var appModels AppsModel
-	apiErr = repo.gateway.Get(fmt.Sprintf("/routes/"+routeId+"/apps"), &appModels)
-//	appModels.AppMapper = NewAppRepository(repo.config, repo.gateway)
+	apiErr = repo.gateway.Get(fmt.Sprintf("/routes/" + routeId + "/apps"), &appModels)
+	//	appModels.AppMapper = NewAppRepository(repo.config, repo.gateway)
 	apps = appModels
 	return
 }
