@@ -10,12 +10,12 @@ import (
 
 //go:generate counterfeiter -o fakes/fake_stack_repository.go . StackRepository
 type StackRepository interface {
-	Create(params StackParams) (createdStack Stack, apiErr error)
+	Create(params map[string]interface{}) (createdStack Stack, apiErr error)
 	GetStack(id string) (Stack, error)
 	GetStackByURI(uri string) (Stack, error)
 	GetStacks() (Stacks, error)
 	GetStackByName(name string) (Stacks, error)
-	Update(id string, params StackParams) (target Stack, apiErr error)
+	Update(id string, params map[string]interface{}) (target Stack, apiErr error)
 	Delete(id string) (apiErr error)
 }
 
@@ -28,7 +28,7 @@ func NewStackRepository(config config.Reader, gateway net.Gateway) StackReposito
 	return DefaultStackRepository{config: config, gateway: gateway}
 }
 
-func (cc DefaultStackRepository) Create(params StackParams) (createdStack Stack, apiErr error) {
+func (cc DefaultStackRepository) Create(params map[string]interface{}) (createdStack Stack, apiErr error) {
 	data, err := json.Marshal(params)
 	if err != nil {
 		apiErr = fmt.Errorf("Can not serilize the data")
@@ -54,8 +54,7 @@ func (cc DefaultStackRepository) Create(params StackParams) (createdStack Stack,
 
 func (cc DefaultStackRepository) GetStack(id string) (Stack, error) {
 	var data []byte
-	var jsonData map[string]string
-	var stackStructure StackStructure
+
 	res, err := cc.gateway.Request("GET", fmt.Sprintf("/stacks/%s", id), nil)
 	if err != nil {
 		return nil, err
@@ -64,20 +63,13 @@ func (cc DefaultStackRepository) GetStack(id string) (Stack, error) {
 	if err != nil {
 		return nil, err
 	}
-	json.Unmarshal(data, &jsonData)
-	json.Unmarshal([]byte(jsonData["content"]), &stackStructure)
-	return StackModel{
-		IDField: jsonData["id"],
-		NameField: jsonData["name"],
-		StackStructureField: stackStructure,
-		LinksField: []Link{},
-	}, nil
+	stackModel := StackModel{}
+	json.Unmarshal(data, &stackModel)
+	return stackModel, nil
 }
 
 func (cc DefaultStackRepository) GetStackByURI(uri string) (Stack, error) {
 	var data []byte
-	var jsonData map[string]string
-	var stackStructure StackStructure
 	res, err := cc.gateway.Request("GET", uri, nil)
 	if err != nil {
 		return nil, err
@@ -86,14 +78,9 @@ func (cc DefaultStackRepository) GetStackByURI(uri string) (Stack, error) {
 	if err != nil {
 		return nil, err
 	}
-	json.Unmarshal(data, &jsonData)
-	json.Unmarshal([]byte(jsonData["content"]), &stackStructure)
-	return StackModel{
-		IDField: jsonData["id"],
-		NameField: jsonData["name"],
-		StackStructureField: stackStructure,
-		LinksField: []Link{},
-	}, nil
+	stackModel := StackModel{}
+	json.Unmarshal(data, &stackModel)
+	return stackModel, nil
 }
 
 func (cc DefaultStackRepository) GetStacks() (Stacks, error) {
@@ -118,7 +105,7 @@ func (cc DefaultStackRepository) GetStackByName(name string) (Stacks, error){
 	return stacks, apiErr
 }
 
-func (cc DefaultStackRepository) Update(id string, params StackParams) (target Stack, apiErr error) {
+func (cc DefaultStackRepository) Update(id string, params map[string]interface{}) (target Stack, apiErr error) {
 	return nil, nil
 }
 

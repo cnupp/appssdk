@@ -26,7 +26,44 @@ var _ = Describe("Stacks", func() {
 	{
 	  "name": "javajersey",
 	  "id": "74a052c9-76b3-44a1-ac0b-666faa1223b6",
-	  "content": "{\"meta\":{\"build\":{\"image\":\"192.168.99.100:5000/javajersey-test-build\",\"mem\":1024,\"cpus\":1.0},\"verify\":{\"image\":\"abc\",\"mem\":512,\"cpus\":1.0}},\"services\":{\"web\":{\"name\":\"web\",\"main\":true,\"localhostPort\":4876,\"image\":null,\"links\":[\"db\"],\"environment\":{},\"mem\":512,\"cpus\":0.4,\"instances\":1,\"expose\":8088},\"db\":{\"name\":\"db\",\"main\":false,\"localhostPort\":26468,\"image\":\"tutum/mysql\",\"links\":[],\"environment\":{\"EXTRA_OPTS\":\"--lower_case_table_names=1\",\"MYSQL_PASS\":\"mysql\",\"MYSQL_PASSWORD\":\"mysql\",\"MYSQL_USER\":\"mysql\",\"ON_CREATE_DB\":\"stacks\"},\"mem\":256,\"cpus\":0.2,\"instances\":1,\"expose\":3306}}}"
+	  "services" :{
+	  	"web":
+	  	{
+	  		"build":{
+	  			"image":"192.168.99.100:5000/javajersey-test-build",
+	  			"mem":1024,
+	  			"cpus":1.0
+	  		},
+	  		"verify":{
+	  			"image":"abc",
+	  			"mem":512,
+	  			"cpus":1.0
+	  		},
+	  		"name":"web",
+	  		"main":true,
+	  		"localhostPort":4876,
+	  		"image":null,
+	  		"links":["db"],
+	  		"environment":{},
+	  		"mem":512,
+	  		"cpus":0.4,
+	  		"instances":1,
+	  		"expose":8088
+		},
+		"db":
+		{
+			"name":"db",
+			"main":false,
+			"localhostPort":26468,
+			"image":"tutum/mysql",
+			"links":[],
+			"environment":{"EXTRA_OPTS":"--lower_case_table_names=1","MYSQL_PASS":"mysql","MYSQL_PASSWORD":"mysql","MYSQL_USER":"mysql","ON_CREATE_DB":"stacks"},
+			"mem":256,
+			"cpus":0.2,
+			"instances":1,
+			"expose":3306
+		}
+	  }
 	}
 	`
 	var getStackRequest = testnet.TestRequest{
@@ -166,12 +203,11 @@ var _ = Describe("Stacks", func() {
 		return
 	}
 
-	var defaultStackParams = func() StackParams {
-		name := "javajersey"
+	var defaultStackParams = func() map[string]interface{} {
+		stack := make(map[string]interface{})
 
-		return StackParams{
-			Name: name,
-		}
+		stack["name"] = "javajersey"
+		return stack
 	}
 
 	It("should able to create an stack", func() {

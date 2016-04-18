@@ -1,13 +1,5 @@
 package api
 
-import (
-)
-
-type StackParams struct {
-	Name    string `json:"name"`
-	Content string `json:"content"`
-}
-
 type Image struct {
 	Name string `json:"image"`
 	Mem  int `json:"mem"`
@@ -20,8 +12,18 @@ type Meta struct {
 	TemplateCodeField string `json:"template"`
 }
 
+type Service struct {
+	Build  Image `json:"build"`
+	Verify Image `json:"verify"`
+}
+
+type Template struct {
+	Type string `json:"type"`
+	URI string `json:"uri"`
+}
+
 type StackStructure struct {
-	MetaField Meta `json:"meta"`
+
 }
 
 type Stack interface {
@@ -37,7 +39,8 @@ type StackModel struct {
 	IDField             string `json:"id"`
 	NameField           string `json:"name"`
 	LinksField          []Link `json:"links"`
-	StackStructureField StackStructure
+	Services map[string]Service `json:"services"`
+	Template Template `json:"template"`
 }
 
 func (a StackModel) Id() string {
@@ -55,15 +58,25 @@ func (a StackModel) Links() Links {
 }
 
 func (a StackModel) GetBuildImage() Image {
-	return a.StackStructureField.MetaField.BuildImageField
+	for _, v := range a.Services {
+		if v.Build != (Image{}){
+			return v.Build
+		}
+	}
+	return Image{}
 }
 
 func (a StackModel) GetVerifyImage() Image {
-	return a.StackStructureField.MetaField.VerifyImageField
+	for _, v := range a.Services {
+		if v.Verify !=  (Image{}){
+			return v.Verify
+		}
+	}
+	return Image{}
 }
 
 func (a StackModel) GetTemplateCode() string {
-	return a.StackStructureField.MetaField.TemplateCodeField
+	return a.Template.URI
 }
 
 type Stacks interface {
@@ -111,4 +124,14 @@ func (stacks StacksModel) Items() []Stack {
 		items = append(items, stack)
 	}
 	return items
+}
+
+func Filter(vs []string, f func(string) bool) []string {
+	vsf := make([]string, 0)
+	for _, v := range vs {
+		if f(v) {
+			vsf = append(vsf, v)
+		}
+	}
+	return vsf
 }
