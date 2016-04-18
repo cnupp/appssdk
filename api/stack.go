@@ -12,7 +12,7 @@ type Meta struct {
 	TemplateCodeField string `json:"template"`
 }
 
-type Service struct {
+type ServiceDefinition struct {
 	Build  Image `json:"build"`
 	Verify Image `json:"verify"`
 }
@@ -39,7 +39,7 @@ type StackModel struct {
 	IDField             string `json:"id"`
 	NameField           string `json:"name"`
 	LinksField          []Link `json:"links"`
-	Services map[string]Service `json:"services"`
+	Services map[string]ServiceDefinition `json:"services"`
 	Template Template `json:"template"`
 }
 
