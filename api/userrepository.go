@@ -8,7 +8,7 @@ import (
 
 //go:generate counterfeiter -o fakes/fake_user_repository.go . UserRepository
 type UserRepository interface {
-	Create(params UserParams) (createdUser User, apiErr error)
+	Create(params UserParams) (apiErr error)
 	GetUser(id string) (User, error)
 	GetUserByEmail(email string) (Users, error)
 }
@@ -22,7 +22,7 @@ func NewUserRepository(config config.Reader, gateway net.Gateway) UserRepository
 	return DefaultUserRepository{config: config, gateway: gateway}
 }
 
-func (cc DefaultUserRepository) Create(params UserParams) (createdUser User, apiErr error) {
+func (cc DefaultUserRepository) Create(params UserParams) (apiErr error) {
 	data, err := json.Marshal(params)
 	if err != nil {
 		apiErr = fmt.Errorf("Can not serilize the data")
@@ -39,12 +39,6 @@ func (cc DefaultUserRepository) Create(params UserParams) (createdUser User, api
 
 	var userModel UserModel
 	apiErr = cc.gateway.Get(location, &userModel)
-	if apiErr != nil {
-		return
-	}
-
-	userModel.KeyRepo = NewKeyRepository(cc.config, cc.gateway)
-	createdUser = userModel
 	return
 }
 

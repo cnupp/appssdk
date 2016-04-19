@@ -134,10 +134,8 @@ var _ = Describe("Users", func() {
 		ts, _, repo := createUserRepository([]testnet.TestRequest{createUserRequest, getUserRequest})
 		defer ts.Close()
 
-		createdUser, err := repo.Create(defaultUserParams())
+		err := repo.Create(defaultUserParams())
 		Expect(err).To(BeNil())
-		Expect(createdUser.Email()).To(Equal(userEmail))
-		Expect(createdUser.Links()).NotTo(BeNil())
 	})
 
 	It("should able to get an user", func() {

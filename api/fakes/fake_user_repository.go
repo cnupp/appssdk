@@ -8,14 +8,13 @@ import (
 )
 
 type FakeUserRepository struct {
-	CreateStub        func(params api.UserParams) (createdUser api.User, apiErr error)
+	CreateStub        func(params api.UserParams) (apiErr error)
 	createMutex       sync.RWMutex
 	createArgsForCall []struct {
 		params api.UserParams
 	}
 	createReturns struct {
-		result1 api.User
-		result2 error
+		result1 error
 	}
 	GetUserStub        func(id string) (api.User, error)
 	getUserMutex       sync.RWMutex
@@ -37,7 +36,7 @@ type FakeUserRepository struct {
 	}
 }
 
-func (fake *FakeUserRepository) Create(params api.UserParams) (createdUser api.User, apiErr error) {
+func (fake *FakeUserRepository) Create(params api.UserParams) (apiErr error) {
 	fake.createMutex.Lock()
 	fake.createArgsForCall = append(fake.createArgsForCall, struct {
 		params api.UserParams
@@ -46,7 +45,7 @@ func (fake *FakeUserRepository) Create(params api.UserParams) (createdUser api.U
 	if fake.CreateStub != nil {
 		return fake.CreateStub(params)
 	} else {
-		return fake.createReturns.result1, fake.createReturns.result2
+		return fake.createReturns.result1
 	}
 }
 
@@ -62,12 +61,11 @@ func (fake *FakeUserRepository) CreateArgsForCall(i int) api.UserParams {
 	return fake.createArgsForCall[i].params
 }
 
-func (fake *FakeUserRepository) CreateReturns(result1 api.User, result2 error) {
+func (fake *FakeUserRepository) CreateReturns(result1 error) {
 	fake.CreateStub = nil
 	fake.createReturns = struct {
-		result1 api.User
-		result2 error
-	}{result1, result2}
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeUserRepository) GetUser(id string) (api.User, error) {
