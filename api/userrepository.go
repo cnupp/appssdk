@@ -29,16 +29,12 @@ func (cc DefaultUserRepository) Create(params UserParams) (apiErr error) {
 		return
 	}
 
-	res, err := cc.gateway.Request("POST", "/users", data)
+	_, err = cc.gateway.Request("POST", "/users", data)
 	if err != nil {
 		apiErr = err
 		return
 	}
 
-	location := res.Header.Get("Location")
-
-	var userModel UserModel
-	apiErr = cc.gateway.Get(location, &userModel)
 	return
 }
 
