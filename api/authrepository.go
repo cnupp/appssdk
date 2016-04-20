@@ -11,6 +11,7 @@ import (
 //go:generate counterfeiter -o fakes/fake_auth_repository.go . AuthRepository
 type AuthRepository interface {
 	Create(params UserParams) (auth Auth, apiErr error)
+	Get() (user User, apiErr error)
 	Delete(id string) (error)
 }
 
@@ -43,6 +44,16 @@ func (authRepository DefaultAuthRepository) Create(params UserParams) (createdAu
 		UserEmailField: params.Email,
 		IdField: splits[len(splits) - 1],
 	}, nil
+}
+
+func (authRepository DefaultAuthRepository) Get() (user User, apiErr error) {
+	var remoteUser UserModel
+	apiErr = authRepository.gateway.Get("/auths", &remoteUser)
+	if apiErr != nil {
+		return
+	}
+	user = remoteUser
+	return
 }
 
 func (cc DefaultAuthRepository) Delete(id string) (apiErr error) {

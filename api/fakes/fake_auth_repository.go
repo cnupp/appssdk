@@ -17,6 +17,13 @@ type FakeAuthRepository struct {
 		result1 api.Auth
 		result2 error
 	}
+	GetStub        func() (User user, apiErr error)
+	getMutex       sync.RWMutex
+	getArgsForCall []struct{}
+	getReturns     struct {
+		result1 user
+		result2 error
+	}
 	DeleteStub        func(id string) error
 	deleteMutex       sync.RWMutex
 	deleteArgsForCall []struct {
@@ -56,6 +63,31 @@ func (fake *FakeAuthRepository) CreateReturns(result1 api.Auth, result2 error) {
 	fake.CreateStub = nil
 	fake.createReturns = struct {
 		result1 api.Auth
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeAuthRepository) Get() (User user, apiErr error) {
+	fake.getMutex.Lock()
+	fake.getArgsForCall = append(fake.getArgsForCall, struct{}{})
+	fake.getMutex.Unlock()
+	if fake.GetStub != nil {
+		return fake.GetStub()
+	} else {
+		return fake.getReturns.result1, fake.getReturns.result2
+	}
+}
+
+func (fake *FakeAuthRepository) GetCallCount() int {
+	fake.getMutex.RLock()
+	defer fake.getMutex.RUnlock()
+	return len(fake.getArgsForCall)
+}
+
+func (fake *FakeAuthRepository) GetReturns(result1 user, result2 error) {
+	fake.GetStub = nil
+	fake.getReturns = struct {
+		result1 user
 		result2 error
 	}{result1, result2}
 }

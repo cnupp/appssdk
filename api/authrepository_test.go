@@ -13,6 +13,34 @@ import (
 )
 
 var _ = Describe("Auths", func() {
+	var getUserResponse = `
+	{
+	  "id": "47631d42-25d1-4fde-a8b5-02d94f0d616d",
+	  "email": "ketsu@thoughtworks.com",
+	  "links": [
+		{
+		  "rel": "self",
+		  "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d"
+		},
+		{
+		  "rel": "keys",
+		  "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d/keys"
+		}
+	  ]
+	}
+	`
+
+	var getAuthRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/auths",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: getUserResponse,
+		},
+	}
 	var createAuthRequest = testnet.TestRequest{
 		Method: "POST",
 		Path:   "/auths",
@@ -64,6 +92,16 @@ var _ = Describe("Auths", func() {
 			Password: userPassword,
 		}
 	}
+
+	It("should able to get user by auth", func() {
+		ts, _, repo := createAuthRepository([]testnet.TestRequest{getAuthRequest})
+		defer ts.Close()
+
+		createdUser, err := repo.Get()
+		Expect(err).To(BeNil())
+		Expect(createdUser.Email()).To(Equal(userEmail))
+		Expect(createdUser.Links()).NotTo(BeNil())
+	})
 
 	It("should able to create an authorization with correct user and password", func() {
 		ts, _, repo := createAuthRepository([]testnet.TestRequest{createAuthRequest})
