@@ -125,7 +125,13 @@ func (cc CloudControllerAppRepository) UnbindRoute(app App, routeId string) erro
 }
 
 func (cc CloudControllerAppRepository) SwitchStack(id string, params UpdateStackParams) (apiErr error) {
-	_, apiErr = cc.gateway.Request("PUT", fmt.Sprintf("/apps/%s/switch-stack", id), nil)
+	data, err := json.Marshal(params)
+	if err != nil {
+		apiErr = err
+		return
+	}
+
+	_, apiErr = cc.gateway.Request("PUT", fmt.Sprintf("/apps/%s/switch-stack", id), data)
 	return
 }
 
