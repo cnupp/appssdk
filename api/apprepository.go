@@ -45,12 +45,7 @@ func (cc CloudControllerAppRepository) SetEnv(app App, kvs map[string]interface{
 func (cc CloudControllerAppRepository) UnsetEnv(app App, keys []string) (apiErr error) {
 	env := make(map[string]interface{})
 	env["envs"] = keys
-	data, err := json.Marshal(env)
-	if err != nil {
-		apiErr = fmt.Errorf("Can not serilize the data")
-		return
-	}
-	apiErr = cc.gateway.PUT(fmt.Sprintf("/apps/%s/env", app.Id()), data)
+	apiErr = cc.gateway.PUT(fmt.Sprintf("/apps/%s/env", app.Id()), env)
 	return
 }
 
