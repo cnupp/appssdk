@@ -460,8 +460,8 @@ func (fake *FakeAppRepository) SwitchStackReturns(result1 error) {
 	}{result1}
 }
 
-func (fake *FakeAppRepository) GetLog(appId, buildId, logType string, lines, offset int64) (string, error) {
-	return "", nil
+func (fake *FakeAppRepository) GetLog(appId, buildId, logType string, lines, offset int64) (api.LogsModel, error) {
+	return api.LogsModel{}, nil
 }
 
 var _ api.AppRepository = new(FakeAppRepository)

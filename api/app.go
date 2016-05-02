@@ -1,4 +1,5 @@
 package api
+
 import (
 	"github.com/sjkyspa/stacks/controller/api/util"
 )
@@ -32,7 +33,7 @@ type App interface {
 	BindWithRoute(params AppRouteParams) (error)
 	UnbindRoute(routeId string) (error)
 	SwitchStack(params UpdateStackParams) (error)
-	GetLogForTests(buildId, logType string, lines int64, offset int64) (string, error)
+	GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error)
 }
 
 type AppModel struct {
@@ -120,7 +121,7 @@ func (a AppModel) SwitchStack(params UpdateStackParams) (error) {
 	return a.AppMapper.SwitchStack(a.ID, params)
 }
 
-func (a AppModel) GetLogForTests(buildId, logType string, lines int64, offset int64) (string, error) {
+func (a AppModel) GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error) {
 	return a.AppMapper.GetLog(a.ID, buildId, logType, lines, offset)
 }
 
@@ -218,6 +219,17 @@ type AppRoutesModel struct {
 	NextField  string         `json:"next"`
 	ItemsField []AppRouteModel  `json:"items"`
 	AppRepo    AppRepository
+}
+
+type LogItemsModel struct {
+	MessageField string        `json:"message"`
+}
+
+type LogsModel struct {
+	ErrorField string        `json:"error"`
+	TotalField int64         `json:"total"`
+	SizeField  int64           `json:"size"`
+	ItemsField []LogItemsModel  `json:"items"`
 }
 
 func (appRoutes AppRoutesModel) Count() int {
