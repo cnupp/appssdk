@@ -3,6 +3,7 @@ package api
 type UserParams struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
 }
 
 type User interface {
