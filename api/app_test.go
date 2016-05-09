@@ -13,6 +13,22 @@ import (
 )
 
 var _ = Describe("App", func() {
+	var getAppPermissionResponse = `
+	{
+	  "write": true,
+	  "read": false
+	}
+	`
+
+	var getAppPermissionRequest = testnet.TestRequest{
+		Method: "GET",
+		Path: "/apps/ketsu?user=abcd",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Body: getAppPermissionResponse,
+		},
+	}
+
 	var createAppRequest = testnet.TestRequest{
 		Method: "POST",
 		Path:   "/apps",
@@ -478,5 +494,17 @@ var _ = Describe("App", func() {
 		Expect(err).To(BeNil())
 		Expect(strings.TrimSpace(log)).To(Equal(logBody))
 
+	})
+
+	It("should able to get app permissions", func() {
+		ts, _, repo := createAppRepository([]testnet.TestRequest{getAppRequest, getAppPermissionRequest})
+		defer ts.Close()
+
+		app, err := repo.GetApp("ketsu")
+		Expect(err).To(BeNil())
+
+		permission, err := app.GetPermissions("abcd")
+		Expect(err).To(BeNil())
+		Expect(permission.Write).To(BeTrue())
 	})
 })

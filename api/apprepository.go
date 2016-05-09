@@ -20,6 +20,13 @@ type AppRepository interface {
 	UnsetEnv(app App, keys []string) (error)
 	SwitchStack(id string, params UpdateStackParams) (apiErr error)
 	GetLog(appId, buildId, logType string, lines int64, offset int64) (LogsModel, error)
+	GetPermission(app App, userId string) (AppPermission, error)
+}
+
+
+type AppPermission struct {
+	Write  bool `json:"write"`
+	Read bool `json:"read"`
 }
 
 type CloudControllerAppRepository struct {
@@ -156,5 +163,12 @@ func (cc CloudControllerAppRepository) GetLog(appId, buildId, logType string, li
 	var logsModel LogsModel
 	err = cc.gateway.Get(fmt.Sprintf("/apps/%s/builds/%s/log?lines=%d&log_type=%s&offset=%d", appId, buildId, lines, logType, offset), &logsModel)
 	logs = logsModel
+	return
+}
+
+func (cc CloudControllerAppRepository) GetPermission(app App, userId string) (permission AppPermission, err error) {
+	var appPermission AppPermission
+	err = cc.gateway.Get(fmt.Sprintf("/apps/%s/permissions?user=%s", app.Id(), userId), &appPermission)
+	permission = appPermission
 	return
 }

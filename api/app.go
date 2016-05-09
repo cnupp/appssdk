@@ -34,6 +34,7 @@ type App interface {
 	UnbindRoute(routeId string) (error)
 	SwitchStack(params UpdateStackParams) (error)
 	GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error)
+	GetPermissions(userId string) (AppPermission, error)
 }
 
 type AppModel struct {
@@ -282,5 +283,10 @@ func (appRoutes AppRoutesModel) Items() []AppRouteModel {
 		items = append(items, app)
 	}
 	return items
+}
+
+func (app AppModel) GetPermissions(userId string) (AppPermission, error) {
+	appPermission, err := app.AppMapper.GetPermission(app, userId);
+	return appPermission, err
 }
 
