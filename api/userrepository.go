@@ -11,6 +11,7 @@ type UserRepository interface {
 	Create(params UserParams) (apiErr error)
 	GetUser(id string) (User, error)
 	GetUserByEmail(email string) (Users, error)
+	GetUserByFingerprint(fingerprint string) (Users, error)
 }
 
 type DefaultUserRepository struct {
@@ -63,3 +64,18 @@ func (cc DefaultUserRepository) GetUserByEmail(email string) (users Users, apiEr
 	users = usersModel
 	return
 }
+
+func (cc DefaultUserRepository) GetUserByFingerprint(fingerprint string) (users Users, apiErr error) {
+	var usersModel UsersModel
+	apiErr = cc.gateway.Get(fmt.Sprintf("/users?fingerprint=%s", fingerprint), &usersModel)
+	if apiErr != nil {
+		return nil, apiErr
+	}
+	if usersModel.Count() < 1 {
+		apiErr = fmt.Errorf("User not found")
+		return nil, apiErr
+	}
+	users = usersModel
+	return
+}
+

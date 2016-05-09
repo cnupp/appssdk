@@ -34,6 +34,15 @@ type FakeUserRepository struct {
 		result1 api.Users
 		result2 error
 	}
+	GetUserByFingerprintStub        func(fingerprint string) (api.Users, error)
+	getUserByFingerprintMutex       sync.RWMutex
+	getUserByFingerprintArgsForCall []struct {
+		fingerprint string
+	}
+	getUserByFingerprintReturns struct {
+		result1 api.Users
+		result2 error
+	}
 }
 
 func (fake *FakeUserRepository) Create(params api.UserParams) (apiErr error) {
@@ -129,6 +138,39 @@ func (fake *FakeUserRepository) GetUserByEmailArgsForCall(i int) string {
 func (fake *FakeUserRepository) GetUserByEmailReturns(result1 api.Users, result2 error) {
 	fake.GetUserByEmailStub = nil
 	fake.getUserByEmailReturns = struct {
+		result1 api.Users
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeUserRepository) GetUserByFingerprint(fingerprint string) (api.Users, error) {
+	fake.getUserByFingerprintMutex.Lock()
+	fake.getUserByFingerprintArgsForCall = append(fake.getUserByFingerprintArgsForCall, struct {
+		fingerprint string
+	}{fingerprint})
+	fake.getUserByFingerprintMutex.Unlock()
+	if fake.GetUserByFingerprintStub != nil {
+		return fake.GetUserByFingerprintStub(fingerprint)
+	} else {
+		return fake.getUserByFingerprintReturns.result1, fake.getUserByFingerprintReturns.result2
+	}
+}
+
+func (fake *FakeUserRepository) GetUserByFingerprintCallCount() int {
+	fake.getUserByFingerprintMutex.RLock()
+	defer fake.getUserByFingerprintMutex.RUnlock()
+	return len(fake.getUserByFingerprintArgsForCall)
+}
+
+func (fake *FakeUserRepository) GetUserByFingerprintArgsForCall(i int) string {
+	fake.getUserByFingerprintMutex.RLock()
+	defer fake.getUserByFingerprintMutex.RUnlock()
+	return fake.getUserByFingerprintArgsForCall[i].fingerprint
+}
+
+func (fake *FakeUserRepository) GetUserByFingerprintReturns(result1 api.Users, result2 error) {
+	fake.GetUserByFingerprintStub = nil
+	fake.getUserByFingerprintReturns = struct {
 		result1 api.Users
 		result2 error
 	}{result1, result2}

@@ -90,6 +90,41 @@ var _ = Describe("Users", func() {
 	}
 	`
 
+	var getUserByFingerprintResponse = `
+	{
+	  "count": 1,
+	  "self": "/users?fingerprint=ketsu@thoughtworks.com&page=1&per_page=30",
+	  "first": "/users?fingerprint=ketsu@thoughtworks.com&page=1&per_page=30",
+	  "last": "/users?fingerprint=ketsu@thoughtworks.com&page=1&per_page=30",
+	  "prev": null,
+	  "next": null,
+	  "items": [
+	    {
+	      "id": "47631d42-25d1-4fde-a8b5-02d94f0d616d",
+	      "email": "ketsu@thoughtworks.com",
+	      "links": [
+	        {
+	          "rel": "self",
+	          "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d"
+	        }
+	      ]
+	    }
+	  ]
+	}
+	`
+	var getNoUserByFingerprintResponse = `
+	{
+	  "count": 0,
+	  "self": "/users?fingerprint=noexist@thoughtworks.com&page=1&per_page=30",
+	  "first": "/users?fingerprint=noexist@thoughtworks.com&page=1&per_page=30",
+	  "last": "/users?fingerprint=noexist@thoughtworks.com&page=1&per_page=30",
+	  "prev": null,
+	  "next": null,
+	  "items": [
+	  ]
+	}
+	`
+
 	var getUserByEmailRequest = testnet.TestRequest{
 		Method: "GET",
 		Path:   "/users?email=" + userEmail,
@@ -111,6 +146,30 @@ var _ = Describe("Users", func() {
 				"Content-Type": {"application/json"},
 			},
 			Body: getNoUserByEmailResponse,
+		},
+	}
+
+	var getUserByFingerprintRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/users?fingerprint=" + userEmail,
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: getUserByFingerprintResponse,
+		},
+	}
+
+	var getNoUserByFingerprintRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/users?fingerprint=noexist@thoughtworks.com",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: getNoUserByFingerprintResponse,
 		},
 	}
 
@@ -159,6 +218,20 @@ var _ = Describe("Users", func() {
 		Expect(users.Items()).NotTo(BeNil())
 
 		users, err = repo.GetUserByEmail("noexist@thoughtworks.com")
+		Expect(err).ShouldNot(BeNil())
+	})
+
+	It("should able to get an user by fingerprint", func() {
+		ts, _, repo := createUserRepository([]testnet.TestRequest{getUserByFingerprintRequest, getNoUserByFingerprintRequest})
+		defer ts.Close()
+
+		users, err := repo.GetUserByFingerprint(userEmail)
+		Expect(err).To(BeNil())
+		Expect(users.Count()).To(Equal(1))
+		Expect(users.Items()[0].Id()).To(Equal(userId))
+		Expect(users.Items()).NotTo(BeNil())
+
+		users, err = repo.GetUserByFingerprint("noexist@thoughtworks.com")
 		Expect(err).ShouldNot(BeNil())
 	})
 })
