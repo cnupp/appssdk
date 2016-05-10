@@ -11,6 +11,13 @@ import (
 )
 
 var _ = Describe("Stacks", func() {
+	var unPublishStackRequest = testnet.TestRequest{
+		Method: "PUT",
+		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/unpublished",
+		Response: testnet.TestResponse{
+			Status: 200,
+		},
+	}
 	var publishStackRequest = testnet.TestRequest{
 		Method: "PUT",
 		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/published",
@@ -219,7 +226,7 @@ var _ = Describe("Stacks", func() {
 		return
 	}
 
-	var updateStackRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo StackRepository) {
+	var prepareStackRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo StackRepository) {
 		ts, handler = testnet.NewServer(requests)
 		configRepo := testconfig.NewRepositoryWithDefaults()
 		configRepo.SetApiEndpoint(ts.URL)
@@ -236,10 +243,18 @@ var _ = Describe("Stacks", func() {
 	}
 
 	It("should able to publish a stack", func() {
-		ts, _, repo := updateStackRepository([]testnet.TestRequest{publishStackRequest})
+		ts, _, repo := prepareStackRepository([]testnet.TestRequest{publishStackRequest})
 		defer ts.Close()
 
 		err := repo.Publish("74a052c9-76b3-44a1-ac0b-666faa1223b6")
+		Expect(err).To(BeNil())
+	})
+
+	It("should able to unpublish a stack", func() {
+		ts, _, repo := prepareStackRepository([]testnet.TestRequest{unPublishStackRequest})
+		defer ts.Close()
+
+		err := repo.UnPublish("74a052c9-76b3-44a1-ac0b-666faa1223b6")
 		Expect(err).To(BeNil())
 	})
 
@@ -254,7 +269,7 @@ var _ = Describe("Stacks", func() {
 	})
 
 	It("should able to update an stack", func() {
-		ts, _, repo := updateStackRepository([]testnet.TestRequest{updateStackRequest})
+		ts, _, repo := prepareStackRepository([]testnet.TestRequest{updateStackRequest})
 		defer ts.Close()
 
 		err := repo.Update("74a052c9-76b3-44a1-ac0b-666faa1223b6", defaultStackParams())

@@ -35,6 +35,7 @@ type Stack interface {
 	GetTemplateCode() string
 	Update(stackDefinition map[string]interface{}) error
 	Publish() error
+	UnPublish() error
 }
 
 type StackModel struct {
@@ -89,6 +90,11 @@ func (s StackModel) Update(stackDefinition map[string]interface{}) (err error) {
 
 func (s StackModel) Publish() (err error) {
 	err = s.StackMapper.Publish(s.Id())
+	return
+}
+
+func (s StackModel) UnPublish() (err error) {
+	err = s.StackMapper.UnPublish(s.Id())
 	return
 }
 
