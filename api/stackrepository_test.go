@@ -11,6 +11,13 @@ import (
 )
 
 var _ = Describe("Stacks", func() {
+	var publishStackRequest = testnet.TestRequest{
+		Method: "PUT",
+		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/published",
+		Response: testnet.TestResponse{
+			Status: 200,
+		},
+	}
 	var createStackRequest = testnet.TestRequest{
 		Method: "POST",
 		Path:   "/stacks",
@@ -227,6 +234,14 @@ var _ = Describe("Stacks", func() {
 		stack["name"] = "javajersey"
 		return stack
 	}
+
+	It("should able to publish a stack", func() {
+		ts, _, repo := updateStackRepository([]testnet.TestRequest{publishStackRequest})
+		defer ts.Close()
+
+		err := repo.Publish("74a052c9-76b3-44a1-ac0b-666faa1223b6")
+		Expect(err).To(BeNil())
+	})
 
 	It("should able to create an stack", func() {
 		ts, _, repo := createStackRepository([]testnet.TestRequest{createStackRequest, getStackRequest})

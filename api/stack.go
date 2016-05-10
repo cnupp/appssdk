@@ -34,6 +34,7 @@ type Stack interface {
 	GetVerifyImage() Image
 	GetTemplateCode() string
 	Update(stackDefinition map[string]interface{}) error
+	Publish() error
 }
 
 type StackModel struct {
@@ -83,6 +84,11 @@ func (a StackModel) GetTemplateCode() string {
 
 func (s StackModel) Update(stackDefinition map[string]interface{}) (err error) {
 	err = s.StackMapper.Update(s.Id(), stackDefinition)
+	return
+}
+
+func (s StackModel) Publish() (err error) {
+	err = s.StackMapper.Publish(s.Id())
 	return
 }
 

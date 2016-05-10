@@ -17,6 +17,7 @@ type StackRepository interface {
 	GetStackByName(name string) (Stacks, error)
 	Update(id string, params map[string]interface{}) (apiErr error)
 	Delete(id string) (apiErr error)
+	Publish(id string) (apiErr error)
 }
 
 type DefaultStackRepository struct {
@@ -112,7 +113,7 @@ func (cc DefaultStackRepository) Update(id string, params map[string]interface{}
 	if err != nil {
 		return err
 	}
-	_, apiErr = cc.gateway.Request("POST", fmt.Sprintf("/stacks/%s", id), data)
+	_, apiErr = cc.gateway.Request("PUT", fmt.Sprintf("/stacks/%s", id), data)
 	return
 }
 
@@ -121,3 +122,7 @@ func (cc DefaultStackRepository) Delete(id string) (apiErr error) {
 	return
 }
 
+func (cc DefaultStackRepository) Publish(id string) (apiErr error) {
+	apiErr = cc.gateway.PUT(fmt.Sprintf("/stacks/%s/published", id), nil)
+	return
+}
