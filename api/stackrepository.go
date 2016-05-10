@@ -15,7 +15,7 @@ type StackRepository interface {
 	GetStackByURI(uri string) (Stack, error)
 	GetStacks() (Stacks, error)
 	GetStackByName(name string) (Stacks, error)
-	Update(id string, params map[string]interface{}) (target Stack, apiErr error)
+	Update(id string, params map[string]interface{}) (apiErr error)
 	Delete(id string) (apiErr error)
 }
 
@@ -44,6 +44,7 @@ func (cc DefaultStackRepository) Create(params map[string]interface{}) (createdS
 	location := res.Header.Get("Location")
 	var stackModel StackModel
 	apiErr = cc.gateway.Get(location, &stackModel)
+	stackModel.StackMapper = cc
 	if apiErr != nil {
 		return
 	}
@@ -65,6 +66,7 @@ func (cc DefaultStackRepository) GetStack(id string) (Stack, error) {
 	}
 	stackModel := StackModel{}
 	json.Unmarshal(data, &stackModel)
+	stackModel.StackMapper = cc
 	return stackModel, nil
 }
 
@@ -105,8 +107,13 @@ func (cc DefaultStackRepository) GetStackByName(name string) (Stacks, error){
 	return stacks, apiErr
 }
 
-func (cc DefaultStackRepository) Update(id string, params map[string]interface{}) (target Stack, apiErr error) {
-	return nil, nil
+func (cc DefaultStackRepository) Update(id string, params map[string]interface{}) (apiErr error) {
+	data, err := json.Marshal(params)
+	if err != nil {
+		return err
+	}
+	_, apiErr = cc.gateway.Request("POST", fmt.Sprintf("/stacks/%s", id), data)
+	return
 }
 
 func (cc DefaultStackRepository) Delete(id string) (apiErr error) {

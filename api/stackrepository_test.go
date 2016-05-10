@@ -22,6 +22,15 @@ var _ = Describe("Stacks", func() {
 			},
 		},
 	}
+
+	var updateStackRequest = testnet.TestRequest{
+		Method: "PUT",
+		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6",
+		Response: testnet.TestResponse{
+			Status: 200,
+		},
+	}
+
 	var getStackResponse = `
 	{
 	  "name": "javajersey",
@@ -203,6 +212,15 @@ var _ = Describe("Stacks", func() {
 		return
 	}
 
+	var updateStackRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo StackRepository) {
+		ts, handler = testnet.NewServer(requests)
+		configRepo := testconfig.NewRepositoryWithDefaults()
+		configRepo.SetApiEndpoint(ts.URL)
+		gateway := net.NewCloudControllerGateway(configRepo)
+		repo = NewStackRepository(configRepo, gateway)
+		return
+	}
+
 	var defaultStackParams = func() map[string]interface{} {
 		stack := make(map[string]interface{})
 
@@ -218,6 +236,14 @@ var _ = Describe("Stacks", func() {
 		Expect(err).To(BeNil())
 		Expect(createdStack.Name()).To(Equal("javajersey"))
 		Expect(createdStack.Links()).NotTo(BeNil())
+	})
+
+	It("should able to update an stack", func() {
+		ts, _, repo := updateStackRepository([]testnet.TestRequest{updateStackRequest})
+		defer ts.Close()
+
+		err := repo.Update("74a052c9-76b3-44a1-ac0b-666faa1223b6", defaultStackParams())
+		Expect(err).To(BeNil())
 	})
 
 	It("should able to get an stack", func() {

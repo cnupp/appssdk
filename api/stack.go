@@ -19,7 +19,7 @@ type ServiceDefinition struct {
 
 type Template struct {
 	Type string `json:"type"`
-	URI string `json:"uri"`
+	URI  string `json:"uri"`
 }
 
 type StackStructure struct {
@@ -33,14 +33,16 @@ type Stack interface {
 	GetBuildImage() Image
 	GetVerifyImage() Image
 	GetTemplateCode() string
+	Update(stackDefinition map[string]interface{}) error
 }
 
 type StackModel struct {
-	IDField             string `json:"id"`
-	NameField           string `json:"name"`
-	LinksField          []Link `json:"links"`
-	Services map[string]ServiceDefinition `json:"services"`
-	Template Template `json:"template"`
+	IDField    string `json:"id"`
+	NameField  string `json:"name"`
+	LinksField []Link `json:"links"`
+	Services   map[string]ServiceDefinition `json:"services"`
+	Template   Template `json:"template"`
+	StackMapper  StackRepository
 }
 
 func (a StackModel) Id() string {
@@ -59,7 +61,7 @@ func (a StackModel) Links() Links {
 
 func (a StackModel) GetBuildImage() Image {
 	for _, v := range a.Services {
-		if v.Build != (Image{}){
+		if v.Build != (Image{}) {
 			return v.Build
 		}
 	}
@@ -68,7 +70,7 @@ func (a StackModel) GetBuildImage() Image {
 
 func (a StackModel) GetVerifyImage() Image {
 	for _, v := range a.Services {
-		if v.Verify !=  (Image{}){
+		if v.Verify != (Image{}) {
 			return v.Verify
 		}
 	}
@@ -77,6 +79,11 @@ func (a StackModel) GetVerifyImage() Image {
 
 func (a StackModel) GetTemplateCode() string {
 	return a.Template.URI
+}
+
+func (s StackModel) Update(stackDefinition map[string]interface{}) (err error) {
+	err = s.StackMapper.Update(s.Id(), stackDefinition)
+	return
 }
 
 type Stacks interface {
