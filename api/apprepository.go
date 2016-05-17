@@ -23,6 +23,7 @@ type AppRepository interface {
 	GetPermission(app App, userId string) (AppPermission, error)
 	GetCollaborators(appId string) ([]User, error)
 	AddCollaborator(appId string, param CreateCollaboratorParams) (error)
+	RemoveCollaborator(appId string, userId string) (error)
 }
 
 
@@ -193,4 +194,9 @@ func (cc CloudControllerAppRepository) AddCollaborator(appId string, param Creat
 	_, err = cc.gateway.Request("POST", fmt.Sprintf("/apps/%s/collaborators", appId), data)
 
 	return err
+}
+
+func (cc CloudControllerAppRepository) RemoveCollaborator(appId string, userId string) (err error) {
+	_, err = cc.gateway.Request("DELETE", fmt.Sprintf("/apps/%s/collaborators/%s", appId, userId), nil)
+	return
 }

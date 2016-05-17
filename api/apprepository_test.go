@@ -13,8 +13,15 @@ import (
 )
 
 var _ = Describe("Apps", func() {
+	var removeCollaboratorRequest = testnet.TestRequest{
+		Method: "DELETE",
+		Path:   "/apps/bbc/collaborators/abc",
+		Response: testnet.TestResponse{
+			Status: 204,
+		},
+	}
 	var createCollaboratorRequest = testnet.TestRequest{
-		Method: "GET",
+		Method: "POST",
 		Path:   "/apps/abc/collaborators",
 		Response: testnet.TestResponse{
 			Status: 201,
@@ -280,6 +287,17 @@ var _ = Describe("Apps", func() {
 		err := repo.AddCollaborator("abc", CreateCollaboratorParams{
 			Email: userEmail,
 		})
+		Expect(err).To(BeNil())
+	})
+
+	It("should able to remove collaborator", func() {
+		userId := "abc"
+		appId := "bbc"
+
+		ts, _, repo := createAppRepository([]testnet.TestRequest{removeCollaboratorRequest})
+		defer ts.Close()
+
+		err := repo.RemoveCollaborator(appId, userId)
 		Expect(err).To(BeNil())
 	})
 })

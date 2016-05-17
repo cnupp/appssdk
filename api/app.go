@@ -41,6 +41,7 @@ type App interface {
 	GetPermissions(userId string) (AppPermission, error)
 	GetCollaborators() ([]User, error)
 	AddCollaborator(param CreateCollaboratorParams) (error)
+	RemoveCollaborator(userId string) (error)
 }
 
 type AppModel struct {
@@ -303,5 +304,9 @@ func (app AppModel) GetCollaborators() ([]User, error) {
 
 func (app AppModel) AddCollaborator(param CreateCollaboratorParams) (error) {
 	return app.AppMapper.AddCollaborator(app.Id(), param)
+}
+
+func (app AppModel) RemoveCollaborator(userId string) (error) {
+	return app.AppMapper.RemoveCollaborator(app.Id(), userId)
 }
 
