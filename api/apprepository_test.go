@@ -13,6 +13,17 @@ import (
 )
 
 var _ = Describe("Apps", func() {
+	var createCollaboratorRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/apps/abc/collaborators",
+		Response: testnet.TestResponse{
+			Status: 201,
+			Header: http.Header{
+				"accept":   {"application/json"},
+				"Location": {"/apps/abc/collaborators/123"},
+			},
+		},
+	}
 	var getCollaboratorsResponse = `
 	[
 		{
@@ -258,5 +269,17 @@ var _ = Describe("Apps", func() {
 
 		users, err = repo.GetCollaborators("bbc")
 		Expect(err).ShouldNot(BeNil())
+	})
+
+	It("should able to create collaborator", func() {
+		userEmail := "test@tw.com"
+
+		ts, _, repo := createAppRepository([]testnet.TestRequest{createCollaboratorRequest})
+		defer ts.Close()
+
+		err := repo.AddCollaborator("abc", CreateCollaboratorParams{
+			Email: userEmail,
+		})
+		Expect(err).To(BeNil())
 	})
 })

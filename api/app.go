@@ -18,6 +18,10 @@ type UpdateStackParams struct {
 	Stack string `json:"stack"`
 }
 
+type CreateCollaboratorParams struct {
+	Email string `json:"email"`
+}
+
 type App interface {
 	Id() string
 	Links() Links
@@ -36,6 +40,7 @@ type App interface {
 	GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermissions(userId string) (AppPermission, error)
 	GetCollaborators() ([]User, error)
+	AddCollaborator(param CreateCollaboratorParams) (error)
 }
 
 type AppModel struct {
@@ -294,5 +299,9 @@ func (app AppModel) GetPermissions(userId string) (AppPermission, error) {
 func (app AppModel) GetCollaborators() ([]User, error) {
 	users, err := app.AppMapper.GetCollaborators(app.Id())
 	return users, err
+}
+
+func (app AppModel) AddCollaborator(param CreateCollaboratorParams) (error) {
+	return app.AppMapper.AddCollaborator(app.Id(), param)
 }
 

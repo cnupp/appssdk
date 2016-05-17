@@ -22,6 +22,7 @@ type AppRepository interface {
 	GetLog(appId, buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermission(app App, userId string) (AppPermission, error)
 	GetCollaborators(appId string) ([]User, error)
+	AddCollaborator(appId string, param CreateCollaboratorParams) (error)
 }
 
 
@@ -180,4 +181,16 @@ func (cc CloudControllerAppRepository) GetCollaborators(appId string) (users []U
 		return nil, err
 	}
 	return
+}
+
+func (cc CloudControllerAppRepository) AddCollaborator(appId string, param CreateCollaboratorParams) (err error) {
+	data, err := json.Marshal(param)
+	if err != nil {
+		err = fmt.Errorf("Can not serilize the data")
+		return err
+	}
+
+	_, err = cc.gateway.Request("POST", fmt.Sprintf("/apps/%s/collaborators", appId), data)
+
+	return err
 }
