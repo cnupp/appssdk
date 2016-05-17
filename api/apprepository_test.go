@@ -252,9 +252,9 @@ var _ = Describe("Apps", func() {
 
 		users, err := repo.GetCollaborators("abc")
 		Expect(err).To(BeNil())
-		Expect(users.Count()).To(Equal(1))
-		Expect(users.Items()[0].Id()).To(Equal(userId))
-		Expect(users.Items()).NotTo(BeNil())
+		Expect(len(users)).To(Equal(1))
+		Expect(users[0].Id()).To(Equal(userId))
+		Expect(users).NotTo(BeNil())
 
 		users, err = repo.GetCollaborators("bbc")
 		Expect(err).ShouldNot(BeNil())
