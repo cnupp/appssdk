@@ -13,6 +13,51 @@ import (
 )
 
 var _ = Describe("Apps", func() {
+	var getCollaboratorsResponse = `
+	[
+		{
+		  "id": "47631d42-25d1-4fde-a8b5-02d94f0d616d",
+		  "email": "ketsu@thoughtworks.com",
+		  "links": [
+			{
+			  "rel": "self",
+			  "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d"
+			}
+		  ]
+		}
+	]
+	`
+
+
+	var getCollaboratorsRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/apps/bbc/collaborators",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: getCollaboratorsResponse,
+		},
+	}
+
+	var getNoCollaboratorsResponse = `
+	[
+	]
+	`
+
+	var getNoCollaboratorsRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/apps/abc/collaborators",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: getNoCollaboratorsResponse,
+		},
+	}
+
 	var createAppRequest = testnet.TestRequest{
 		Method: "POST",
 		Path:   "/apps",
@@ -197,5 +242,21 @@ var _ = Describe("Apps", func() {
 
 		err := repo.Delete("ketsu")
 		Expect(err).To(BeNil())
+	})
+
+	It("should able to get collaborators", func() {
+		userId := "47631d42-25d1-4fde-a8b5-02d94f0d616d"
+
+		ts, _, repo := createAppRepository([]testnet.TestRequest{getCollaboratorsRequest, getNoCollaboratorsRequest})
+		defer ts.Close()
+
+		users, err := repo.GetCollaborators("abc")
+		Expect(err).To(BeNil())
+		Expect(users.Count()).To(Equal(1))
+		Expect(users.Items()[0].Id()).To(Equal(userId))
+		Expect(users.Items()).NotTo(BeNil())
+
+		users, err = repo.GetCollaborators("bbc")
+		Expect(err).ShouldNot(BeNil())
 	})
 })

@@ -35,6 +35,7 @@ type App interface {
 	SwitchStack(params UpdateStackParams) (error)
 	GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermissions(userId string) (AppPermission, error)
+	GetCollaborators() (Users, error)
 }
 
 type AppModel struct {
@@ -288,5 +289,10 @@ func (appRoutes AppRoutesModel) Items() []AppRouteModel {
 func (app AppModel) GetPermissions(userId string) (AppPermission, error) {
 	appPermission, err := app.AppMapper.GetPermission(app, userId);
 	return appPermission, err
+}
+
+func (app AppModel) GetCollaborators() (Users, error) {
+	users, err := app.AppMapper.GetCollaborators(app.Id())
+	return users, err
 }
 

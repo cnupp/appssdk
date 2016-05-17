@@ -104,6 +104,38 @@ type FakeAppRepository struct {
 	switchStackReturns struct {
 		result1 error
 	}
+	GetLogStub        func(appId, buildId, logType string, lines int64, offset int64) (api.LogsModel, error)
+	getLogMutex       sync.RWMutex
+	getLogArgsForCall []struct {
+		appId   string
+		buildId string
+		logType string
+		lines   int64
+		offset  int64
+	}
+	getLogReturns struct {
+		result1 api.LogsModel
+		result2 error
+	}
+	GetPermissionStub        func(app api.App, userId string) (api.AppPermission, error)
+	getPermissionMutex       sync.RWMutex
+	getPermissionArgsForCall []struct {
+		app    api.App
+		userId string
+	}
+	getPermissionReturns struct {
+		result1 api.AppPermission
+		result2 error
+	}
+	GetCollaboratorsStub        func(app api.App) (api.Users, error)
+	getCollaboratorsMutex       sync.RWMutex
+	getCollaboratorsArgsForCall []struct {
+		app api.App
+	}
+	getCollaboratorsReturns struct {
+		result1 api.Users
+		result2 error
+	}
 }
 
 func (fake *FakeAppRepository) Create(params api.AppParams) (createdApp api.App, apiErr error) {
@@ -460,8 +492,108 @@ func (fake *FakeAppRepository) SwitchStackReturns(result1 error) {
 	}{result1}
 }
 
-func (fake *FakeAppRepository) GetLog(appId, buildId, logType string, lines, offset int64) (api.LogsModel, error) {
-	return api.LogsModel{}, nil
+func (fake *FakeAppRepository) GetLog(appId string, buildId string, logType string, lines int64, offset int64) (api.LogsModel, error) {
+	fake.getLogMutex.Lock()
+	fake.getLogArgsForCall = append(fake.getLogArgsForCall, struct {
+		appId   string
+		buildId string
+		logType string
+		lines   int64
+		offset  int64
+	}{appId, buildId, logType, lines, offset})
+	fake.getLogMutex.Unlock()
+	if fake.GetLogStub != nil {
+		return fake.GetLogStub(appId, buildId, logType, lines, offset)
+	} else {
+		return fake.getLogReturns.result1, fake.getLogReturns.result2
+	}
+}
+
+func (fake *FakeAppRepository) GetLogCallCount() int {
+	fake.getLogMutex.RLock()
+	defer fake.getLogMutex.RUnlock()
+	return len(fake.getLogArgsForCall)
+}
+
+func (fake *FakeAppRepository) GetLogArgsForCall(i int) (string, string, string, int64, int64) {
+	fake.getLogMutex.RLock()
+	defer fake.getLogMutex.RUnlock()
+	return fake.getLogArgsForCall[i].appId, fake.getLogArgsForCall[i].buildId, fake.getLogArgsForCall[i].logType, fake.getLogArgsForCall[i].lines, fake.getLogArgsForCall[i].offset
+}
+
+func (fake *FakeAppRepository) GetLogReturns(result1 api.LogsModel, result2 error) {
+	fake.GetLogStub = nil
+	fake.getLogReturns = struct {
+		result1 api.LogsModel
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeAppRepository) GetPermission(app api.App, userId string) (api.AppPermission, error) {
+	fake.getPermissionMutex.Lock()
+	fake.getPermissionArgsForCall = append(fake.getPermissionArgsForCall, struct {
+		app    api.App
+		userId string
+	}{app, userId})
+	fake.getPermissionMutex.Unlock()
+	if fake.GetPermissionStub != nil {
+		return fake.GetPermissionStub(app, userId)
+	} else {
+		return fake.getPermissionReturns.result1, fake.getPermissionReturns.result2
+	}
+}
+
+func (fake *FakeAppRepository) GetPermissionCallCount() int {
+	fake.getPermissionMutex.RLock()
+	defer fake.getPermissionMutex.RUnlock()
+	return len(fake.getPermissionArgsForCall)
+}
+
+func (fake *FakeAppRepository) GetPermissionArgsForCall(i int) (api.App, string) {
+	fake.getPermissionMutex.RLock()
+	defer fake.getPermissionMutex.RUnlock()
+	return fake.getPermissionArgsForCall[i].app, fake.getPermissionArgsForCall[i].userId
+}
+
+func (fake *FakeAppRepository) GetPermissionReturns(result1 api.AppPermission, result2 error) {
+	fake.GetPermissionStub = nil
+	fake.getPermissionReturns = struct {
+		result1 api.AppPermission
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeAppRepository) GetCollaborators(app api.App) (api.Users, error) {
+	fake.getCollaboratorsMutex.Lock()
+	fake.getCollaboratorsArgsForCall = append(fake.getCollaboratorsArgsForCall, struct {
+		app api.App
+	}{app})
+	fake.getCollaboratorsMutex.Unlock()
+	if fake.GetCollaboratorsStub != nil {
+		return fake.GetCollaboratorsStub(app)
+	} else {
+		return fake.getCollaboratorsReturns.result1, fake.getCollaboratorsReturns.result2
+	}
+}
+
+func (fake *FakeAppRepository) GetCollaboratorsCallCount() int {
+	fake.getCollaboratorsMutex.RLock()
+	defer fake.getCollaboratorsMutex.RUnlock()
+	return len(fake.getCollaboratorsArgsForCall)
+}
+
+func (fake *FakeAppRepository) GetCollaboratorsArgsForCall(i int) api.App {
+	fake.getCollaboratorsMutex.RLock()
+	defer fake.getCollaboratorsMutex.RUnlock()
+	return fake.getCollaboratorsArgsForCall[i].app
+}
+
+func (fake *FakeAppRepository) GetCollaboratorsReturns(result1 api.Users, result2 error) {
+	fake.GetCollaboratorsStub = nil
+	fake.getCollaboratorsReturns = struct {
+		result1 api.Users
+		result2 error
+	}{result1, result2}
 }
 
 var _ api.AppRepository = new(FakeAppRepository)
