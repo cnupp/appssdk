@@ -203,6 +203,14 @@ var _ = Describe("Apps", func() {
 		},
 	}
 
+	var transferAppToUserRequest = testnet.TestRequest{
+		Method: "PUT",
+		Path: "/apps/appname/transferred",
+		Response: testnet.TestResponse{
+			Status: 204,
+		},
+	}
+
 	var createAppRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo AppRepository) {
 		ts, handler = testnet.NewServer(requests)
 		configRepo := testconfig.NewRepositoryWithDefaults()
@@ -297,6 +305,17 @@ var _ = Describe("Apps", func() {
 		defer ts.Close()
 
 		err := repo.RemoveCollaborator(appId, userId)
+		Expect(err).To(BeNil())
+	})
+
+	It("should able to transfer to other user", func() {
+		userEmail := "otheruser@tw.com"
+		appId := "appname"
+
+		ts, _, repo := createAppRepository([]testnet.TestRequest{transferAppToUserRequest})
+		defer ts.Close()
+
+		err := repo.TransferToUser(appId, userEmail)
 		Expect(err).To(BeNil())
 	})
 })

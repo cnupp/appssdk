@@ -24,12 +24,18 @@ type AppRepository interface {
 	GetCollaborators(appId string) ([]UserModel, error)
 	AddCollaborator(appId string, param CreateCollaboratorParams) (error)
 	RemoveCollaborator(appId string, userId string) (error)
+	TransferToUser(appId string, email string) (error)
 }
 
 
 type AppPermission struct {
-	Write  bool `json:"write"`
-	Read bool `json:"read"`
+	Write bool `json:"write"`
+	Read  bool `json:"read"`
+}
+
+type TransferAppParams struct {
+	Owner     string `json:"owner`
+	OwnerType string `json:"owner_type"`
 }
 
 type CloudControllerAppRepository struct {
@@ -199,4 +205,18 @@ func (cc CloudControllerAppRepository) AddCollaborator(appId string, param Creat
 func (cc CloudControllerAppRepository) RemoveCollaborator(appId string, userId string) (err error) {
 	_, err = cc.gateway.Request("DELETE", fmt.Sprintf("/apps/%s/collaborators/%s", appId, userId), nil)
 	return
+}
+
+func (cc CloudControllerAppRepository) TransferToUser(appId string, userEmail string) (err error) {
+	params := TransferAppParams{
+		Owner: userEmail,
+		OwnerType: "User",
+	}
+	data, err := json.Marshal(params)
+	if err != nil {
+		return
+	}
+	_, err = cc.gateway.Request("PUT", fmt.Sprintf("/apps/%s/transferred", appId), data)
+
+	return err
 }
