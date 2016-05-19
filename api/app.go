@@ -42,6 +42,8 @@ type App interface {
 	GetCollaborators() ([]UserModel, error)
 	AddCollaborator(param CreateCollaboratorParams) (error)
 	RemoveCollaborator(userId string) (error)
+	TransferToOrg(orgName string) (error)
+	TransferToUser(userEmail string) (error)
 }
 
 type AppModel struct {
@@ -310,3 +312,10 @@ func (app AppModel) RemoveCollaborator(userId string) (error) {
 	return app.AppMapper.RemoveCollaborator(app.Id(), userId)
 }
 
+func (app AppModel) TransferToOrg(orgName string) (error) {
+	return app.AppMapper.TransferToOrg(app.Id(), orgName)
+}
+
+func (app AppModel) TransferToUser(userEmail string) (error) {
+	return app.AppMapper.TransferToUser(app.Id(), userEmail)
+}
