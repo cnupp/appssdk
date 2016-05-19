@@ -35,7 +35,7 @@ type AppPermission struct {
 }
 
 type TransferAppParams struct {
-	Owner     string `json:"owner`
+	Owner     string `json:"owner"`
 	OwnerType string `json:"owner_type"`
 }
 
