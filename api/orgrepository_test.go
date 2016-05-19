@@ -13,7 +13,19 @@ import (
 )
 
 var _ = Describe("Apps", func() {
-
+	var getOrgMembersRequest = testnet.TestRequest{
+		Method: "GET",
+		Path: "/orgs/tw-test/members",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"accept":   {"application/json"},
+			},
+			Body: `
+			[]
+			`,
+		},
+	}
 	var createOrgRequest = testnet.TestRequest{
 		Method: "POST",
 		Path:   "/orgs",
@@ -104,6 +116,14 @@ var _ = Describe("Apps", func() {
 		Expect(err).To(BeNil())
 		Expect(createdApp.Name()).To(Equal("tw-test"))
 		Expect(createdApp.Links()).NotTo(BeNil())
+	})
+
+	It("should list all members", func() {
+		ts, _, repo := createOrgRepository([]testnet.TestRequest{getOrgMembersRequest})
+		defer ts.Close()
+
+		_, err := repo.GetOrgMembers("tw-test")
+		Expect(err).To(BeNil())
 	})
 //
 //	It("should able to delete org", func() {

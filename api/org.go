@@ -10,6 +10,7 @@ type OrgParams struct {
 type Org interface {
 	Name() string
 	Links() Links
+	Members() []UserModel
 }
 
 type OrgModel struct {
@@ -26,4 +27,8 @@ func (o OrgModel) Links() Links {
 	return LinksModel{
 		Links: o.LinksArray,
 	}
+}
+
+func (o OrgModel) Members() []UserModel {
+	return o.OrgMapper.GetOrgMembers(o.Name())
 }

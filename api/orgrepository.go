@@ -10,6 +10,7 @@ import (
 type OrgRepository interface {
 	Create(params OrgParams) (org Org, apiErr error)
 	GetOrg(name string) (Org, error)
+	GetOrgMembers(name string) (users []UserModel, apiErr error)
 }
 
 
@@ -58,3 +59,7 @@ func (cc CloudControllerOrgRepository) GetOrg(orgName string) (org Org, apiErr e
 	return
 }
 
+func (cc CloudControllerOrgRepository) GetOrgMembers(orgName string) (users []UserModel, apiErr error) {
+	apiErr = cc.gateway.Get(fmt.Sprintf("/orgs/%s/members", orgName), &users)
+	return
+}
