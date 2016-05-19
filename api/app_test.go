@@ -9,7 +9,6 @@ import (
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 )
 
 var _ = Describe("App", func() {
@@ -295,7 +294,17 @@ var _ = Describe("App", func() {
 		},
 	}
 
-	var logBody = "2016-03-17 05:38:19 DEBUG PooledDataSource:316  - PooledDataSource forcefully closed/removed all connections."
+	var logBody = `
+	{
+	  "total": 1,
+	  "size": 2,
+	  "items": [
+	    {
+	      "message": "init successful"
+	    }
+	  ]
+	}
+	`
 
 	var getAppBuildLog = testnet.TestRequest{
 		Method: "GET",
@@ -303,7 +312,7 @@ var _ = Describe("App", func() {
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
-				"Content-Type": {"text/plain"},
+				"Content-Type": {"application/json"},
 			},
 			Body: logBody,
 		},
@@ -492,7 +501,7 @@ var _ = Describe("App", func() {
 
 		log, err := app.GetLogForTests("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45", "build", 15, 0)
 		Expect(err).To(BeNil())
-		Expect(strings.TrimSpace(log)).To(Equal(logBody))
+		Expect(log.ItemsField[0].MessageField).To(Equal("init successful"))
 
 	})
 
