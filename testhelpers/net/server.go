@@ -143,6 +143,5 @@ func NewServer(requests []TestRequest) (*httptest.Server, *TestHandler) {
 }
 
 func (h *TestHandler) logError(msg string, args ...interface{}) {
-	println(fmt.Sprintf(msg, args...))
-	ginkgo.Fail("failed")
+	ginkgo.Fail(fmt.Sprintf(msg, args...))
 }
