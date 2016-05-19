@@ -26,6 +26,19 @@ var _ = Describe("Apps", func() {
 			`,
 		},
 	}
+	var listOrgAppsRequest = testnet.TestRequest{
+		Method: "GET",
+		Path: "/orgs/tw-test/apps",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"accept":   {"application/json"},
+			},
+			Body: `
+			[]
+			`,
+		},
+	}
 	var createOrgRequest = testnet.TestRequest{
 		Method: "POST",
 		Path:   "/orgs",
@@ -160,6 +173,15 @@ var _ = Describe("Apps", func() {
 		defer ts.Close()
 
 		err := repo.RmMember(orgName, userId)
+		Expect(err).To(BeNil())
+	})
+
+	It("should list apps", func() {
+		orgName := "tw-test"
+		ts, _, repo := createOrgRepository([]testnet.TestRequest{listOrgAppsRequest})
+		defer ts.Close()
+
+		_, err := repo.GetApps(orgName)
 		Expect(err).To(BeNil())
 	})
 //

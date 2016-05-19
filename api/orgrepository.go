@@ -13,6 +13,7 @@ type OrgRepository interface {
 	GetOrgMembers(name string) (users []UserModel, apiErr error)
 	AddMember(orgName string, userEmail string) (apiErr error)
 	RmMember(orgName string, userId string) (apiErr error)
+	GetApps(orgName string) (apps []AppModel, apiErr error)
 }
 
 
@@ -85,5 +86,10 @@ func (cc CloudControllerOrgRepository) AddMember(orgName string, userEmail strin
 
 func (cc CloudControllerOrgRepository) RmMember(orgName string, userId string) (apiErr error) {
 	apiErr = cc.gateway.Delete(fmt.Sprintf("/orgs/%s/members/%s", orgName, userId), nil)
+	return
+}
+
+func (cc CloudControllerOrgRepository) GetApps(orgName string) (apps []AppModel, apiErr error) {
+	apiErr = cc.gateway.Get(fmt.Sprintf("/orgs/%s/apps", orgName), &apps)
 	return
 }
