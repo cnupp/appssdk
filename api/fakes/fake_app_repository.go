@@ -127,13 +127,13 @@ type FakeAppRepository struct {
 		result1 api.AppPermission
 		result2 error
 	}
-	GetCollaboratorsStub        func(appId string) ([]api.User, error)
+	GetCollaboratorsStub        func(appId string) ([]api.UserModel, error)
 	getCollaboratorsMutex       sync.RWMutex
 	getCollaboratorsArgsForCall []struct {
 		appId string
 	}
 	getCollaboratorsReturns struct {
-		result1 []api.User
+		result1 []api.UserModel
 		result2 error
 	}
 	AddCollaboratorStub        func(appId string, param api.CreateCollaboratorParams) error
@@ -152,6 +152,24 @@ type FakeAppRepository struct {
 		userId string
 	}
 	removeCollaboratorReturns struct {
+		result1 error
+	}
+	TransferToUserStub        func(appId string, email string) error
+	transferToUserMutex       sync.RWMutex
+	transferToUserArgsForCall []struct {
+		appId string
+		email string
+	}
+	transferToUserReturns struct {
+		result1 error
+	}
+	TransferToOrgStub        func(appId string, orgName string) error
+	transferToOrgMutex       sync.RWMutex
+	transferToOrgArgsForCall []struct {
+		appId   string
+		orgName string
+	}
+	transferToOrgReturns struct {
 		result1 error
 	}
 	invocations map[string][][]interface{}
@@ -613,7 +631,7 @@ func (fake *FakeAppRepository) GetPermissionReturns(result1 api.AppPermission, r
 	}{result1, result2}
 }
 
-func (fake *FakeAppRepository) GetCollaborators(appId string) ([]api.User, error) {
+func (fake *FakeAppRepository) GetCollaborators(appId string) ([]api.UserModel, error) {
 	fake.getCollaboratorsMutex.Lock()
 	fake.getCollaboratorsArgsForCall = append(fake.getCollaboratorsArgsForCall, struct {
 		appId string
@@ -640,10 +658,10 @@ func (fake *FakeAppRepository) GetCollaboratorsArgsForCall(i int) string {
 	return fake.getCollaboratorsArgsForCall[i].appId
 }
 
-func (fake *FakeAppRepository) GetCollaboratorsReturns(result1 []api.User, result2 error) {
+func (fake *FakeAppRepository) GetCollaboratorsReturns(result1 []api.UserModel, result2 error) {
 	fake.GetCollaboratorsStub = nil
 	fake.getCollaboratorsReturns = struct {
-		result1 []api.User
+		result1 []api.UserModel
 		result2 error
 	}{result1, result2}
 }
@@ -714,6 +732,76 @@ func (fake *FakeAppRepository) RemoveCollaboratorArgsForCall(i int) (string, str
 func (fake *FakeAppRepository) RemoveCollaboratorReturns(result1 error) {
 	fake.RemoveCollaboratorStub = nil
 	fake.removeCollaboratorReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeAppRepository) TransferToUser(appId string, email string) error {
+	fake.transferToUserMutex.Lock()
+	fake.transferToUserArgsForCall = append(fake.transferToUserArgsForCall, struct {
+		appId string
+		email string
+	}{appId, email})
+	fake.guard("TransferToUser")
+	fake.invocations["TransferToUser"] = append(fake.invocations["TransferToUser"], []interface{}{appId, email})
+	fake.transferToUserMutex.Unlock()
+	if fake.TransferToUserStub != nil {
+		return fake.TransferToUserStub(appId, email)
+	} else {
+		return fake.transferToUserReturns.result1
+	}
+}
+
+func (fake *FakeAppRepository) TransferToUserCallCount() int {
+	fake.transferToUserMutex.RLock()
+	defer fake.transferToUserMutex.RUnlock()
+	return len(fake.transferToUserArgsForCall)
+}
+
+func (fake *FakeAppRepository) TransferToUserArgsForCall(i int) (string, string) {
+	fake.transferToUserMutex.RLock()
+	defer fake.transferToUserMutex.RUnlock()
+	return fake.transferToUserArgsForCall[i].appId, fake.transferToUserArgsForCall[i].email
+}
+
+func (fake *FakeAppRepository) TransferToUserReturns(result1 error) {
+	fake.TransferToUserStub = nil
+	fake.transferToUserReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeAppRepository) TransferToOrg(appId string, orgName string) error {
+	fake.transferToOrgMutex.Lock()
+	fake.transferToOrgArgsForCall = append(fake.transferToOrgArgsForCall, struct {
+		appId   string
+		orgName string
+	}{appId, orgName})
+	fake.guard("TransferToOrg")
+	fake.invocations["TransferToOrg"] = append(fake.invocations["TransferToOrg"], []interface{}{appId, orgName})
+	fake.transferToOrgMutex.Unlock()
+	if fake.TransferToOrgStub != nil {
+		return fake.TransferToOrgStub(appId, orgName)
+	} else {
+		return fake.transferToOrgReturns.result1
+	}
+}
+
+func (fake *FakeAppRepository) TransferToOrgCallCount() int {
+	fake.transferToOrgMutex.RLock()
+	defer fake.transferToOrgMutex.RUnlock()
+	return len(fake.transferToOrgArgsForCall)
+}
+
+func (fake *FakeAppRepository) TransferToOrgArgsForCall(i int) (string, string) {
+	fake.transferToOrgMutex.RLock()
+	defer fake.transferToOrgMutex.RUnlock()
+	return fake.transferToOrgArgsForCall[i].appId, fake.transferToOrgArgsForCall[i].orgName
+}
+
+func (fake *FakeAppRepository) TransferToOrgReturns(result1 error) {
+	fake.TransferToOrgStub = nil
+	fake.transferToOrgReturns = struct {
 		result1 error
 	}{result1}
 }
