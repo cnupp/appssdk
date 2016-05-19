@@ -38,6 +38,14 @@ var _ = Describe("Apps", func() {
 		},
 	}
 
+	var rmOrgMemberRequest = testnet.TestRequest{
+		Method: "DELETE",
+		Path:   "/orgs/tw/members/abc",
+		Response: testnet.TestResponse{
+			Status: 204,
+		},
+	}
+
 	var addOrgMemberRequest = testnet.TestRequest{
 		Method: "POST",
 		Path: "/orgs/tw/members",
@@ -142,6 +150,16 @@ var _ = Describe("Apps", func() {
 		defer ts.Close()
 
 		err := repo.AddMember(orgName, userEmail)
+		Expect(err).To(BeNil())
+	})
+
+	It("should remove members", func() {
+		userId := "abc"
+		orgName := "tw"
+		ts, _, repo := createOrgRepository([]testnet.TestRequest{rmOrgMemberRequest})
+		defer ts.Close()
+
+		err := repo.RmMember(orgName, userId)
 		Expect(err).To(BeNil())
 	})
 //
