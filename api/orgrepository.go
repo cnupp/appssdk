@@ -14,6 +14,7 @@ type OrgRepository interface {
 	AddMember(orgName string, userEmail string) (apiErr error)
 	RmMember(orgName string, userId string) (apiErr error)
 	GetApps(orgName string) (apps []AppModel, apiErr error)
+	AddApp(orgName string, appName string) (apiErr error)
 }
 
 
@@ -24,6 +25,10 @@ type CloudControllerOrgRepository struct {
 
 type AddMemberParams struct {
 	Email string `json:"email"`
+}
+
+type AddAppParams struct {
+	Name string `json:"name"`
 }
 
 func NewOrgRepository(config config.Reader, gateway net.Gateway) OrgRepository {
@@ -91,5 +96,18 @@ func (cc CloudControllerOrgRepository) RmMember(orgName string, userId string) (
 
 func (cc CloudControllerOrgRepository) GetApps(orgName string) (apps []AppModel, apiErr error) {
 	apiErr = cc.gateway.Get(fmt.Sprintf("/orgs/%s/apps", orgName), &apps)
+	return
+}
+
+func (cc CloudControllerOrgRepository) AddApp(orgName string, appName string) (apiErr error) {
+	params := AddAppParams{
+		Name: appName,
+	}
+	data, err := json.Marshal(params)
+	if err != nil {
+		apiErr = fmt.Errorf("Can not serilize the data")
+		return
+	}
+	_, apiErr = cc.gateway.Request("POST", fmt.Sprintf("/orgs/%s/apps", orgName), data)
 	return
 }
