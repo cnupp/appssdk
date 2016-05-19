@@ -79,5 +79,5 @@ func (cc CloudControllerOrgRepository) AddMember(orgName string, userEmail strin
 		return
 	}
 	_, apiErr = cc.gateway.Request("POST", fmt.Sprintf("/orgs/%s/members", orgName), data)
-	return 
+	return
 }
