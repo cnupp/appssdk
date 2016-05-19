@@ -268,13 +268,13 @@ var _ = Describe("Apps", func() {
 		ts, _, repo := createAppRepository([]testnet.TestRequest{getCollaboratorsRequest, getNoCollaboratorsRequest})
 		defer ts.Close()
 
-		users, err := repo.GetCollaborators("abc")
+		users, err := repo.GetCollaborators("bbc")
 		Expect(err).To(BeNil())
 		Expect(len(users)).To(Equal(1))
 		Expect(users[0].Id()).To(Equal(userId))
 		Expect(users).NotTo(BeNil())
 
-		users, err = repo.GetCollaborators("bbc")
+		users, err = repo.GetCollaborators("abc")
 		Expect(err).ShouldNot(BeNil())
 	})
 
