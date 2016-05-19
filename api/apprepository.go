@@ -25,6 +25,7 @@ type AppRepository interface {
 	AddCollaborator(appId string, param CreateCollaboratorParams) (error)
 	RemoveCollaborator(appId string, userId string) (error)
 	TransferToUser(appId string, email string) (error)
+	TransferToOrg(appId string, orgName string) (error)
 }
 
 
@@ -211,6 +212,20 @@ func (cc CloudControllerAppRepository) TransferToUser(appId string, userEmail st
 	params := TransferAppParams{
 		Owner: userEmail,
 		OwnerType: "User",
+	}
+	data, err := json.Marshal(params)
+	if err != nil {
+		return
+	}
+	_, err = cc.gateway.Request("PUT", fmt.Sprintf("/apps/%s/transferred", appId), data)
+
+	return err
+}
+
+func (cc CloudControllerAppRepository) TransferToOrg(appId string, orgName string) (err error) {
+	params := TransferAppParams{
+		Owner: orgName,
+		OwnerType: "Organization",
 	}
 	data, err := json.Marshal(params)
 	if err != nil {
