@@ -37,6 +37,15 @@ var _ = Describe("Apps", func() {
 			},
 		},
 	}
+
+	var addOrgMemberRequest = testnet.TestRequest{
+		Method: "POST",
+		Path: "/orgs/tw/members",
+		Response: testnet.TestResponse{
+			Status: 201,
+		},
+	}
+
 	var getOrgResponse = `
 	{
 	  "name": "tw-test",
@@ -123,6 +132,16 @@ var _ = Describe("Apps", func() {
 		defer ts.Close()
 
 		_, err := repo.GetOrgMembers("tw-test")
+		Expect(err).To(BeNil())
+	})
+
+	It("should add members", func() {
+		userEmail := "user@tw.com"
+		orgName := "tw"
+		ts, _, repo := createOrgRepository([]testnet.TestRequest{addOrgMemberRequest})
+		defer ts.Close()
+
+		err := repo.AddMember(orgName, userEmail)
 		Expect(err).To(BeNil())
 	})
 //

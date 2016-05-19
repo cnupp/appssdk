@@ -11,12 +11,17 @@ type OrgRepository interface {
 	Create(params OrgParams) (org Org, apiErr error)
 	GetOrg(name string) (Org, error)
 	GetOrgMembers(name string) (users []UserModel, apiErr error)
+	AddMember(orgName string, userEmail string) (apiErr error)
 }
 
 
 type CloudControllerOrgRepository struct {
 	config  config.Reader
 	gateway net.Gateway
+}
+
+type AddMemberParams struct {
+	Email string `json:"email"`
 }
 
 func NewOrgRepository(config config.Reader, gateway net.Gateway) OrgRepository {
@@ -62,4 +67,17 @@ func (cc CloudControllerOrgRepository) GetOrg(orgName string) (org Org, apiErr e
 func (cc CloudControllerOrgRepository) GetOrgMembers(orgName string) (users []UserModel, apiErr error) {
 	apiErr = cc.gateway.Get(fmt.Sprintf("/orgs/%s/members", orgName), &users)
 	return
+}
+
+func (cc CloudControllerOrgRepository) AddMember(orgName string, userEmail string) (apiErr error) {
+	params := AddMemberParams{
+		Email: userEmail,
+	}
+	data, err := json.Marshal(params)
+	if err != nil {
+		apiErr = fmt.Errorf("Can not serilize the data")
+		return
+	}
+	_, apiErr = cc.gateway.Request("POST", fmt.Sprintf("/orgs/%s/members", orgName), data)
+	return 
 }
