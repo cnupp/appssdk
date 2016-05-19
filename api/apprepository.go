@@ -21,7 +21,7 @@ type AppRepository interface {
 	SwitchStack(id string, params UpdateStackParams) (apiErr error)
 	GetLog(appId, buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermission(app App, userId string) (AppPermission, error)
-	GetCollaborators(appId string) ([]User, error)
+	GetCollaborators(appId string) ([]UserModel, error)
 	AddCollaborator(appId string, param CreateCollaboratorParams) (error)
 	RemoveCollaborator(appId string, userId string) (error)
 }
@@ -176,7 +176,7 @@ func (cc CloudControllerAppRepository) GetPermission(app App, userId string) (pe
 	return
 }
 
-func (cc CloudControllerAppRepository) GetCollaborators(appId string) (users []User, err error) {
+func (cc CloudControllerAppRepository) GetCollaborators(appId string) (users []UserModel, err error) {
 	err = cc.gateway.Get(fmt.Sprintf("/apps/%s/collaborators", appId), &users)
 	if err != nil {
 		return nil, err

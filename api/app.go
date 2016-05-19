@@ -39,7 +39,7 @@ type App interface {
 	SwitchStack(params UpdateStackParams) (error)
 	GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermissions(userId string) (AppPermission, error)
-	GetCollaborators() ([]User, error)
+	GetCollaborators() ([]UserModel, error)
 	AddCollaborator(param CreateCollaboratorParams) (error)
 	RemoveCollaborator(userId string) (error)
 }
@@ -297,7 +297,7 @@ func (app AppModel) GetPermissions(userId string) (AppPermission, error) {
 	return appPermission, err
 }
 
-func (app AppModel) GetCollaborators() ([]User, error) {
+func (app AppModel) GetCollaborators() ([]UserModel, error) {
 	users, err := app.AppMapper.GetCollaborators(app.Id())
 	return users, err
 }

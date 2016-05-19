@@ -21,7 +21,7 @@ var _ = Describe("App", func() {
 
 	var getAppPermissionRequest = testnet.TestRequest{
 		Method: "GET",
-		Path: "/apps/ketsu?user=abcd",
+		Path: "/apps/ketsu/permissions?user=abcd",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Body: getAppPermissionResponse,

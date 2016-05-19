@@ -46,7 +46,6 @@ var _ = Describe("Apps", func() {
 	]
 	`
 
-
 	var getCollaboratorsRequest = testnet.TestRequest{
 		Method: "GET",
 		Path:   "/apps/bbc/collaborators",
@@ -275,7 +274,7 @@ var _ = Describe("Apps", func() {
 		Expect(users).NotTo(BeNil())
 
 		users, err = repo.GetCollaborators("abc")
-		Expect(err).ShouldNot(BeNil())
+		Expect(err).Should(BeNil())
 	})
 
 	It("should able to create collaborator", func() {
