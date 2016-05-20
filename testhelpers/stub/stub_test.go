@@ -107,4 +107,36 @@ var _ = Describe("Stub", func() {
 
 		Expect(res.StatusCode).To(Equal(http.StatusNotFound))
 	})
+
+	It("should able to check the spy data", func() {
+		server, _ := NewStub([]TestRequest{
+			TestRequest{
+				Method: "PUT",
+				Path: "/path",
+				Matcher: func(r *http.Request) {
+					Expect(r.Header.Get("csrf")).To(Equal("csrf"))
+				},
+				Response: TestResponse{
+					Status: 200,
+					Header: http.Header{
+						"Content-Type": {"application/json"},
+						"Set-Cookie": {"cookie=cookie"},
+					},
+					Body: "content",
+				},
+			},
+		})
+
+		var body []byte;
+		req, err := http.NewRequest("PUT", server.URL + "/path", bytes.NewBuffer(body))
+		req.Header.Add("csrf", "csrf")
+		Expect(err).To(BeNil())
+
+		client := http.Client{}
+
+		res, err := client.Do(req)
+		Expect(err).To(BeNil())
+
+		Expect(res.StatusCode).To(Equal(http.StatusOK))
+	})
 })

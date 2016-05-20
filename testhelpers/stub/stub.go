@@ -41,6 +41,10 @@ func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	matched := request[0]
 
+	if (matched.Matcher != nil) {
+		matched.Matcher(r)
+	}
+
 	for key, values := range matched.Response.Header {
 		for _, value := range values {
 			w.Header().Add(key, value)
