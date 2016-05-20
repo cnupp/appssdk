@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"github.com/onsi/ginkgo"
+	"fmt"
 )
 
 type TestRequest struct {
@@ -23,12 +24,36 @@ type TestResponse struct {
 }
 
 type TestHandler struct {
-	Requests  []TestRequest
+	Requests []TestRequest
 }
 
 func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer ginkgo.GinkgoRecover()
 
+	request := Filter(h.Requests, func(tq TestRequest) bool {
+		return tq.Method == r.Method;
+	})
+
+	matched := request[0]
+
+	for key, values := range matched.Response.Header {
+		for _, value := range values {
+			w.Header().Add(key, value)
+		}
+	}
+
+	w.WriteHeader(matched.Response.Status)
+	fmt.Fprint(w, matched.Response.Body)
+}
+
+func Filter(vs []TestRequest, f func(tq TestRequest) bool) []TestRequest {
+	vsf := make([]TestRequest, 0)
+	for _, v := range vs {
+		if f(v) {
+			vsf = append(vsf, v)
+		}
+	}
+	return vsf
 }
 
 func NewStub(requests []TestRequest) (*httptest.Server, *TestHandler) {
