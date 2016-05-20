@@ -171,7 +171,7 @@ var _ = Describe("App", func() {
 	var getRoutesResponse = `
 	{
 	  "count": 2,
-	  "self": "/apps/ketsu/routes",
+	  "self": "/apps/ketsu/routes?page=1&per_page=30",
 	  "first": "/apps/ketsu/routes?page=1&per_page=30",
 	  "last": "/apps/ketsu/routes?page=2&per_page=30",
 	  "prev": "",
@@ -273,7 +273,7 @@ var _ = Describe("App", func() {
 
 	var getRoutesOnNextPageWithAppRequest = testnet.TestRequest{
 		Method: "GET",
-		Path:   "/apps/ketsu/routes",
+		Path:   "/apps/ketsu/routes?page=2&per_page=30",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -308,7 +308,7 @@ var _ = Describe("App", func() {
 
 	var getAppBuildLog = testnet.TestRequest{
 		Method: "GET",
-		Path:   "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45/log",
+		Path:   "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45/log?lines=15&log_type=build&offset=0",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{

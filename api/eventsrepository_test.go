@@ -24,7 +24,7 @@ var _ = Describe("Eventsrepository", func() {
 
 	var rootEventsLatestPage = `
 	{
-  		"next": "",
+  	    "next": "",
   	    "last": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
   	    "prev": "/events?type=ReleaseSuccessEvent&page=1&per-page=1",
   	    "self": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
@@ -68,7 +68,7 @@ var _ = Describe("Eventsrepository", func() {
 
 	var rootEventsResponseFirstPage = `
 	{
-  		"next": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
+  	    "next": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
   	    "last": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
   	    "prev": "",
   	    "self": "/events?type=ReleaseSuccessEvent&page=1&per-page=1",
@@ -117,6 +117,16 @@ var _ = Describe("Eventsrepository", func() {
 			Body:   rootEventsLatestPage,
 		},
 	}
+
+	var secondRootEvents = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Body:   rootEventsLatestPage,
+		},
+	}
+
 	var firstRootEvents = testnet.TestRequest{
 		Method: "GET",
 		Path:   "/events?type=ReleaseSuccessEvent&page=1&per-page=1",
@@ -158,7 +168,7 @@ var _ = Describe("Eventsrepository", func() {
 		ts, handler, er := createEventRepository([]testnet.TestRequest{
 			latestRootEvents,
 			firstRootEvents,
-			latestRootEvents,
+			secondRootEvents,
 		})
 		defer ts.Close()
 
