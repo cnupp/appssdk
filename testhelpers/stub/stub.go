@@ -31,7 +31,7 @@ func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer ginkgo.GinkgoRecover()
 
 	request := Filter(h.Requests, func(tq TestRequest) bool {
-		return tq.Method == r.Method;
+		return tq.Method == r.Method && tq.Path == r.RequestURI;
 	})
 
 	matched := request[0]
