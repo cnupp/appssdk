@@ -8,7 +8,7 @@ test-unit: ginkgo
 
 ginkgo:
 	for i in $(SOURCES); do \
-		ginkgo -p $$i generic || exit 1;\
+		ginkgo -trace -keepGoing $$i || exit 1;\
 	done
 
 generate:
