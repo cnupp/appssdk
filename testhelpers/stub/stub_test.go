@@ -91,4 +91,20 @@ var _ = Describe("Stub", func() {
 		Expect(err).To(BeNil())
 		Expect(string(bodyInBytes)).To(Equal("anothercontent"))
 	})
+
+	It("should able to 404 when no request stub defined", func() {
+		server, _ := NewStub([]TestRequest{
+		})
+
+		var body []byte;
+		req, err := http.NewRequest("GET", server.URL + "/not-exists-path", bytes.NewBuffer(body))
+		Expect(err).To(BeNil())
+
+		client := http.Client{}
+
+		res, err := client.Do(req)
+		Expect(err).To(BeNil())
+
+		Expect(res.StatusCode).To(Equal(http.StatusNotFound))
+	})
 })

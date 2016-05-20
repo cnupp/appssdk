@@ -34,6 +34,11 @@ func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return tq.Method == r.Method && tq.Path == r.RequestURI;
 	})
 
+	if(len(request) == 0) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	matched := request[0]
 
 	for key, values := range matched.Response.Header {
