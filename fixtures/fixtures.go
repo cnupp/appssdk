@@ -137,7 +137,7 @@ func FailKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 	}
 }
 
-func SuccessKetsuVerify(matcher func(r *http.Request) ) testnet.TestRequest {
+func SuccessKetsuVerify(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
 		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/success",
@@ -464,7 +464,6 @@ func KetsuBuildLog() testnet.TestRequest {
 	}
 }
 
-
 func KaylaPermissionOnKetsu() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "GET",
@@ -476,6 +475,92 @@ func KaylaPermissionOnKetsu() testnet.TestRequest {
 			  "write": true,
 			  "read": false
 			}`,
+		},
+	}
+}
+
+func Domains() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "GET",
+		Path:   "/domains",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: `
+			{
+			  "count": 1,
+			  "self": "/domains?page=1&per_page=30",
+			  "first": "/domains?page=1&per_page=30",
+			  "last": "/domains?page=1&per_page=30",
+			  "prev": null,
+			  "next": null,
+			  "items": [
+				{
+				  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
+				  "name": "tw.com",
+				  "links": [
+					{
+					  "rel": "self",
+					  "uri": "/domains/tw.com"
+					}
+				  ]
+				}
+			  ]
+			}`,
+		},
+	}
+}
+
+func DomainDelete() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "DELETE",
+		Path:   "/domains/tw.com",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: "",
+		},
+	}
+}
+
+func DomainDetail() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "GET",
+		Path:   "/domains/tw.com",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: `
+			{
+			  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
+			  "name": "tw.com",
+			  "links": [
+				{
+				  "rel": "self",
+				  "uri": "/domains/tw.com"
+				}
+			  ]
+			}`,
+		},
+	}
+}
+
+func DomainCreate() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "POST",
+		Path:   "/domains",
+		Response: testnet.TestResponse{
+			Status: 201,
+			Header: http.Header{
+				"accept":   {"application/json"},
+				"Location": {"/domains/tw.com"},
+			},
 		},
 	}
 }
