@@ -123,10 +123,11 @@ func SuccessKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 	}
 }
 
-func FailKetsuBuild() testnet.TestRequest {
+func FailKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
 		Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/fail",
+		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{

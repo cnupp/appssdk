@@ -39,7 +39,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to fail the build", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.FailKetsuBuild(), fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.FailKetsuBuild(func(r *http.Request) { }), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
