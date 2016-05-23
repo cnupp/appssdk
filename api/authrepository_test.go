@@ -8,72 +8,12 @@ import (
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
-	"net/http"
 	"net/http/httptest"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("Auths", func() {
-	var getUserResponse = `
-	{
-	  "id": "47631d42-25d1-4fde-a8b5-02d94f0d616d",
-	  "email": "ketsu@thoughtworks.com",
-	  "links": [
-		{
-		  "rel": "self",
-		  "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d"
-		},
-		{
-		  "rel": "keys",
-		  "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d/keys"
-		}
-	  ]
-	}
-	`
-
-	var getAuthRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/auths",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getUserResponse,
-		},
-	}
-	var createAuthRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/auths",
-		Response: testnet.TestResponse{
-			Status: 201,
-			Header: http.Header{
-				"accept":   {"application/json"},
-				"Location": {"/auths/47631d42-25d1-4fde-a8b5-02d94f0d616d"},
-			},
-		},
-	}
-
-	var createFailedAuthRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/auths",
-		Response: testnet.TestResponse{
-			Status: 400,
-			Header: http.Header{
-				"accept": {"application/json"},
-			},
-			Body: "error",
-		},
-	}
-
-	var deleteAuthRequest = testnet.TestRequest{
-		Method: "DELETE",
-		Path:   "/auths/47631d42-25d1-4fde-a8b5-02d94f0d616d",
-		Response: testnet.TestResponse{
-			Status: 200,
-		},
-	}
-
-	var authId = "47631d42-25d1-4fde-a8b5-02d94f0d616d"
+	var authId = "47631d4225d14fdea8b502d94f0d616d"
 	var userEmail = "ketsu@thoughtworks.com"
 	var userPassword = "123456"
 
@@ -94,7 +34,7 @@ var _ = Describe("Auths", func() {
 	}
 
 	It("should able to get user by auth", func() {
-		ts, _, repo := createAuthRepository([]testnet.TestRequest{getAuthRequest})
+		ts, _, repo := createAuthRepository([]testnet.TestRequest{fixtures.Auths()})
 		defer ts.Close()
 
 		createdUser, err := repo.Get()
@@ -104,7 +44,7 @@ var _ = Describe("Auths", func() {
 	})
 
 	It("should able to create an authorization with correct user and password", func() {
-		ts, _, repo := createAuthRepository([]testnet.TestRequest{createAuthRequest})
+		ts, _, repo := createAuthRepository([]testnet.TestRequest{fixtures.Login()})
 		defer ts.Close()
 
 		createdAuth, err := repo.Create(defaultAuthParams())
@@ -114,7 +54,7 @@ var _ = Describe("Auths", func() {
 	})
 
 	It("should show error with wrong user password", func() {
-		ts, _, repo := createAuthRepository([]testnet.TestRequest{createFailedAuthRequest})
+		ts, _, repo := createAuthRepository([]testnet.TestRequest{fixtures.InvalidLogin()})
 		defer ts.Close()
 
 		createdAuth, err := repo.Create(defaultAuthParams())
@@ -123,7 +63,7 @@ var _ = Describe("Auths", func() {
 	})
 
 	It("should able to delete an authorization", func() {
-		ts, _, repo := createAuthRepository([]testnet.TestRequest{deleteAuthRequest})
+		ts, _, repo := createAuthRepository([]testnet.TestRequest{fixtures.Logout()})
 		defer ts.Close()
 
 		err := repo.Delete(authId)
