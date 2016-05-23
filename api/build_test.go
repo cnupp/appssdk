@@ -25,7 +25,7 @@ var _ = Describe("Build", func() {
 	}
 
 	It("should able to success the build", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }),fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {}), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -39,7 +39,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to fail the build", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.FailKetsuBuild(func(r *http.Request) { }), fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.FailKetsuBuild(func(r *http.Request) {}), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -52,7 +52,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to set verify success", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }), fixtures.SuccessKetsuVerify(), fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {}), fixtures.SuccessKetsuVerify(func(r *http.Request) {}), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -67,7 +67,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to set verify fail", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }), fixtures.FailKetsuVerify(), fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {}), fixtures.FailKetsuVerify(func(r *http.Request) {}), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{

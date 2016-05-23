@@ -137,10 +137,11 @@ func FailKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 	}
 }
 
-func SuccessKetsuVerify() testnet.TestRequest {
+func SuccessKetsuVerify(matcher func(r *http.Request) ) testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
 		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/success",
+		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -150,10 +151,11 @@ func SuccessKetsuVerify() testnet.TestRequest {
 	}
 }
 
-func FailKetsuVerify() testnet.TestRequest {
+func FailKetsuVerify(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
 		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/fail",
+		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
