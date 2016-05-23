@@ -128,11 +128,11 @@ var getAppBuildResponse = `
   "links": [
 	{
 	  "rel": "self",
-	  "uri": "http://cde.tw.com/build/apps/demoapp/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"
+	  "uri": "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"
 	},
 	{
 	  "rel": "app",
-	  "uri": "http://cde.tw.com/build/apps/demoapp"
+	  "uri": "/apps/ketsu"
 	}
   ],
   "id": "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",

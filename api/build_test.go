@@ -78,17 +78,65 @@ var _ = Describe("Build", func() {
 	  "links": [
 		{
 		  "rel": "self",
-		  "uri": "http://cde.tw.com/build/apps/demoapp/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"
+		  "uri": "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"
 		},
 		{
 		  "rel": "app",
-		  "uri": "http://cde.tw.com/build/apps/demoapp"
+		  "uri": "/apps/ketsu"
 		}
 	  ],
 	  "id": "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",
 	  "status": "NEW"
 	}
 	`
+
+	var getAppResponse = `
+		{
+		  "id": "b78dba518daf4fe99345c7ab582c3387",
+		  "name": "ketsu",
+		  "memory": 30,
+		  "disk": 30,
+		  "instances": 1,
+		  "links": [
+			{
+			  "rel": "self",
+			  "uri": "/apps/ketsu"
+			},
+			{
+			  "rel": "env",
+			  "uri": "/apps/ketsu/env"
+			},
+			{
+			  "rel": "routes",
+			  "uri": "/apps/ketsu/routes"
+			},
+			{
+			  "rel": "builds",
+			  "uri": "/apps/ketsu/builds"
+			},
+			{
+			  "rel": "releases",
+			  "uri": "/apps/ketsu/releases"
+			},
+			{
+			  "rel": "stack",
+			  "uri": "/stacks/javajersey"
+			}
+		  ]
+		}
+		`
+
+	var getAppRequest = testnet.TestRequest{
+		Method: "GET",
+		Path:   "/apps/ketsu",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: getAppResponse,
+		},
+	}
 
 	var getAppBuildRequest = testnet.TestRequest{
 		Method: "GET",
@@ -103,7 +151,7 @@ var _ = Describe("Build", func() {
 	}
 
 	It("should able to success the build", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, successBuildRequest})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, successBuildRequest,getAppRequest})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -117,7 +165,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to fail the build", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, failBuildRequest})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, failBuildRequest, getAppRequest})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -130,7 +178,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to set verify success", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, successBuildRequest, successVerifyRequest})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, successBuildRequest, successVerifyRequest, getAppRequest})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -145,7 +193,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to set verify fail", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, successBuildRequest, failVerifyRequest})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{getAppBuildRequest, successBuildRequest, failVerifyRequest, getAppRequest})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{

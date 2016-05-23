@@ -1,4 +1,5 @@
 package api
+
 import "fmt"
 
 type Build interface {
@@ -35,6 +36,7 @@ type BuildModel struct {
 	LinksField  []Link    `json:"links"`
 	AppField    App          `json:"-"`
 	BuildMapper BuildMapper `json:"-"`
+	Resource    Resource `json:"-"`
 }
 
 type BuildRef struct {
@@ -119,7 +121,15 @@ func (bm BuildModel) Success() (apiErr error) {
 }
 
 func (bm BuildModel) GetApp() App {
-	return bm.AppField.(App)
+	link, err := bm.Links().Link("app")
+	if err != nil {
+		return AppModel{}
+	}
+	model, err := bm.Resource.GetResourceByURI(link.URI)
+	if err != nil {
+		return AppModel{}
+	}
+	return model.(App)
 }
 
 func (bm BuildModel) Fail() (error) {

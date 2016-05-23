@@ -76,8 +76,8 @@ func (bm DefaultBuildMapper) GetBuild(app App, id string) (build Build, apiErr e
 	if apiErr != nil {
 		return
 	}
-	buildModel.AppField = app
 	buildModel.BuildMapper = NewBuildMapper(bm.config, bm.gateway)
+	buildModel.Resource = NewResource(bm.config, bm.gateway)
 	build = buildModel
 	return
 }
