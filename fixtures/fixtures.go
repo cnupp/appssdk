@@ -60,7 +60,7 @@ func KetsuBuilds() testnet.TestRequest {
 			    {
 			      "created": "1451953908",
 			      "git_sha": "60bc43aa",
-			      "id": "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",
+			      "id": "86e03fc8b63941669a20dbae948bdfc8",
 			      "status": "NEW",
 			      "app": {
 				"name": "ketsu"
@@ -68,7 +68,7 @@ func KetsuBuilds() testnet.TestRequest {
 			      "links": [
 				{
 				  "rel": "self",
-				  "uri": "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"
+				  "uri": "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8"
 				},
 				{
 				  "rel": "app",
@@ -86,6 +86,46 @@ func SuccessKetsuBuild() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
 		Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/success",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+		},
+	}
+}
+
+func FailKetsuBuild() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "PUT",
+		Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/fail",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+		},
+	}
+}
+
+
+func SuccessKetsuVerify() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "PUT",
+		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/success",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+		},
+	}
+}
+
+func FailKetsuVerify() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "PUT",
+		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/fail",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -162,7 +202,7 @@ func AppList() testnet.TestRequest {
 			  "next": null,
 			  "items": [
 				{
-				  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
+				  "id": "b78dba518daf4fe99345c7ab582c3387",
 				  "name": "ketsu",
 				  "links": [
 					{
@@ -187,7 +227,7 @@ func AppList() testnet.TestRequest {
 					},
 					{
 					  "rel": "stack",
-					  "uri": "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6"
+					  "uri": "/stacks/74a052c976b344a1ac0b666faa1223b6"
 					}
 				  ]
 				}
