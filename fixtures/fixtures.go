@@ -3,6 +3,8 @@ package fixtures
 import (
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http"
+	"fmt"
+	"net/url"
 )
 
 func KetsuBuild() testnet.TestRequest {
@@ -498,7 +500,7 @@ func Domains() testnet.TestRequest {
 			  "next": null,
 			  "items": [
 				{
-				  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
+				  "id": "b78dba518daf4fe99345c7ab582c3387",
 				  "name": "tw.com",
 				  "links": [
 					{
@@ -538,7 +540,7 @@ func DomainDetail() testnet.TestRequest {
 			},
 			Body: `
 			{
-			  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
+			  "id": "b78dba518daf4fe99345c7ab582c3387",
 			  "name": "tw.com",
 			  "links": [
 				{
@@ -564,3 +566,180 @@ func DomainCreate() testnet.TestRequest {
 		},
 	}
 }
+
+func Events(eventType string) testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "GET",
+		Path:   fmt.Sprintf("/events?type=%s", eventType),
+		Response: testnet.TestResponse{
+			Status: 200,
+			Body:   Render(`
+			{
+			    "self": "/events?page=2&per-page=1&type={{.Type}}",
+			    "first": "/events?page=1&per-page=1&type={{.Type}}",
+			    "last": "/events?page=2&per-page=1&type={{.Type}}",
+			    "prev": "/events?page=1&per-page=1&type={{.Type}}",
+			    "next": "",
+			    "count": 2,
+			    "items": [
+			      {
+				"id": "2",
+				"type": "{{.Type}}",
+				"content": {
+				  "createdAt": 1453274984000,
+				  "release": {
+				    "createdAt": 1453274984000,
+				    "application": {
+				      "name": "javajersey-api2",
+				      "id": "060113d0767946f090d7a3a21b3008d2"
+				    },
+				    "envs": {},
+				    "links": [
+				      {
+					"rel": "self",
+					"uri": "/apps/javajersey-api2/releases/1453274984822"
+				      },
+				      {
+					"rel": "app",
+					"uri": "/apps/javajersey-api2"
+				      },
+				      {
+					"rel": "build",
+					"uri": "/apps/javajersey-api2/builds/86e03fc8b63941669a20dbae948bdfc8"
+				      }
+				    ],
+				    "id": "1453274984822",
+				    "version": 0
+				  }
+				}
+			      }
+			    ]
+			    }
+			`, map[string]string{"Type": eventType}),
+		},
+	}
+}
+
+func EventsOnPage(eventType string, total, page, perPage int) testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "GET",
+		Path:   fmt.Sprintf("/events?page=%d&per-page=%d&type=%s", page, perPage, eventType),
+		Response: testnet.TestResponse{
+			Status: 200,
+			Body:   Render(`
+			{
+			    "self": "{{.Self}}",
+			    "first": "{{.First}}",
+			    "last": "{{.Last}}",
+			    "prev": "{{.Prev}}",
+			    "next": "{{.Next}}",
+			    "count": {{.Total}},
+			    "items": [
+			      {
+				"id": "2",
+				"type": "{{.Type}}",
+				"content": {
+				  "createdAt": 1453274984000,
+				  "release": {
+				    "createdAt": 1453274984000,
+				    "application": {
+				      "name": "javajersey-api2",
+				      "id": "060113d0767946f090d7a3a21b3008d2"
+				    },
+				    "envs": {},
+				    "links": [
+				      {
+					"rel": "self",
+					"uri": "/apps/javajersey-api2/releases/1453274984822"
+				      },
+				      {
+					"rel": "app",
+					"uri": "/apps/javajersey-api2"
+				      },
+				      {
+					"rel": "build",
+					"uri": "/apps/javajersey-api2/builds/86e03fc8b63941669a20dbae948bdfc8"
+				      }
+				    ],
+				    "id": "1453274984822",
+				    "version": 0
+				  }
+				}
+			      }
+			    ]
+			    }
+			`, map[string]string{
+				"Type": eventType,
+				"Self": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Self,
+				"First": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).First,
+				"Last": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Last,
+				"Prev": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Prev,
+				"Next": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Next,
+				"Total": fmt.Sprintf("%d", total),
+			}),
+		},
+	}
+}
+
+type Page struct {
+	First string
+	Last  string
+	Prev  string
+	Next  string
+	Self  string
+}
+
+func PageGenerator(prefix string, total, page, perPage int) Page {
+	uri := func(page, perPage int) string {
+		u, _ := url.Parse(prefix)
+		query := u.Query()
+		query.Set("type", fmt.Sprintf("%s", query.Get("type")))
+		query.Add("page", fmt.Sprintf("%d", page))
+		query.Add("per-page", fmt.Sprintf("%d", perPage))
+		u.RawQuery = query.Encode()
+		return u.String()
+	}
+
+	var last = func() string {
+		last := (total / perPage) + 1
+		return uri(last, perPage)
+	}
+
+	var first = func() string {
+		return uri(1, perPage)
+	}
+
+	var self = func() string {
+		return uri(page, perPage)
+	}
+
+	var next = func() string {
+		last := (total / perPage) + 1
+		next := page + 1
+		if (next >= last) {
+			return ""
+		} else {
+			return uri(next, perPage)
+		}
+	}
+
+	var prev = func() string {
+		prev := page - 1
+		if (prev <= 1) {
+			return ""
+		} else {
+			return uri(prev, perPage)
+		}
+	}
+
+	return Page{
+		Self: self(),
+		First: first(),
+		Last: last(),
+		Prev: prev(),
+		Next: next(),
+	}
+}
+
+
+

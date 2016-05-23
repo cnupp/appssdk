@@ -36,7 +36,7 @@ var _ = Describe("Domains", func() {
 
 		createdDomain, err := repo.Create(defaultDomainParams())
 		Expect(err).To(BeNil())
-		Expect(createdDomain.Id()).To(Equal("b78dba51-8daf-4fe9-9345-c7ab582c3387"))
+		Expect(createdDomain.Id()).To(Equal("b78dba518daf4fe99345c7ab582c3387"))
 		Expect(createdDomain.Name()).To(Equal("tw.com"))
 	})
 
@@ -46,7 +46,7 @@ var _ = Describe("Domains", func() {
 
 		createdDomain, err := repo.GetDomain("tw.com")
 		Expect(err).To(BeNil())
-		Expect(createdDomain.Id()).To(Equal("b78dba51-8daf-4fe9-9345-c7ab582c3387"))
+		Expect(createdDomain.Id()).To(Equal("b78dba518daf4fe99345c7ab582c3387"))
 		Expect(createdDomain.Name()).To(Equal("tw.com"))
 	})
 
@@ -57,7 +57,7 @@ var _ = Describe("Domains", func() {
 		createdDomains, err := repo.GetDomains()
 		Expect(err).To(BeNil())
 		Expect(createdDomains.Count()).To(Equal(1))
-		Expect(createdDomains.Items()[0].Id()).To(Equal("b78dba51-8daf-4fe9-9345-c7ab582c3387"))
+		Expect(createdDomains.Items()[0].Id()).To(Equal("b78dba518daf4fe99345c7ab582c3387"))
 		Expect(createdDomains.Items()[0].Name()).To(Equal("tw.com"))
 		Expect(createdDomains.Items()[0].Links()).NotTo(BeNil())
 	})

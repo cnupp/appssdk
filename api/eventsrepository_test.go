@@ -10,6 +10,7 @@ import (
 	. "github.com/sjkyspa/stacks/controller/api/testhelpers/matchers"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http/httptest"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("Eventsrepository", func() {
@@ -22,119 +23,9 @@ var _ = Describe("Eventsrepository", func() {
 		return
 	}
 
-	var rootEventsLatestPage = `
-	{
-  	    "next": "",
-  	    "last": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
-  	    "prev": "/events?type=ReleaseSuccessEvent&page=1&per-page=1",
-  	    "self": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
-  	    "count": 2,
-  	    "items": [
-  	      {
-  	        "id": "2",
-  	        "type": "ReleaseSuccessEvent",
-  	        "content": {
-  	          "createdAt": 1453274984000,
-  	          "release": {
-  	            "createdAt": 1453274984000,
-  	            "application": {
-  	              "name": "javajersey-api2",
-  	              "id": "060113d0-7679-46f0-90d7-a3a21b3008d2"
-  	            },
-  	            "envs": {},
-  	            "links": [
-  	              {
-  	                "rel": "self",
-  	                "uri": "/apps/javajersey-api2/releases/1453274984822"
-  	              },
-  	              {
-  	                "rel": "app",
-  	                "uri": "/apps/javajersey-api2"
-  	              },
-  	              {
-  	                "rel": "build",
-  	                "uri": "/apps/javajersey-api2/builds/3ff77dab-9d97-4a53-a13c-1b61958b3d7b"
-  	              }
-  	            ],
-  	            "id": "1453274984822",
-  	            "version": 0
-  	          }
-  	        }
-  	      }
-  	    ],
-  	    "first": "/events?type=ReleaseSuccessEvent&page=1&per-page=1"
-	    }
-	`
-
-	var rootEventsResponseFirstPage = `
-	{
-  	    "next": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
-  	    "last": "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
-  	    "prev": "",
-  	    "self": "/events?type=ReleaseSuccessEvent&page=1&per-page=1",
-  	    "count": 2,
-  	    "items": [
-  	      {
-  	        "id": "1",
-  	        "type": "ReleaseSuccessEvent",
-  	        "content": {
-  	          "createdAt": 1453274984000,
-  	          "release": {
-  	            "createdAt": 1453274984000,
-  	            "application": {
-  	              "name": "javajersey-api2",
-  	              "id": "060113d0-7679-46f0-90d7-a3a21b3008d2"
-  	            },
-  	            "envs": {},
-  	            "links": [
-  	              {
-  	                "rel": "self",
-  	                "uri": "/apps/javajersey-api2/releases/1453274984822"
-  	              },
-  	              {
-  	                "rel": "app",
-  	                "uri": "/apps/javajersey-api2"
-  	              },
-  	              {
-  	                "rel": "build",
-  	                "uri": "/apps/javajersey-api2/builds/3ff77dab-9d97-4a53-a13c-1b61958b3d7b"
-  	              }
-  	            ],
-  	            "id": "1453274984822",
-  	            "version": 0
-  	          }
-  	        }
-  	      }
-  	    ],
-  	    "first": "/events?type=ReleaseSuccessEvent&page=1&per-page=1"
-	}
-	`
-	var latestRootEvents = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/events?type=ReleaseSuccessEvent",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Body:   rootEventsLatestPage,
-		},
-	}
-
-	var secondRootEvents = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/events?type=ReleaseSuccessEvent&page=2&per-page=1",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Body:   rootEventsLatestPage,
-		},
-	}
-
-	var firstRootEvents = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/events?type=ReleaseSuccessEvent&page=1&per-page=1",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Body:   rootEventsResponseFirstPage,
-		},
-	}
+	var latestRootEvents = fixtures.Events("ReleaseSuccessEvent")
+	var rootEventsSecondPage = fixtures.EventsOnPage("ReleaseSuccessEvent", 2, 2, 1)
+	var rootEventsFirstPage = fixtures.EventsOnPage("ReleaseSuccessEvent", 2, 1, 1)
 
 	It("should able to get latest the events", func() {
 		ts, handler, er := createEventRepository([]testnet.TestRequest{
@@ -154,10 +45,9 @@ var _ = Describe("Eventsrepository", func() {
 	It("should able to get prev page the events", func() {
 		ts, handler, er := createEventRepository([]testnet.TestRequest{
 			latestRootEvents,
-			firstRootEvents,
+			rootEventsFirstPage,
 		})
 		defer ts.Close()
-
 		events, _ := er.GetEvents("ReleaseSuccessEvent")
 		prev, _ := events.Prev()
 		Expect(handler).To(HaveAllRequestsCalled())
@@ -167,8 +57,8 @@ var _ = Describe("Eventsrepository", func() {
 	It("should able to get next events", func() {
 		ts, handler, er := createEventRepository([]testnet.TestRequest{
 			latestRootEvents,
-			firstRootEvents,
-			secondRootEvents,
+			rootEventsFirstPage,
+			rootEventsSecondPage,
 		})
 		defer ts.Close()
 
