@@ -35,8 +35,6 @@ func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if(len(request) == 0) {
-		fmt.Println(r.RequestURI)
-		fmt.Println(r.Method)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

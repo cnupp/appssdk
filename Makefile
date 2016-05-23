@@ -4,11 +4,7 @@ SOURCES := util api
 
 test: test-unit
 
-test-unit: ginkgo
-
-ginkgo:
-	for i in $(SOURCES); do \
-		ginkgo -trace -keepGoing $$i || exit 1;\
-	done
+test-unit:
+	ginkgo -r -trace -keepGoing . || exit 1;\
 
 generate:
