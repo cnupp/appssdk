@@ -15,7 +15,7 @@ var _ = Describe("Resource", func() {
 	Context("Authorized User", func() {
 		var buildRequest = testnet.TestRequest{
 			Method: "GET",
-			Path: "/apps/test/builds/86e03fc8b63941669a20dbae948bdfc8",
+			Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8",
 			Response: testnet.TestResponse{
 				Status: 200,
 				Header: http.Header{
@@ -32,11 +32,11 @@ var _ = Describe("Resource", func() {
 						"links": [
 							{
 								"rel": "self",
-								"uri": "/apps/test/builds/86e03fc8b63941669a20dbae948bdfc8"
+								"uri": "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8"
 							},
 							{
 								"rel": "app",
-								"uri": "/apps/test"
+								"uri": "/apps/ketsu"
 							}
 						],
 						"id": "86e03fc8b63941669a20dbae948bdfc8",
@@ -48,7 +48,7 @@ var _ = Describe("Resource", func() {
 
 		var putBuildRequest = testnet.TestRequest{
 			Method: "PUT",
-			Path: "/apps/test/builds/86e03fc8b63941669a20dbae948bdfc8/success",
+			Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/success",
 			Response: testnet.TestResponse{
 				Status: 200,
 				Header: http.Header{
@@ -60,30 +60,30 @@ var _ = Describe("Resource", func() {
 		var getAppResponse = `
 		{
 		  "id": "b78dba518daf4fe99345c7ab582c3387",
-		  "name": "test",
+		  "name": "ketsu",
 		  "memory": 30,
 		  "disk": 30,
 		  "instances": 1,
 		  "links": [
 			{
 			  "rel": "self",
-			  "uri": "/apps/test"
+			  "uri": "/apps/ketsu"
 			},
 			{
 			  "rel": "env",
-			  "uri": "/apps/test/env"
+			  "uri": "/apps/ketsu/env"
 			},
 			{
 			  "rel": "routes",
-			  "uri": "/apps/test/routes"
+			  "uri": "/apps/ketsu/routes"
 			},
 			{
 			  "rel": "builds",
-			  "uri": "/apps/test/builds"
+			  "uri": "/apps/ketsu/builds"
 			},
 			{
 			  "rel": "releases",
-			  "uri": "/apps/test/releases"
+			  "uri": "/apps/ketsu/releases"
 			},
 			{
 			  "rel": "stack",
@@ -95,7 +95,7 @@ var _ = Describe("Resource", func() {
 
 		var getAppRequest = testnet.TestRequest{
 			Method: "GET",
-			Path:   "/apps/test",
+			Path:   "/apps/ketsu",
 			Response: testnet.TestResponse{
 				Status: 200,
 				Header: http.Header{
@@ -105,20 +105,18 @@ var _ = Describe("Resource", func() {
 			},
 		}
 
-		requests := []testnet.TestRequest{
-			buildRequest, getAppRequest, putBuildRequest,
-		}
-
 		It("should able to get the build by the uri", func(done Done) {
-			ts, _ := testnet.NewServer(requests)
+			ts, _ := testnet.NewServer([]testnet.TestRequest{
+				buildRequest, getAppRequest, putBuildRequest,
+			})
 			defer ts.Close()
 
-			configRepo := testconfig.NewRepositoryWithDefaults()
+			configRepo := testconfig.NewConfigRepository()
 			configRepo.SetApiEndpoint(ts.URL)
 			configRepo.SetAuth("auth")
 			gateway := net.NewCloudControllerGateway(configRepo)
 
-			resource, err := NewResource(configRepo, gateway).GetResourceByURI("/apps/test/builds/86e03fc8b63941669a20dbae948bdfc8")
+			resource, err := NewResource(configRepo, gateway).GetResourceByURI("/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8")
 			Expect(err).To(BeNil())
 			Expect(resource).NotTo(BeNil())
 			Expect(resource.(Build).GitSha()).To(Equal("60bc43aa"))
