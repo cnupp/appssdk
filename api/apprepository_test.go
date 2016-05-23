@@ -8,217 +8,11 @@ import (
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
-	"net/http"
 	"net/http/httptest"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("Apps", func() {
-	var removeCollaboratorRequest = testnet.TestRequest{
-		Method: "DELETE",
-		Path:   "/apps/bbc/collaborators/abc",
-		Response: testnet.TestResponse{
-			Status: 204,
-		},
-	}
-	var createCollaboratorRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/apps/abc/collaborators",
-		Response: testnet.TestResponse{
-			Status: 201,
-			Header: http.Header{
-				"accept":   {"application/json"},
-				"Location": {"/apps/abc/collaborators/123"},
-			},
-		},
-	}
-	var getCollaboratorsResponse = `
-	[
-		{
-		  "id": "47631d42-25d1-4fde-a8b5-02d94f0d616d",
-		  "email": "ketsu@thoughtworks.com",
-		  "links": [
-			{
-			  "rel": "self",
-			  "uri": "/users/47631d42-25d1-4fde-a8b5-02d94f0d616d"
-			}
-		  ]
-		}
-	]
-	`
-
-	var getCollaboratorsRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/bbc/collaborators",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getCollaboratorsResponse,
-		},
-	}
-
-	var getNoCollaboratorsResponse = `
-	[
-	]
-	`
-
-	var getNoCollaboratorsRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/abc/collaborators",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getNoCollaboratorsResponse,
-		},
-	}
-
-	var createAppRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/apps",
-		Response: testnet.TestResponse{
-			Status: 201,
-			Header: http.Header{
-				"accept":   {"application/json"},
-				"Location": {"/apps/ketsu"},
-			},
-		},
-	}
-	var getAppResponse = `
-	{
-	  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
-	  "name": "ketsu",
-	  "memory": 30,
-	  "disk": 30,
-	  "instances": 1,
-	  "envs": {
-	    "ENV": "PRODUCTION"
-	  },
-	  "links": [
-		{
-		  "rel": "self",
-		  "uri": "/apps/ketsu"
-		},
-		{
-		  "rel": "env",
-		  "uri": "/apps/ketsu/env"
-		},
-		{
-		  "rel": "routes",
-		  "uri": "/apps/ketsu/routes"
-		},
-		{
-		  "rel": "builds",
-		  "uri": "/apps/ketsu/builds"
-		},
-		{
-		  "rel": "releases",
-		  "uri": "/apps/ketsu/releases"
-		},
-		{
-		  "rel": "stack",
-		  "uri": "/stacks/ketsu"
-		}
-	  ]
-	}
-	`
-
-	var getAppRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/ketsu",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getAppResponse,
-		},
-	}
-
-	var getAppsResponse = `
-	{
-	  "count": 2,
-	  "self": "/apps?page=1&per_page=30",
-	  "first": "/apps?page=1&per_page=30",
-	  "last": "/apps?page=1&per_page=30",
-	  "prev": null,
-	  "next": null,
-	  "items": [
-		{
-		  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
-		  "name": "ketsu",
-		  "links": [
-			{
-			  "rel": "self",
-			  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387"
-			},
-			{
-			  "rel": "env",
-			  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387/env"
-			},
-			{
-			  "rel": "routes",
-			  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387/routes"
-			},
-			{
-			  "rel": "builds",
-			  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387/builds"
-			},
-			{
-			  "rel": "releases",
-			  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387/releases"
-			},
-			{
-			  "rel": "stack",
-			  "uri": "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6"
-			}
-		  ]
-		}
-	  ]
-	}
-	`
-
-	var getAppsRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getAppsResponse,
-		},
-	}
-
-	var destroyAppRequest = testnet.TestRequest{
-		Method: "DELETE",
-		Path:   "/apps/ketsu",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-		},
-	}
-
-	var transferAppToUserRequest = testnet.TestRequest{
-		Method: "PUT",
-		Path: "/apps/appname/transferred",
-		Response: testnet.TestResponse{
-			Status: 204,
-		},
-	}
-
-	var transferAppToOrgRequest = testnet.TestRequest{
-		Method: "PUT",
-		Path: "/apps/appname/transferred",
-		Response: testnet.TestResponse{
-			Status: 204,
-		},
-	}
-
 	var createAppRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo AppRepository) {
 		ts, handler = testnet.NewServer(requests)
 		configRepo := testconfig.NewRepositoryWithDefaults()
@@ -238,7 +32,7 @@ var _ = Describe("Apps", func() {
 	}
 
 	It("should able to create an app", func() {
-		ts, _, repo := createAppRepository([]testnet.TestRequest{createAppRequest, getAppRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.KetsuCreate(), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		createdApp, err := repo.Create(defaultAppParams())
@@ -248,7 +42,7 @@ var _ = Describe("Apps", func() {
 	})
 
 	It("should able to get an app", func() {
-		ts, _, repo := createAppRepository([]testnet.TestRequest{getAppRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		createdApp, err := repo.GetApp("ketsu")
@@ -259,7 +53,7 @@ var _ = Describe("Apps", func() {
 	})
 
 	It("should able to get apps", func() {
-		ts, _, repo := createAppRepository([]testnet.TestRequest{getAppsRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.AppList()})
 		defer ts.Close()
 
 		createdApps, err := repo.GetApps()
@@ -270,7 +64,7 @@ var _ = Describe("Apps", func() {
 	})
 
 	It("should able to delete apps", func() {
-		ts, _, repo := createAppRepository([]testnet.TestRequest{destroyAppRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.KetsuDestroy()})
 		defer ts.Close()
 
 		err := repo.Delete("ketsu")
@@ -278,28 +72,28 @@ var _ = Describe("Apps", func() {
 	})
 
 	It("should able to get collaborators", func() {
-		userId := "47631d42-25d1-4fde-a8b5-02d94f0d616d"
+		userId := "47631d4225d14fdea8b502d94f0d616d"
 
-		ts, _, repo := createAppRepository([]testnet.TestRequest{getCollaboratorsRequest, getNoCollaboratorsRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.KetsuCollaborators(), fixtures.EmptyCollaborators()})
 		defer ts.Close()
 
-		users, err := repo.GetCollaborators("bbc")
+		users, err := repo.GetCollaborators("ketsu")
 		Expect(err).To(BeNil())
 		Expect(len(users)).To(Equal(1))
 		Expect(users[0].Id()).To(Equal(userId))
 		Expect(users).NotTo(BeNil())
 
-		users, err = repo.GetCollaborators("abc")
+		users, err = repo.GetCollaborators("empty")
 		Expect(err).Should(BeNil())
 	})
 
 	It("should able to create collaborator", func() {
 		userEmail := "test@tw.com"
 
-		ts, _, repo := createAppRepository([]testnet.TestRequest{createCollaboratorRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.CollaboratorsAdd()})
 		defer ts.Close()
 
-		err := repo.AddCollaborator("abc", CreateCollaboratorParams{
+		err := repo.AddCollaborator("ketsu", CreateCollaboratorParams{
 			Email: userEmail,
 		})
 		Expect(err).To(BeNil())
@@ -307,9 +101,9 @@ var _ = Describe("Apps", func() {
 
 	It("should able to remove collaborator", func() {
 		userId := "abc"
-		appId := "bbc"
+		appId := "ketsu"
 
-		ts, _, repo := createAppRepository([]testnet.TestRequest{removeCollaboratorRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.CollaboratorsRemove()})
 		defer ts.Close()
 
 		err := repo.RemoveCollaborator(appId, userId)
@@ -318,9 +112,9 @@ var _ = Describe("Apps", func() {
 
 	It("should able to transfer to other user", func() {
 		userEmail := "otheruser@tw.com"
-		appId := "appname"
+		appId := "ketsu"
 
-		ts, _, repo := createAppRepository([]testnet.TestRequest{transferAppToUserRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.KetsuTransferToUser()})
 		defer ts.Close()
 
 		err := repo.TransferToUser(appId, userEmail)
@@ -330,9 +124,9 @@ var _ = Describe("Apps", func() {
 
 	It("should able to transfer to org", func() {
 		orgName := "tw-test"
-		appId := "appname"
+		appId := "ketsu"
 
-		ts, _, repo := createAppRepository([]testnet.TestRequest{transferAppToOrgRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{fixtures.KetsuTransferToOrg()})
 		defer ts.Close()
 
 		err := repo.TransferToOrg(appId, orgName)

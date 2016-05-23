@@ -64,7 +64,7 @@ var _ = Describe("Resource", func() {
 			configRepo.SetAuth("auth")
 			gateway := net.NewCloudControllerGateway(configRepo)
 
-			resource, err := NewResource(configRepo, gateway).GetResourceByURI("/apps?page=1&per-page=30")
+			resource, err := NewResource(configRepo, gateway).GetResourceByURI("/apps")
 			Expect(err).To(BeNil())
 			Expect(resource).NotTo(BeNil())
 			Expect(resource.(Apps).Count()).To(Equal(2))

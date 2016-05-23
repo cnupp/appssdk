@@ -183,6 +183,9 @@ func KetsuDetail() testnet.TestRequest {
 			  "memory": 30,
 			  "disk": 30,
 			  "instances": 1,
+			  "envs": {
+			    "ENV": "PRODUCTION"
+			  },
 			  "links": [
 				{
 				  "rel": "self",
@@ -241,7 +244,7 @@ func KetsuStackDetail() testnet.TestRequest {
 func AppList() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "GET",
-		Path:   "/apps?page=1&per-page=30",
+		Path:   "/apps",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -722,6 +725,38 @@ func Keys() testnet.TestRequest {
 		},
 	}
 }
+
+func KetsuDestroy() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "DELETE",
+		Path:   "/apps/ketsu",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+		},
+	}
+}
+
+func KetsuTransferToUser() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "PUT",
+		Path: "/apps/ketsu/transferred",
+		Response: testnet.TestResponse{
+			Status: 204,
+		},
+	}
+}
+
+func KetsuTransferToOrg() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "PUT",
+		Path: "/apps/ketsu/transferred",
+		Response: testnet.TestResponse{
+			Status: 204,
+		},
+	}}
 
 type Page struct {
 	First string
