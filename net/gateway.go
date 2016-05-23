@@ -47,18 +47,6 @@ func (g *Gateway) Get(path string, value interface{}) (getErr error) {
 	return
 }
 
-func (g *Gateway) GetPlainResponse(path string) (response string, getErr error) {
-	res, err := g.request("GET", path, nil, "text/plain")
-	if err != nil {
-		getErr = err
-		return
-	}
-
-	bodyInBytes, err := ioutil.ReadAll(res.Body)
-	response = string(bodyInBytes)
-	return
-}
-
 func (g *Gateway) Delete(path string, value interface{}) (getErr error) {
 	res, err := g.Request("DELETE", path, nil)
 	if err != nil {
