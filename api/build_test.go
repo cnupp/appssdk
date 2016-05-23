@@ -11,6 +11,7 @@ import (
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http/httptest"
 	"github.com/sjkyspa/stacks/controller/api/fixtures"
+	"net/http"
 )
 
 var _ = Describe("Build", func() {
@@ -24,7 +25,7 @@ var _ = Describe("Build", func() {
 	}
 
 	It("should able to success the build", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(),fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }),fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -51,7 +52,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to set verify success", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(), fixtures.SuccessKetsuVerify(), fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }), fixtures.SuccessKetsuVerify(), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
@@ -66,7 +67,7 @@ var _ = Describe("Build", func() {
 	})
 
 	It("should able to set verify fail", func() {
-		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(), fixtures.FailKetsuVerify(), fixtures.KetsuDetail()})
+		ts, handler, buildMapper := createBuildMapper([]testnet.TestRequest{fixtures.KetsuBuild(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }), fixtures.FailKetsuVerify(), fixtures.KetsuDetail()})
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{

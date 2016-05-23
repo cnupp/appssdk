@@ -9,13 +9,14 @@ import (
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	"github.com/sjkyspa/stacks/controller/api/fixtures"
+	"net/http"
 )
 
 var _ = Describe("Resource", func() {
 	Context("Authorized User", func() {
 		It("should able to get the build by the uri", func(done Done) {
 			ts, _ := testnet.NewServer([]testnet.TestRequest{
-				fixtures.KetsuBuild(), fixtures.KetsuDetail(), fixtures.SuccessKetsuBuild(),
+				fixtures.KetsuBuild(), fixtures.KetsuDetail(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }),
 			})
 			defer ts.Close()
 

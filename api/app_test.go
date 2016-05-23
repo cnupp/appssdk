@@ -7,110 +7,25 @@ import (
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
-	"net/http"
 	"net/http/httptest"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("App", func() {
-	var getAppPermissionResponse = `
-	{
-	  "write": true,
-	  "read": false
-	}
-	`
+	var getAppPermissionRequest = fixtures.KaylaPermissionOnKetsu()
+	var createAppRequest = fixtures.KetsuCreate()
+	var getAppRequest = fixtures.KetsuDetail()
+	var getStackRequest = fixtures.KetsuStackDetail()
+	var getAppBuildRequest = fixtures.KetsuBuild()
+	var bindRouteWithAppRequest = fixtures.KetsuRoutesBind()
+	var getRoutesWithAppRequest = fixtures.KetsuRoutes()
+	var getRoutesOnNextPageWithAppRequest = fixtures.KetsuRoutesSecondPage()
+	var switchToAnotherStackRequest = fixtures.KetsuStackUpdate()
+	var getAppBuildLog = fixtures.KetsuBuildLog()
+	var unbindRouteWithAppRequest = fixtures.KetsuRoutesUnbind()
+	var createEnvRequest = fixtures.KetsuEnvCreate()
+	var deleteEnvRequest = fixtures.KetsuEnvUpdate()
 
-	var getAppPermissionRequest = testnet.TestRequest{
-		Method: "GET",
-		Path: "/apps/ketsu/permissions?user=abcd",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Body: getAppPermissionResponse,
-		},
-	}
-
-	var createAppRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/apps",
-		Response: testnet.TestResponse{
-			Status: 201,
-			Header: http.Header{
-				"accept":   {"application/json"},
-				"Location": {"/apps/ketsu"},
-			},
-		},
-	}
-	var getAppResponse = `
-	{
-	  "id": "b78dba51-8daf-4fe9-9345-c7ab582c3387",
-	  "name": "ketsu",
-	  "memory": 30,
-	  "disk": 30,
-	  "instances": 1,
-	  "links": [
-		{
-		  "rel": "self",
-		  "uri": "/apps/ketsu"
-		},
-		{
-		  "rel": "env",
-		  "uri": "/apps/ketsu/env"
-		},
-		{
-		  "rel": "routes",
-		  "uri": "/apps/ketsu/routes"
-		},
-		{
-		  "rel": "builds",
-		  "uri": "/apps/ketsu/builds"
-		},
-		{
-		  "rel": "releases",
-		  "uri": "/apps/ketsu/releases"
-		},
-		{
-		  "rel": "stack",
-		  "uri": "/stacks/javajersey"
-		}
-	  ]
-	}
-	`
-
-	var getAppRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/ketsu",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getAppResponse,
-		},
-	}
-
-	var getStackResponse = `
-	{
-        "id": "74a052c9-76b3-44a1-ac0b-666faa1223b6",
-        "name": "javajersey",
-        "links": [
-          {
-            "rel": "self",
-            "uri": "/stacks/javajersey"
-          }
-        ]
-	}
-	`
-
-	var getStackRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/stacks/javajersey",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getStackResponse,
-		},
-	}
 
 	var createAppRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo AppRepository) {
 		ts, handler = testnet.NewServer(requests)
@@ -143,210 +58,8 @@ var _ = Describe("App", func() {
 		}
 	}
 
-	var getAppBuildResponse = `
-	{
-	  "created": "1451953908",
-	  "git_sha": "60bc43aa",
-	  "id": "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",
-	  "status": "NEW",
-	  "app": {
-		"name": "ketsu"
-	  },
-	  "links": [
-		{
-		  "rel": "self",
-		  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"
-		},
-		{
-		  "rel": "app",
-		  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387"
-		},
-		{
-		  "rel": "verifies",
-		  "uri": "/apps/b78dba51-8daf-4fe9-9345-c7ab582c3387/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45/verifies"
-		}
-	  ]
-	}
-	`
-	var getRoutesResponse = `
-	{
-	  "count": 2,
-	  "self": "/apps/ketsu/routes?page=1&per_page=30",
-	  "first": "/apps/ketsu/routes?page=1&per_page=30",
-	  "last": "/apps/ketsu/routes?page=2&per_page=30",
-	  "prev": "",
-	  "next": "/apps/ketsu/routes?page=2&per_page=30",
-	  "items": [
-	    {
-	      "id": "8399de76-eeef-418d-a567-75253b03c4ec",
-	      "path": "/path",
-	      "domain": {
-	        "name": "deepi.cn"
-	      },
-	      "app": {
-	        "name": "ketsu"
-	      },
-	      "links": [
-	        {
-	          "rel": "self",
-	          "uri": "/apps/ketsu/routes/8399de76-eeef-418d-a567-75253b03c4ec"
-	        },
-	        {
-	          "rel": "app",
-	          "uri": "/apps/ketsu"
-	        }
-	      ]
-	    }
-	  ]
-	}
-
-	`
-
-	var getRoutesOnSecondPageResponse = `
-	{
-	  "count": 2,
-	  "self": "/apps/ketsu/routes?page=2&per_page=30",
-	  "first": "/apps/ketsu/routes?page=1&per_page=30",
-	  "last": "/apps/ketsu/routes?page=2&per_page=30",
-	  "prev": "/apps/ketsu/routes?page=1&per_page=30",
-	  "next": "",
-	  "items": [
-	    {
-	      "id": "8399de76-eeef-418d-a567-75253b03c4ec",
-	      "path": "/path",
-	      "domain": {
-	        "name": "deepi.cn"
-	      },
-	      "app": {
-	        "name": "ketsu"
-	      },
-	      "links": [
-	        {
-	          "rel": "self",
-	          "uri": "/apps/ketsu/routes/8399de76-eeef-418d-a567-75253b03c4ec"
-	        },
-	        {
-	          "rel": "app",
-	          "uri": "/apps/ketsu"
-	        }
-	      ]
-	    }
-	  ]
-	}
-	`
-
-	var getAppBuildRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getAppBuildResponse,
-		},
-	}
-
-	var bindRouteWithAppRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/apps/ketsu/routes",
-		Response: testnet.TestResponse{
-			Status: 201,
-			Header: http.Header{
-				"accept":   {"application/json"},
-				"Location": {"/apps/ketsu/routes/8399de76-eeef-418d-a567-75253b03c4ec"},
-			},
-		},
-	}
-
-	var getRoutesWithAppRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/ketsu/routes",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getRoutesResponse,
-		},
-	}
-
-	var getRoutesOnNextPageWithAppRequest = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/ketsu/routes?page=2&per_page=30",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: getRoutesOnSecondPageResponse,
-		},
-	}
-
-	var switchToAnotherStackRequest = testnet.TestRequest{
-		Method: "PUT",
-		Path:   "/apps/ketsu/switch-stack",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-		},
-	}
-
-	var logBody = `
-	{
-	  "total": 1,
-	  "size": 2,
-	  "items": [
-	    {
-	      "message": "init successful"
-	    }
-	  ]
-	}
-	`
-
-	var getAppBuildLog = testnet.TestRequest{
-		Method: "GET",
-		Path:   "/apps/ketsu/builds/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45/log?lines=15&log_type=build&offset=0",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-			Body: logBody,
-		},
-	}
-
-	var unbindRouteWithAppRequest = testnet.TestRequest{
-		Method: "DELETE",
-		Path:   "/apps/ketsu/routes/test.tw.com/path",
-		Response: testnet.TestResponse{
-			Status: 200,
-			Header: http.Header{
-				"Content-Type": {"application/json"},
-			},
-		},
-	}
-
-	var createEnvRequest = testnet.TestRequest{
-		Method: "POST",
-		Path:   "/apps/ketsu/env",
-		Response: testnet.TestResponse{
-			Status: 200,
-		},
-	}
-
-	var deleteEnvRequest = testnet.TestRequest{
-		Method: "PUT",
-		Path:   "/apps/ketsu/env",
-		Response: testnet.TestResponse{
-			Status: 200,
-		},
-	}
-
 	It("should able to get builds for app", func() {
-		ts, _, repo := createAppRepository([]testnet.TestRequest{createAppRequest, getAppRequest, getAppBuildsRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{createAppRequest, getAppRequest, fixtures.KetsuBuilds()})
 		defer ts.Close()
 
 		createdApp, err := repo.Create(defaultAppParams())
@@ -361,7 +74,7 @@ var _ = Describe("App", func() {
 		defer ts.Close()
 
 		createdApp, err := repo.Create(defaultAppParams())
-		build, err := createdApp.GetBuild("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45")
+		build, err := createdApp.GetBuild("86e03fc8b63941669a20dbae948bdfc8")
 		Expect(err).To(BeNil())
 		Expect(build.GitSha()).To(Equal("60bc43aa"))
 	})
@@ -371,20 +84,20 @@ var _ = Describe("App", func() {
 		defer ts.Close()
 
 		createdApp, err := repo.Create(defaultAppParams())
-		build, err := createdApp.GetBuildByURI("/apps/ketsu/1a5abd6c-49b6-4c6a-b47c-d75fedec0a45")
+		build, err := createdApp.GetBuildByURI("/apps/ketsu/86e03fc8b63941669a20dbae948bdfc8")
 		Expect(err).To(BeNil())
 		Expect(build.GitSha()).To(Equal("60bc43aa"))
 	})
 
 	It("should able to create one build for app", func() {
-		ts, _, repo := createAppRepository([]testnet.TestRequest{getAppRequest, createAppBuildRequest, getAppBuildRequest})
+		ts, _, repo := createAppRepository([]testnet.TestRequest{getAppRequest, fixtures.KetsuBuildCreate(), getAppBuildRequest})
 		defer ts.Close()
 
 		remoteApp, err := repo.GetApp("ketsu")
 		build, err := remoteApp.CreateBuild(defaultBuildParams())
 
 		Expect(err).To(BeNil())
-		Expect(build.Id()).To(Equal("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"))
+		Expect(build.Id()).To(Equal("86e03fc8b63941669a20dbae948bdfc8"))
 		Expect(build.GitSha()).To(Equal("60bc43aa"))
 	})
 
@@ -406,7 +119,7 @@ var _ = Describe("App", func() {
 		routes, err := remoteApp.GetRoutes()
 
 		Expect(err).To(BeNil())
-		Expect(routes.Count()).To(Equal(2))
+		Expect(routes.Count()).To(Equal(31))
 		Expect(routes.Items()[0].PathField).NotTo(BeNil())
 		Expect(routes.Items()[0].IDField).NotTo(BeNil())
 	})
@@ -420,7 +133,7 @@ var _ = Describe("App", func() {
 		routesOnSecondPage, err := routesOnFirstPage.Next()
 
 		Expect(err).To(BeNil())
-		Expect(routesOnSecondPage.Count()).To(Equal(2))
+		Expect(routesOnSecondPage.Count()).To(Equal(31))
 		Expect(routesOnSecondPage.Items()[0].PathField).NotTo(BeNil())
 		Expect(routesOnSecondPage.Items()[0].IDField).NotTo(BeNil())
 	})
@@ -499,7 +212,7 @@ var _ = Describe("App", func() {
 		app, err := repo.GetApp("ketsu")
 		Expect(err).To(BeNil())
 
-		log, err := app.GetLogForTests("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45", "build", 15, 0)
+		log, err := app.GetLogForTests("86e03fc8b63941669a20dbae948bdfc8", "build", 15, 0)
 		Expect(err).To(BeNil())
 		Expect(log.ItemsField[0].MessageField).To(Equal("init successful"))
 
