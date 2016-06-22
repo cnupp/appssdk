@@ -29,6 +29,7 @@ type StackStructure struct {
 type Stack interface {
 	Id() string
 	Name() string
+	Type() string
 	Links() Links
 	GetBuildImage() Image
 	GetVerifyImage() Image
@@ -42,6 +43,7 @@ type StackModel struct {
 	IDField    string `json:"id"`
 	NameField  string `json:"name"`
 	LinksField []Link `json:"links"`
+	TypeField  string `json:"type"`
 	Services   map[string]ServiceDefinition `json:"services"`
 	Template   Template `json:"template"`
 	StackMapper  StackRepository
@@ -53,6 +55,10 @@ func (a StackModel) Id() string {
 
 func (a StackModel) Name() string {
 	return a.NameField
+}
+
+func (s StackModel) Type() string {
+	return s.TypeField
 }
 
 func (a StackModel) Links() Links {

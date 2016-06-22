@@ -16,11 +16,8 @@ var _ = Describe("releases", func() {
 	It("should able to create an release for app", func() {
 		ts, _, mapper := createReleaseMapper([]testnet.TestRequest{createAppReleaseRequest, getAppReleaseRequest})
 		defer ts.Close()
-
 		_, err := mapper.Create(AppModel{
 			ID: "ketsu",
-		}, ReleaseParams{
-			BuildId: "2a5abd6c-49b6-4c6a-b47c-e72fedec0a43",
 		})
 
 		Expect(err).To(BeNil())

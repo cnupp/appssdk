@@ -172,7 +172,6 @@ type FakeAppRepository struct {
 	transferToOrgReturns struct {
 		result1 error
 	}
-	invocations map[string][][]interface{}
 }
 
 func (fake *FakeAppRepository) Create(params api.AppParams) (createdApp api.App, apiErr error) {
@@ -180,8 +179,6 @@ func (fake *FakeAppRepository) Create(params api.AppParams) (createdApp api.App,
 	fake.createArgsForCall = append(fake.createArgsForCall, struct {
 		params api.AppParams
 	}{params})
-	fake.guard("Create")
-	fake.invocations["Create"] = append(fake.invocations["Create"], []interface{}{params})
 	fake.createMutex.Unlock()
 	if fake.CreateStub != nil {
 		return fake.CreateStub(params)
@@ -215,8 +212,6 @@ func (fake *FakeAppRepository) GetApp(id string) (api.App, error) {
 	fake.getAppArgsForCall = append(fake.getAppArgsForCall, struct {
 		id string
 	}{id})
-	fake.guard("GetApp")
-	fake.invocations["GetApp"] = append(fake.invocations["GetApp"], []interface{}{id})
 	fake.getAppMutex.Unlock()
 	if fake.GetAppStub != nil {
 		return fake.GetAppStub(id)
@@ -248,8 +243,6 @@ func (fake *FakeAppRepository) GetAppReturns(result1 api.App, result2 error) {
 func (fake *FakeAppRepository) GetApps() (api.Apps, error) {
 	fake.getAppsMutex.Lock()
 	fake.getAppsArgsForCall = append(fake.getAppsArgsForCall, struct{}{})
-	fake.guard("GetApps")
-	fake.invocations["GetApps"] = append(fake.invocations["GetApps"], []interface{}{})
 	fake.getAppsMutex.Unlock()
 	if fake.GetAppsStub != nil {
 		return fake.GetAppsStub()
@@ -277,8 +270,6 @@ func (fake *FakeAppRepository) Delete(id string) (apiErr error) {
 	fake.deleteArgsForCall = append(fake.deleteArgsForCall, struct {
 		id string
 	}{id})
-	fake.guard("Delete")
-	fake.invocations["Delete"] = append(fake.invocations["Delete"], []interface{}{id})
 	fake.deleteMutex.Unlock()
 	if fake.DeleteStub != nil {
 		return fake.DeleteStub(id)
@@ -312,8 +303,6 @@ func (fake *FakeAppRepository) BindWithRoute(app api.App, params api.AppRoutePar
 		app    api.App
 		params api.AppRouteParams
 	}{app, params})
-	fake.guard("BindWithRoute")
-	fake.invocations["BindWithRoute"] = append(fake.invocations["BindWithRoute"], []interface{}{app, params})
 	fake.bindWithRouteMutex.Unlock()
 	if fake.BindWithRouteStub != nil {
 		return fake.BindWithRouteStub(app, params)
@@ -347,8 +336,6 @@ func (fake *FakeAppRepository) UnbindRoute(app api.App, routeId string) error {
 		app     api.App
 		routeId string
 	}{app, routeId})
-	fake.guard("UnbindRoute")
-	fake.invocations["UnbindRoute"] = append(fake.invocations["UnbindRoute"], []interface{}{app, routeId})
 	fake.unbindRouteMutex.Unlock()
 	if fake.UnbindRouteStub != nil {
 		return fake.UnbindRouteStub(app, routeId)
@@ -381,8 +368,6 @@ func (fake *FakeAppRepository) GetRoutes(app api.App) (routes api.AppRoutes, api
 	fake.getRoutesArgsForCall = append(fake.getRoutesArgsForCall, struct {
 		app api.App
 	}{app})
-	fake.guard("GetRoutes")
-	fake.invocations["GetRoutes"] = append(fake.invocations["GetRoutes"], []interface{}{app})
 	fake.getRoutesMutex.Unlock()
 	if fake.GetRoutesStub != nil {
 		return fake.GetRoutesStub(app)
@@ -416,8 +401,6 @@ func (fake *FakeAppRepository) GetRoutesByURI(uri string) (routes api.AppRoutes,
 	fake.getRoutesByURIArgsForCall = append(fake.getRoutesByURIArgsForCall, struct {
 		uri string
 	}{uri})
-	fake.guard("GetRoutesByURI")
-	fake.invocations["GetRoutesByURI"] = append(fake.invocations["GetRoutesByURI"], []interface{}{uri})
 	fake.getRoutesByURIMutex.Unlock()
 	if fake.GetRoutesByURIStub != nil {
 		return fake.GetRoutesByURIStub(uri)
@@ -452,8 +435,6 @@ func (fake *FakeAppRepository) SetEnv(app api.App, kvs map[string]interface{}) e
 		app api.App
 		kvs map[string]interface{}
 	}{app, kvs})
-	fake.guard("SetEnv")
-	fake.invocations["SetEnv"] = append(fake.invocations["SetEnv"], []interface{}{app, kvs})
 	fake.setEnvMutex.Unlock()
 	if fake.SetEnvStub != nil {
 		return fake.SetEnvStub(app, kvs)
@@ -482,18 +463,11 @@ func (fake *FakeAppRepository) SetEnvReturns(result1 error) {
 }
 
 func (fake *FakeAppRepository) UnsetEnv(app api.App, keys []string) error {
-	var keysCopy []string
-	if keys != nil {
-		keysCopy = make([]string, len(keys))
-		copy(keysCopy, keys)
-	}
 	fake.unsetEnvMutex.Lock()
 	fake.unsetEnvArgsForCall = append(fake.unsetEnvArgsForCall, struct {
 		app  api.App
 		keys []string
-	}{app, keysCopy})
-	fake.guard("UnsetEnv")
-	fake.invocations["UnsetEnv"] = append(fake.invocations["UnsetEnv"], []interface{}{app, keysCopy})
+	}{app, keys})
 	fake.unsetEnvMutex.Unlock()
 	if fake.UnsetEnvStub != nil {
 		return fake.UnsetEnvStub(app, keys)
@@ -527,8 +501,6 @@ func (fake *FakeAppRepository) SwitchStack(id string, params api.UpdateStackPara
 		id     string
 		params api.UpdateStackParams
 	}{id, params})
-	fake.guard("SwitchStack")
-	fake.invocations["SwitchStack"] = append(fake.invocations["SwitchStack"], []interface{}{id, params})
 	fake.switchStackMutex.Unlock()
 	if fake.SwitchStackStub != nil {
 		return fake.SwitchStackStub(id, params)
@@ -565,8 +537,6 @@ func (fake *FakeAppRepository) GetLog(appId string, buildId string, logType stri
 		lines   int64
 		offset  int64
 	}{appId, buildId, logType, lines, offset})
-	fake.guard("GetLog")
-	fake.invocations["GetLog"] = append(fake.invocations["GetLog"], []interface{}{appId, buildId, logType, lines, offset})
 	fake.getLogMutex.Unlock()
 	if fake.GetLogStub != nil {
 		return fake.GetLogStub(appId, buildId, logType, lines, offset)
@@ -601,8 +571,6 @@ func (fake *FakeAppRepository) GetPermission(app api.App, userId string) (api.Ap
 		app    api.App
 		userId string
 	}{app, userId})
-	fake.guard("GetPermission")
-	fake.invocations["GetPermission"] = append(fake.invocations["GetPermission"], []interface{}{app, userId})
 	fake.getPermissionMutex.Unlock()
 	if fake.GetPermissionStub != nil {
 		return fake.GetPermissionStub(app, userId)
@@ -636,8 +604,6 @@ func (fake *FakeAppRepository) GetCollaborators(appId string) ([]api.UserModel, 
 	fake.getCollaboratorsArgsForCall = append(fake.getCollaboratorsArgsForCall, struct {
 		appId string
 	}{appId})
-	fake.guard("GetCollaborators")
-	fake.invocations["GetCollaborators"] = append(fake.invocations["GetCollaborators"], []interface{}{appId})
 	fake.getCollaboratorsMutex.Unlock()
 	if fake.GetCollaboratorsStub != nil {
 		return fake.GetCollaboratorsStub(appId)
@@ -672,8 +638,6 @@ func (fake *FakeAppRepository) AddCollaborator(appId string, param api.CreateCol
 		appId string
 		param api.CreateCollaboratorParams
 	}{appId, param})
-	fake.guard("AddCollaborator")
-	fake.invocations["AddCollaborator"] = append(fake.invocations["AddCollaborator"], []interface{}{appId, param})
 	fake.addCollaboratorMutex.Unlock()
 	if fake.AddCollaboratorStub != nil {
 		return fake.AddCollaboratorStub(appId, param)
@@ -707,8 +671,6 @@ func (fake *FakeAppRepository) RemoveCollaborator(appId string, userId string) e
 		appId  string
 		userId string
 	}{appId, userId})
-	fake.guard("RemoveCollaborator")
-	fake.invocations["RemoveCollaborator"] = append(fake.invocations["RemoveCollaborator"], []interface{}{appId, userId})
 	fake.removeCollaboratorMutex.Unlock()
 	if fake.RemoveCollaboratorStub != nil {
 		return fake.RemoveCollaboratorStub(appId, userId)
@@ -742,8 +704,6 @@ func (fake *FakeAppRepository) TransferToUser(appId string, email string) error 
 		appId string
 		email string
 	}{appId, email})
-	fake.guard("TransferToUser")
-	fake.invocations["TransferToUser"] = append(fake.invocations["TransferToUser"], []interface{}{appId, email})
 	fake.transferToUserMutex.Unlock()
 	if fake.TransferToUserStub != nil {
 		return fake.TransferToUserStub(appId, email)
@@ -777,8 +737,6 @@ func (fake *FakeAppRepository) TransferToOrg(appId string, orgName string) error
 		appId   string
 		orgName string
 	}{appId, orgName})
-	fake.guard("TransferToOrg")
-	fake.invocations["TransferToOrg"] = append(fake.invocations["TransferToOrg"], []interface{}{appId, orgName})
 	fake.transferToOrgMutex.Unlock()
 	if fake.TransferToOrgStub != nil {
 		return fake.TransferToOrgStub(appId, orgName)
@@ -804,19 +762,6 @@ func (fake *FakeAppRepository) TransferToOrgReturns(result1 error) {
 	fake.transferToOrgReturns = struct {
 		result1 error
 	}{result1}
-}
-
-func (fake *FakeAppRepository) Invocations() map[string][][]interface{} {
-	return fake.invocations
-}
-
-func (fake *FakeAppRepository) guard(key string) {
-	if fake.invocations == nil {
-		fake.invocations = map[string][][]interface{}{}
-	}
-	if fake.invocations[key] == nil {
-		fake.invocations[key] = [][]interface{}{}
-	}
 }
 
 var _ api.AppRepository = new(FakeAppRepository)

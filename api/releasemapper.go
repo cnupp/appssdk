@@ -3,11 +3,10 @@ import (
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
 	"fmt"
-	"encoding/json"
 )
 
 type ReleaseMapper interface {
-	Create(app App, params ReleaseParams) (release Release, apiErr error)
+	Create(app App) (release Release, apiErr error)
 	GetReleases(app App) (releases Releases, apiErr error)
 	GetRelease(app App, id string) (release Release, apiErr error)
 	Success(release Release) (apiErr error)
@@ -26,14 +25,8 @@ func NewReleaseMapper(reader config.Reader, gateway net.Gateway) ReleaseMapper {
 	}
 }
 
-func (bm DefaultReleaseMapper) Create(app App, params ReleaseParams) (release Release, apiErr error) {
-	data, err := json.Marshal(params)
-	if err != nil {
-		apiErr = fmt.Errorf("Can not serilize the data")
-		return
-	}
-
-	res, err := bm.gateway.Request("POST", fmt.Sprintf("/apps/%s/releases", app.Id()), data)
+func (bm DefaultReleaseMapper) Create(app App) (release Release, apiErr error) {
+	res, err := bm.gateway.Request("POST", fmt.Sprintf("/apps/%s/releases", app.Id()), []byte("{}"))
 	if err != nil {
 		apiErr = err
 		return
