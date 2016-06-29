@@ -50,6 +50,7 @@ var _ = Describe("Apps", func() {
 		Expect(createdApp.Id()).To(Equal("ketsu"))
 		Expect(createdApp.GetEnvs()["ENV"]).To(Equal("PRODUCTION"))
 		Expect(createdApp.Links()).NotTo(BeNil())
+		Expect(createdApp.Links().Self()).NotTo(BeNil())
 	})
 
 	It("should able to get apps", func() {
