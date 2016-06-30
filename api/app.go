@@ -44,10 +44,12 @@ type App interface {
 	RemoveCollaborator(userId string) (error)
 	TransferToOrg(orgName string) (error)
 	TransferToUser(userEmail string) (error)
+	NeedDeploy() (bool)
 }
 
 type AppModel struct {
 	ID              string     `json:"name"`
+	NeedDeployField bool `json:"needDeploy"`
 	Envs            map[string]string `json:"envs"`
 	LinksArray      []Link     `json:"links"`
 	BuildMapper     BuildMapper
@@ -76,6 +78,10 @@ func (a AppModel) UnsetEnv(keys []string) (err error) {
 
 func (a AppModel) Id() string {
 	return a.ID
+}
+
+func (a AppModel) NeedDeploy() bool {
+	return a.NeedDeployField
 }
 
 func (a AppModel) Links() Links {

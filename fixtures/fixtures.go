@@ -186,6 +186,7 @@ func KetsuDetail() testnet.TestRequest {
 			  "envs": {
 			    "ENV": "PRODUCTION"
 			  },
+			  "needDeploy": true,
 			  "links": [
 				{
 				  "rel": "self",
