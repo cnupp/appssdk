@@ -6,15 +6,36 @@ type Image struct {
 	Cpus float64 `json:"cpus"`
 }
 
-type Meta struct {
-	VerifyImageField  Image `json:"verify"`
-	BuildImageField   Image `json:"build"`
-	TemplateCodeField string `json:"template"`
+type ServiceDefinition struct {
+	Build   Image `json:"build"`
+	Verify  Image `json:"verify"`
+	Env     map[string]string `json:"environment"`
+	Links   []string `json:"links"`
+	Health  []HealthCheck `json:"health"`
+	Volumes []Volume `json:"volumes"`
+	Exposes int `json:"expose"`
 }
 
-type ServiceDefinition struct {
-	Build  Image `json:"build"`
-	Verify Image `json:"verify"`
+func (sd ServiceDefinition) GetLinks() []string {
+	return sd.Links
+}
+
+func (sd ServiceDefinition) GetEnv() map[string]string {
+	return sd.Env
+}
+
+func (sd ServiceDefinition) GetVolumes() []Volume {
+	return sd.Volumes
+}
+
+func (sd ServiceDefinition) GetHealthChecks() []HealthCheck {
+	return sd.Health
+}
+
+func (sd ServiceDefinition) GetExpose() []int {
+	exposes := make([]int, 1)
+	exposes[0] = sd.Exposes
+	return exposes
 }
 
 type Template struct {
@@ -22,8 +43,22 @@ type Template struct {
 	URI  string `json:"uri"`
 }
 
-type StackStructure struct {
+type Volume struct {
+	ContainerPath string `json:"container"`
+	HostPath      string `json:"host"`
+	Mode          string `json:"mode"`
+}
 
+type HealthCheck struct {
+
+}
+
+type Service interface {
+	GetEnv() map[string]string
+	GetVolumes() []Volume
+	GetLinks() []string
+	GetHealthChecks() []HealthCheck
+	GetExpose() []int
 }
 
 type Stack interface {
@@ -34,19 +69,20 @@ type Stack interface {
 	GetBuildImage() Image
 	GetVerifyImage() Image
 	GetTemplateCode() string
+	GetServices() map[string]Service
 	Update(stackDefinition map[string]interface{}) error
 	Publish() error
 	UnPublish() error
 }
 
 type StackModel struct {
-	IDField    string `json:"id"`
-	NameField  string `json:"name"`
-	LinksField []Link `json:"links"`
-	TypeField  string `json:"type"`
-	Services   map[string]ServiceDefinition `json:"services"`
-	Template   Template `json:"template"`
-	StackMapper  StackRepository
+	IDField     string `json:"id"`
+	NameField   string `json:"name"`
+	LinksField  []Link `json:"links"`
+	TypeField   string `json:"type"`
+	Services    map[string]ServiceDefinition `json:"services"`
+	Template    Template `json:"template"`
+	StackMapper StackRepository
 }
 
 func (a StackModel) Id() string {
@@ -102,6 +138,15 @@ func (s StackModel) Publish() (err error) {
 func (s StackModel) UnPublish() (err error) {
 	err = s.StackMapper.UnPublish(s.Id())
 	return
+}
+
+func (s StackModel) GetServices() map[string]Service {
+	services := make(map[string]Service, 1)
+
+	for key, value := range s.Services {
+		services[key] = value
+	}
+	return services
 }
 
 type Stacks interface {

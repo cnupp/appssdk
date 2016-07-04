@@ -84,7 +84,8 @@ var _ = Describe("Stacks", func() {
 			"mem":256,
 			"cpus":0.2,
 			"instances":1,
-			"expose":3306
+			"expose":3306,
+			"volumes":[{"container":"/var/lib/mysql","host":"db","mode":"RW"}]
 		}
 	  }
 	}
@@ -295,6 +296,25 @@ var _ = Describe("Stacks", func() {
 		Expect(verifyImage.Cpus).To(Equal(1.0))
 		Expect(verifyImage.Mem).To(Equal(512))
 		Expect(verifyImage.Name).To(Equal("abc"))
+
+		services := stack.GetServices()
+		Expect(len(services)).To(Equal(2))
+		Expect(len(services["web"].GetEnv())).To(Equal(0))
+		Expect(services["web"].GetLinks()[0]).To(Equal("db"))
+		Expect(services["web"].GetExpose()[0]).To(Equal(8088))
+
+		webVolumes := services["web"].GetVolumes()
+		Expect(len(webVolumes)).To(Equal(0))
+
+		dbVolumes := services["db"].GetVolumes()
+		Expect(len(dbVolumes)).To(Equal(1))
+		Expect(dbVolumes[0].ContainerPath).To(Equal("/var/lib/mysql"))
+		Expect(dbVolumes[0].HostPath).To(Equal("db"))
+		Expect(dbVolumes[0].Mode).To(Equal("RW"))
+
+		env := services["db"].GetEnv()
+		Expect(env["EXTRA_OPTS"]).To(Equal("--lower_case_table_names=1"))
+		Expect(env["MYSQL_PASS"]).To(Equal("mysql"))
 	})
 
 	It("should able to get stacks", func() {
