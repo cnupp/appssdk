@@ -7,13 +7,18 @@ type Image struct {
 }
 
 type ServiceDefinition struct {
-	Build   Image `json:"build"`
-	Verify  Image `json:"verify"`
-	Env     map[string]string `json:"environment"`
-	Links   []string `json:"links"`
-	Health  []HealthCheck `json:"health"`
-	Volumes []Volume `json:"volumes"`
-	Exposes int `json:"expose"`
+	Build     Image `json:"build"`
+	Verify    Image `json:"verify"`
+	Env       map[string]string `json:"environment"`
+	Links     []string `json:"links"`
+	Health    []HealthCheck `json:"health"`
+	Volumes   []Volume `json:"volumes"`
+	Exposes   int `json:"expose"`
+	Image     string `json:"image"`
+	cpu       float64 `json:"cpus"`
+	mem       float64 `json:"mem"`
+	instances int `json:"instances"`
+	name      string `json:"name"`
 }
 
 func (sd ServiceDefinition) GetLinks() []string {
@@ -38,6 +43,38 @@ func (sd ServiceDefinition) GetExpose() []int {
 	return exposes
 }
 
+func (sd ServiceDefinition) GetImage() string {
+	return sd.Image
+}
+
+func (sd ServiceDefinition) CPU() float64 {
+	return sd.cpu
+}
+
+func (sd ServiceDefinition) Mem() float64 {
+	return sd.mem
+}
+
+func (sd ServiceDefinition) Instances() int {
+	return sd.instances
+}
+
+func (sd ServiceDefinition) Name() string {
+	return sd.name
+}
+
+func (sd ServiceDefinition) IsBuildable() bool {
+	return sd.Build.Name != ""
+}
+
+func (sd ServiceDefinition) GetBuild() Image {
+	return sd.Build
+}
+
+func (sd ServiceDefinition) GetVerify() Image {
+	return sd.Verify
+}
+
 type Template struct {
 	Type string `json:"type"`
 	URI  string `json:"uri"`
@@ -55,10 +92,18 @@ type HealthCheck struct {
 
 type Service interface {
 	GetEnv() map[string]string
+	GetImage() string
+	CPU() float64
+	Mem() float64
+	Instances() int
+	Name() string
 	GetVolumes() []Volume
 	GetLinks() []string
 	GetHealthChecks() []HealthCheck
 	GetExpose() []int
+	IsBuildable() bool
+	GetBuild() Image
+	GetVerify() Image
 }
 
 type Stack interface {
