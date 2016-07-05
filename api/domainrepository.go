@@ -1,4 +1,5 @@
 package api
+
 import (
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
@@ -11,6 +12,7 @@ type DomainRepository interface {
 	Create(params DomainParams) (createdDomain Domain, apiErr error)
 	GetDomain(name string) (Domain, error)
 	GetDomains() (Domains, error)
+	AttachCert(Domain, CertParams) (error)
 	Delete(id string) (apiErr error)
 }
 
@@ -43,21 +45,21 @@ func (cc DefaultDomainRepository) Create(params DomainParams) (createdDomain Dom
 	if apiErr != nil {
 		return
 	}
+	domainModel.DomainMapper = cc
 	createdDomain = domainModel
-
 	return
 }
 
-func (cc DefaultDomainRepository) GetDomain(name string) (app Domain, apiErr error) {
+func (cc DefaultDomainRepository) GetDomain(name string) (domain Domain, apiErr error) {
 	var remoteDomain DomainModel
 	apiErr = cc.gateway.Get(fmt.Sprintf("/domains/%s", name), &remoteDomain)
 	if apiErr != nil {
 		return
 	}
-	app = remoteDomain
+	remoteDomain.DomainMapper = cc
+	domain = remoteDomain
 	return
 }
-
 
 func (cc DefaultDomainRepository) GetDomains() (domains Domains, apiErr error) {
 	var remoteDomains DomainsModel
@@ -70,11 +72,27 @@ func (cc DefaultDomainRepository) GetDomains() (domains Domains, apiErr error) {
 	return
 }
 
-
 func (cc DefaultDomainRepository) Delete(id string) (apiErr error) {
 	apiErr = cc.gateway.Delete(fmt.Sprintf("/domains/%s", id), "")
 	if apiErr != nil {
 		return
 	}
 	return
+}
+
+func (cc DefaultDomainRepository) AttachCert(domain Domain, params CertParams) error {
+	data, err := json.Marshal(params)
+
+	if err != nil {
+		return fmt.Errorf("Can not serilize the data")
+	}
+
+	res, err := cc.gateway.Request("PUT", fmt.Sprintf("/domains/%s/cert", domain.Name()), data)
+	defer res.Body.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -4,14 +4,21 @@ type DomainParams struct {
 	Name string `json:"name"`
 }
 
+type CertParams struct {
+	Crt string `json:"crt"`
+	Key string `json:"key"`
+}
+
 type Domain interface {
 	Id() string
 	Name() string
+	AttachCert(CertParams) error
 }
 
 type DomainModel struct {
-	IdField   string     `json:"id"`
-	NameField string     `json:"name"`
+	IdField      string     `json:"id"`
+	NameField    string     `json:"name"`
+	DomainMapper DomainRepository `json:"-"`
 }
 
 func (d DomainModel) Id() string {
@@ -22,6 +29,9 @@ func (d DomainModel) Name() string {
 	return d.NameField
 }
 
+func (d DomainModel) AttachCert(cert CertParams) error {
+	return d.DomainMapper.AttachCert(d, cert)
+}
 
 type DomainRef interface {
 	Id() string

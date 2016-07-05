@@ -557,6 +557,21 @@ func DomainDetail() testnet.TestRequest {
 	}
 }
 
+func DomainAttachCert(matcher func(r *http.Request)) testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "PUT",
+		Path:   "/domains/tw.com/cert",
+		Matcher: matcher,
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: ``,
+		},
+	}
+}
+
 func DomainCreate() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "POST",
