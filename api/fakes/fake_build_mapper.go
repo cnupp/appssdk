@@ -79,6 +79,7 @@ type FakeBuildMapper struct {
 	verifyFailReturns struct {
 		result1 error
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeBuildMapper) Create(app api.App, params api.BuildParams) (build api.Build, apiErr error) {
@@ -87,6 +88,8 @@ func (fake *FakeBuildMapper) Create(app api.App, params api.BuildParams) (build 
 		app    api.App
 		params api.BuildParams
 	}{app, params})
+	fake.guard("Create")
+	fake.invocations["Create"] = append(fake.invocations["Create"], []interface{}{app, params})
 	fake.createMutex.Unlock()
 	if fake.CreateStub != nil {
 		return fake.CreateStub(app, params)
@@ -120,6 +123,8 @@ func (fake *FakeBuildMapper) GetBuilds(app api.App) (builds api.Builds, apiErr e
 	fake.getBuildsArgsForCall = append(fake.getBuildsArgsForCall, struct {
 		app api.App
 	}{app})
+	fake.guard("GetBuilds")
+	fake.invocations["GetBuilds"] = append(fake.invocations["GetBuilds"], []interface{}{app})
 	fake.getBuildsMutex.Unlock()
 	if fake.GetBuildsStub != nil {
 		return fake.GetBuildsStub(app)
@@ -154,6 +159,8 @@ func (fake *FakeBuildMapper) GetBuild(app api.App, id string) (build api.Build, 
 		app api.App
 		id  string
 	}{app, id})
+	fake.guard("GetBuild")
+	fake.invocations["GetBuild"] = append(fake.invocations["GetBuild"], []interface{}{app, id})
 	fake.getBuildMutex.Unlock()
 	if fake.GetBuildStub != nil {
 		return fake.GetBuildStub(app, id)
@@ -188,6 +195,8 @@ func (fake *FakeBuildMapper) Update(id string, params api.BuildParams) (updatedB
 		id     string
 		params api.BuildParams
 	}{id, params})
+	fake.guard("Update")
+	fake.invocations["Update"] = append(fake.invocations["Update"], []interface{}{id, params})
 	fake.updateMutex.Unlock()
 	if fake.UpdateStub != nil {
 		return fake.UpdateStub(id, params)
@@ -221,6 +230,8 @@ func (fake *FakeBuildMapper) Success(build api.Build) (apiErr error) {
 	fake.successArgsForCall = append(fake.successArgsForCall, struct {
 		build api.Build
 	}{build})
+	fake.guard("Success")
+	fake.invocations["Success"] = append(fake.invocations["Success"], []interface{}{build})
 	fake.successMutex.Unlock()
 	if fake.SuccessStub != nil {
 		return fake.SuccessStub(build)
@@ -253,6 +264,8 @@ func (fake *FakeBuildMapper) Fail(build api.Build) (apiErr error) {
 	fake.failArgsForCall = append(fake.failArgsForCall, struct {
 		build api.Build
 	}{build})
+	fake.guard("Fail")
+	fake.invocations["Fail"] = append(fake.invocations["Fail"], []interface{}{build})
 	fake.failMutex.Unlock()
 	if fake.FailStub != nil {
 		return fake.FailStub(build)
@@ -285,6 +298,8 @@ func (fake *FakeBuildMapper) VerifySuccess(build api.Build) (apiErr error) {
 	fake.verifySuccessArgsForCall = append(fake.verifySuccessArgsForCall, struct {
 		build api.Build
 	}{build})
+	fake.guard("VerifySuccess")
+	fake.invocations["VerifySuccess"] = append(fake.invocations["VerifySuccess"], []interface{}{build})
 	fake.verifySuccessMutex.Unlock()
 	if fake.VerifySuccessStub != nil {
 		return fake.VerifySuccessStub(build)
@@ -317,6 +332,8 @@ func (fake *FakeBuildMapper) VerifyFail(build api.Build) (apiErr error) {
 	fake.verifyFailArgsForCall = append(fake.verifyFailArgsForCall, struct {
 		build api.Build
 	}{build})
+	fake.guard("VerifyFail")
+	fake.invocations["VerifyFail"] = append(fake.invocations["VerifyFail"], []interface{}{build})
 	fake.verifyFailMutex.Unlock()
 	if fake.VerifyFailStub != nil {
 		return fake.VerifyFailStub(build)
@@ -342,6 +359,19 @@ func (fake *FakeBuildMapper) VerifyFailReturns(result1 error) {
 	fake.verifyFailReturns = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeBuildMapper) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeBuildMapper) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.BuildMapper = new(FakeBuildMapper)

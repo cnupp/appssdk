@@ -68,6 +68,23 @@ type FakeStackRepository struct {
 	deleteReturns struct {
 		result1 error
 	}
+	PublishStub        func(id string) (apiErr error)
+	publishMutex       sync.RWMutex
+	publishArgsForCall []struct {
+		id string
+	}
+	publishReturns struct {
+		result1 error
+	}
+	UnPublishStub        func(id string) (apiErr error)
+	unPublishMutex       sync.RWMutex
+	unPublishArgsForCall []struct {
+		id string
+	}
+	unPublishReturns struct {
+		result1 error
+	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeStackRepository) Create(params map[string]interface{}) (createdStack api.Stack, apiErr error) {
@@ -75,6 +92,8 @@ func (fake *FakeStackRepository) Create(params map[string]interface{}) (createdS
 	fake.createArgsForCall = append(fake.createArgsForCall, struct {
 		params map[string]interface{}
 	}{params})
+	fake.guard("Create")
+	fake.invocations["Create"] = append(fake.invocations["Create"], []interface{}{params})
 	fake.createMutex.Unlock()
 	if fake.CreateStub != nil {
 		return fake.CreateStub(params)
@@ -108,6 +127,8 @@ func (fake *FakeStackRepository) GetStack(id string) (api.Stack, error) {
 	fake.getStackArgsForCall = append(fake.getStackArgsForCall, struct {
 		id string
 	}{id})
+	fake.guard("GetStack")
+	fake.invocations["GetStack"] = append(fake.invocations["GetStack"], []interface{}{id})
 	fake.getStackMutex.Unlock()
 	if fake.GetStackStub != nil {
 		return fake.GetStackStub(id)
@@ -141,6 +162,8 @@ func (fake *FakeStackRepository) GetStackByURI(uri string) (api.Stack, error) {
 	fake.getStackByURIArgsForCall = append(fake.getStackByURIArgsForCall, struct {
 		uri string
 	}{uri})
+	fake.guard("GetStackByURI")
+	fake.invocations["GetStackByURI"] = append(fake.invocations["GetStackByURI"], []interface{}{uri})
 	fake.getStackByURIMutex.Unlock()
 	if fake.GetStackByURIStub != nil {
 		return fake.GetStackByURIStub(uri)
@@ -172,6 +195,8 @@ func (fake *FakeStackRepository) GetStackByURIReturns(result1 api.Stack, result2
 func (fake *FakeStackRepository) GetStacks() (api.Stacks, error) {
 	fake.getStacksMutex.Lock()
 	fake.getStacksArgsForCall = append(fake.getStacksArgsForCall, struct{}{})
+	fake.guard("GetStacks")
+	fake.invocations["GetStacks"] = append(fake.invocations["GetStacks"], []interface{}{})
 	fake.getStacksMutex.Unlock()
 	if fake.GetStacksStub != nil {
 		return fake.GetStacksStub()
@@ -199,6 +224,8 @@ func (fake *FakeStackRepository) GetStackByName(name string) (api.Stacks, error)
 	fake.getStackByNameArgsForCall = append(fake.getStackByNameArgsForCall, struct {
 		name string
 	}{name})
+	fake.guard("GetStackByName")
+	fake.invocations["GetStackByName"] = append(fake.invocations["GetStackByName"], []interface{}{name})
 	fake.getStackByNameMutex.Unlock()
 	if fake.GetStackByNameStub != nil {
 		return fake.GetStackByNameStub(name)
@@ -233,6 +260,8 @@ func (fake *FakeStackRepository) Update(id string, params map[string]interface{}
 		id     string
 		params map[string]interface{}
 	}{id, params})
+	fake.guard("Update")
+	fake.invocations["Update"] = append(fake.invocations["Update"], []interface{}{id, params})
 	fake.updateMutex.Unlock()
 	if fake.UpdateStub != nil {
 		return fake.UpdateStub(id, params)
@@ -265,6 +294,8 @@ func (fake *FakeStackRepository) Delete(id string) (apiErr error) {
 	fake.deleteArgsForCall = append(fake.deleteArgsForCall, struct {
 		id string
 	}{id})
+	fake.guard("Delete")
+	fake.invocations["Delete"] = append(fake.invocations["Delete"], []interface{}{id})
 	fake.deleteMutex.Unlock()
 	if fake.DeleteStub != nil {
 		return fake.DeleteStub(id)
@@ -290,6 +321,87 @@ func (fake *FakeStackRepository) DeleteReturns(result1 error) {
 	fake.deleteReturns = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeStackRepository) Publish(id string) (apiErr error) {
+	fake.publishMutex.Lock()
+	fake.publishArgsForCall = append(fake.publishArgsForCall, struct {
+		id string
+	}{id})
+	fake.guard("Publish")
+	fake.invocations["Publish"] = append(fake.invocations["Publish"], []interface{}{id})
+	fake.publishMutex.Unlock()
+	if fake.PublishStub != nil {
+		return fake.PublishStub(id)
+	} else {
+		return fake.publishReturns.result1
+	}
+}
+
+func (fake *FakeStackRepository) PublishCallCount() int {
+	fake.publishMutex.RLock()
+	defer fake.publishMutex.RUnlock()
+	return len(fake.publishArgsForCall)
+}
+
+func (fake *FakeStackRepository) PublishArgsForCall(i int) string {
+	fake.publishMutex.RLock()
+	defer fake.publishMutex.RUnlock()
+	return fake.publishArgsForCall[i].id
+}
+
+func (fake *FakeStackRepository) PublishReturns(result1 error) {
+	fake.PublishStub = nil
+	fake.publishReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeStackRepository) UnPublish(id string) (apiErr error) {
+	fake.unPublishMutex.Lock()
+	fake.unPublishArgsForCall = append(fake.unPublishArgsForCall, struct {
+		id string
+	}{id})
+	fake.guard("UnPublish")
+	fake.invocations["UnPublish"] = append(fake.invocations["UnPublish"], []interface{}{id})
+	fake.unPublishMutex.Unlock()
+	if fake.UnPublishStub != nil {
+		return fake.UnPublishStub(id)
+	} else {
+		return fake.unPublishReturns.result1
+	}
+}
+
+func (fake *FakeStackRepository) UnPublishCallCount() int {
+	fake.unPublishMutex.RLock()
+	defer fake.unPublishMutex.RUnlock()
+	return len(fake.unPublishArgsForCall)
+}
+
+func (fake *FakeStackRepository) UnPublishArgsForCall(i int) string {
+	fake.unPublishMutex.RLock()
+	defer fake.unPublishMutex.RUnlock()
+	return fake.unPublishArgsForCall[i].id
+}
+
+func (fake *FakeStackRepository) UnPublishReturns(result1 error) {
+	fake.UnPublishStub = nil
+	fake.unPublishReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeStackRepository) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeStackRepository) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.StackRepository = new(FakeStackRepository)

@@ -43,6 +43,7 @@ type FakeUserRepository struct {
 		result1 api.Users
 		result2 error
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeUserRepository) Create(params api.UserParams) (apiErr error) {
@@ -50,6 +51,8 @@ func (fake *FakeUserRepository) Create(params api.UserParams) (apiErr error) {
 	fake.createArgsForCall = append(fake.createArgsForCall, struct {
 		params api.UserParams
 	}{params})
+	fake.guard("Create")
+	fake.invocations["Create"] = append(fake.invocations["Create"], []interface{}{params})
 	fake.createMutex.Unlock()
 	if fake.CreateStub != nil {
 		return fake.CreateStub(params)
@@ -82,6 +85,8 @@ func (fake *FakeUserRepository) GetUser(id string) (api.User, error) {
 	fake.getUserArgsForCall = append(fake.getUserArgsForCall, struct {
 		id string
 	}{id})
+	fake.guard("GetUser")
+	fake.invocations["GetUser"] = append(fake.invocations["GetUser"], []interface{}{id})
 	fake.getUserMutex.Unlock()
 	if fake.GetUserStub != nil {
 		return fake.GetUserStub(id)
@@ -115,6 +120,8 @@ func (fake *FakeUserRepository) GetUserByEmail(email string) (api.Users, error) 
 	fake.getUserByEmailArgsForCall = append(fake.getUserByEmailArgsForCall, struct {
 		email string
 	}{email})
+	fake.guard("GetUserByEmail")
+	fake.invocations["GetUserByEmail"] = append(fake.invocations["GetUserByEmail"], []interface{}{email})
 	fake.getUserByEmailMutex.Unlock()
 	if fake.GetUserByEmailStub != nil {
 		return fake.GetUserByEmailStub(email)
@@ -148,6 +155,8 @@ func (fake *FakeUserRepository) GetUserByFingerprint(fingerprint string) (api.Us
 	fake.getUserByFingerprintArgsForCall = append(fake.getUserByFingerprintArgsForCall, struct {
 		fingerprint string
 	}{fingerprint})
+	fake.guard("GetUserByFingerprint")
+	fake.invocations["GetUserByFingerprint"] = append(fake.invocations["GetUserByFingerprint"], []interface{}{fingerprint})
 	fake.getUserByFingerprintMutex.Unlock()
 	if fake.GetUserByFingerprintStub != nil {
 		return fake.GetUserByFingerprintStub(fingerprint)
@@ -174,6 +183,19 @@ func (fake *FakeUserRepository) GetUserByFingerprintReturns(result1 api.Users, r
 		result1 api.Users
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeUserRepository) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeUserRepository) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.UserRepository = new(FakeUserRepository)

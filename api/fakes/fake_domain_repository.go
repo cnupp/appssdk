@@ -17,10 +17,10 @@ type FakeDomainRepository struct {
 		result1 api.Domain
 		result2 error
 	}
-	GetDomainStub        func(id string) (api.Domain, error)
+	GetDomainStub        func(name string) (api.Domain, error)
 	getDomainMutex       sync.RWMutex
 	getDomainArgsForCall []struct {
-		id string
+		name string
 	}
 	getDomainReturns struct {
 		result1 api.Domain
@@ -33,14 +33,14 @@ type FakeDomainRepository struct {
 		result1 api.Domains
 		result2 error
 	}
-	GetDomainByNameStub        func(name string) (api.Domains, error)
-	getDomainByNameMutex       sync.RWMutex
-	getDomainByNameArgsForCall []struct {
-		name string
+	AttachCertStub        func(api.Domain, api.CertParams) error
+	attachCertMutex       sync.RWMutex
+	attachCertArgsForCall []struct {
+		arg1 api.Domain
+		arg2 api.CertParams
 	}
-	getDomainByNameReturns struct {
-		result1 api.Domains
-		result2 error
+	attachCertReturns struct {
+		result1 error
 	}
 	DeleteStub        func(id string) (apiErr error)
 	deleteMutex       sync.RWMutex
@@ -50,6 +50,7 @@ type FakeDomainRepository struct {
 	deleteReturns struct {
 		result1 error
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeDomainRepository) Create(params api.DomainParams) (createdDomain api.Domain, apiErr error) {
@@ -57,6 +58,8 @@ func (fake *FakeDomainRepository) Create(params api.DomainParams) (createdDomain
 	fake.createArgsForCall = append(fake.createArgsForCall, struct {
 		params api.DomainParams
 	}{params})
+	fake.guard("Create")
+	fake.invocations["Create"] = append(fake.invocations["Create"], []interface{}{params})
 	fake.createMutex.Unlock()
 	if fake.CreateStub != nil {
 		return fake.CreateStub(params)
@@ -85,14 +88,16 @@ func (fake *FakeDomainRepository) CreateReturns(result1 api.Domain, result2 erro
 	}{result1, result2}
 }
 
-func (fake *FakeDomainRepository) GetDomain(id string) (api.Domain, error) {
+func (fake *FakeDomainRepository) GetDomain(name string) (api.Domain, error) {
 	fake.getDomainMutex.Lock()
 	fake.getDomainArgsForCall = append(fake.getDomainArgsForCall, struct {
-		id string
-	}{id})
+		name string
+	}{name})
+	fake.guard("GetDomain")
+	fake.invocations["GetDomain"] = append(fake.invocations["GetDomain"], []interface{}{name})
 	fake.getDomainMutex.Unlock()
 	if fake.GetDomainStub != nil {
-		return fake.GetDomainStub(id)
+		return fake.GetDomainStub(name)
 	} else {
 		return fake.getDomainReturns.result1, fake.getDomainReturns.result2
 	}
@@ -107,7 +112,7 @@ func (fake *FakeDomainRepository) GetDomainCallCount() int {
 func (fake *FakeDomainRepository) GetDomainArgsForCall(i int) string {
 	fake.getDomainMutex.RLock()
 	defer fake.getDomainMutex.RUnlock()
-	return fake.getDomainArgsForCall[i].id
+	return fake.getDomainArgsForCall[i].name
 }
 
 func (fake *FakeDomainRepository) GetDomainReturns(result1 api.Domain, result2 error) {
@@ -121,6 +126,8 @@ func (fake *FakeDomainRepository) GetDomainReturns(result1 api.Domain, result2 e
 func (fake *FakeDomainRepository) GetDomains() (api.Domains, error) {
 	fake.getDomainsMutex.Lock()
 	fake.getDomainsArgsForCall = append(fake.getDomainsArgsForCall, struct{}{})
+	fake.guard("GetDomains")
+	fake.invocations["GetDomains"] = append(fake.invocations["GetDomains"], []interface{}{})
 	fake.getDomainsMutex.Unlock()
 	if fake.GetDomainsStub != nil {
 		return fake.GetDomainsStub()
@@ -143,37 +150,39 @@ func (fake *FakeDomainRepository) GetDomainsReturns(result1 api.Domains, result2
 	}{result1, result2}
 }
 
-func (fake *FakeDomainRepository) GetDomainByName(name string) (api.Domains, error) {
-	fake.getDomainByNameMutex.Lock()
-	fake.getDomainByNameArgsForCall = append(fake.getDomainByNameArgsForCall, struct {
-		name string
-	}{name})
-	fake.getDomainByNameMutex.Unlock()
-	if fake.GetDomainByNameStub != nil {
-		return fake.GetDomainByNameStub(name)
+func (fake *FakeDomainRepository) AttachCert(arg1 api.Domain, arg2 api.CertParams) error {
+	fake.attachCertMutex.Lock()
+	fake.attachCertArgsForCall = append(fake.attachCertArgsForCall, struct {
+		arg1 api.Domain
+		arg2 api.CertParams
+	}{arg1, arg2})
+	fake.guard("AttachCert")
+	fake.invocations["AttachCert"] = append(fake.invocations["AttachCert"], []interface{}{arg1, arg2})
+	fake.attachCertMutex.Unlock()
+	if fake.AttachCertStub != nil {
+		return fake.AttachCertStub(arg1, arg2)
 	} else {
-		return fake.getDomainByNameReturns.result1, fake.getDomainByNameReturns.result2
+		return fake.attachCertReturns.result1
 	}
 }
 
-func (fake *FakeDomainRepository) GetDomainByNameCallCount() int {
-	fake.getDomainByNameMutex.RLock()
-	defer fake.getDomainByNameMutex.RUnlock()
-	return len(fake.getDomainByNameArgsForCall)
+func (fake *FakeDomainRepository) AttachCertCallCount() int {
+	fake.attachCertMutex.RLock()
+	defer fake.attachCertMutex.RUnlock()
+	return len(fake.attachCertArgsForCall)
 }
 
-func (fake *FakeDomainRepository) GetDomainByNameArgsForCall(i int) string {
-	fake.getDomainByNameMutex.RLock()
-	defer fake.getDomainByNameMutex.RUnlock()
-	return fake.getDomainByNameArgsForCall[i].name
+func (fake *FakeDomainRepository) AttachCertArgsForCall(i int) (api.Domain, api.CertParams) {
+	fake.attachCertMutex.RLock()
+	defer fake.attachCertMutex.RUnlock()
+	return fake.attachCertArgsForCall[i].arg1, fake.attachCertArgsForCall[i].arg2
 }
 
-func (fake *FakeDomainRepository) GetDomainByNameReturns(result1 api.Domains, result2 error) {
-	fake.GetDomainByNameStub = nil
-	fake.getDomainByNameReturns = struct {
-		result1 api.Domains
-		result2 error
-	}{result1, result2}
+func (fake *FakeDomainRepository) AttachCertReturns(result1 error) {
+	fake.AttachCertStub = nil
+	fake.attachCertReturns = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeDomainRepository) Delete(id string) (apiErr error) {
@@ -181,6 +190,8 @@ func (fake *FakeDomainRepository) Delete(id string) (apiErr error) {
 	fake.deleteArgsForCall = append(fake.deleteArgsForCall, struct {
 		id string
 	}{id})
+	fake.guard("Delete")
+	fake.invocations["Delete"] = append(fake.invocations["Delete"], []interface{}{id})
 	fake.deleteMutex.Unlock()
 	if fake.DeleteStub != nil {
 		return fake.DeleteStub(id)
@@ -206,6 +217,19 @@ func (fake *FakeDomainRepository) DeleteReturns(result1 error) {
 	fake.deleteReturns = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeDomainRepository) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeDomainRepository) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.DomainRepository = new(FakeDomainRepository)

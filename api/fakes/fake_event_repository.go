@@ -26,6 +26,7 @@ type FakeEventRepository struct {
 		result1 api.Events
 		result2 error
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeEventRepository) GetEvents(eventType string) (api.Events, error) {
@@ -33,6 +34,8 @@ func (fake *FakeEventRepository) GetEvents(eventType string) (api.Events, error)
 	fake.getEventsArgsForCall = append(fake.getEventsArgsForCall, struct {
 		eventType string
 	}{eventType})
+	fake.guard("GetEvents")
+	fake.invocations["GetEvents"] = append(fake.invocations["GetEvents"], []interface{}{eventType})
 	fake.getEventsMutex.Unlock()
 	if fake.GetEventsStub != nil {
 		return fake.GetEventsStub(eventType)
@@ -66,6 +69,8 @@ func (fake *FakeEventRepository) GetEventsByURI(uri string) (api.Events, error) 
 	fake.getEventsByURIArgsForCall = append(fake.getEventsByURIArgsForCall, struct {
 		uri string
 	}{uri})
+	fake.guard("GetEventsByURI")
+	fake.invocations["GetEventsByURI"] = append(fake.invocations["GetEventsByURI"], []interface{}{uri})
 	fake.getEventsByURIMutex.Unlock()
 	if fake.GetEventsByURIStub != nil {
 		return fake.GetEventsByURIStub(uri)
@@ -92,6 +97,19 @@ func (fake *FakeEventRepository) GetEventsByURIReturns(result1 api.Events, resul
 		result1 api.Events
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeEventRepository) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeEventRepository) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.EventRepository = new(FakeEventRepository)

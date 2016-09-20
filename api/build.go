@@ -2,6 +2,7 @@ package api
 
 import "fmt"
 
+//go:generate counterfeiter -o fakes/fake_build.go . Build
 type Build interface {
 	Id() string
 	GitSha() string

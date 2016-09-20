@@ -32,6 +32,7 @@ type FakeRouteRepository struct {
 		result1 api.Apps
 		result2 error
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeRouteRepository) Create(params api.RouteParams) (apiErr error) {
@@ -39,6 +40,8 @@ func (fake *FakeRouteRepository) Create(params api.RouteParams) (apiErr error) {
 	fake.createArgsForCall = append(fake.createArgsForCall, struct {
 		params api.RouteParams
 	}{params})
+	fake.guard("Create")
+	fake.invocations["Create"] = append(fake.invocations["Create"], []interface{}{params})
 	fake.createMutex.Unlock()
 	if fake.CreateStub != nil {
 		return fake.CreateStub(params)
@@ -69,6 +72,8 @@ func (fake *FakeRouteRepository) CreateReturns(result1 error) {
 func (fake *FakeRouteRepository) GetRoutes() (routes api.Routes, apiErr error) {
 	fake.getRoutesMutex.Lock()
 	fake.getRoutesArgsForCall = append(fake.getRoutesArgsForCall, struct{}{})
+	fake.guard("GetRoutes")
+	fake.invocations["GetRoutes"] = append(fake.invocations["GetRoutes"], []interface{}{})
 	fake.getRoutesMutex.Unlock()
 	if fake.GetRoutesStub != nil {
 		return fake.GetRoutesStub()
@@ -96,6 +101,8 @@ func (fake *FakeRouteRepository) GetAppsForRoute(routeId string) (apps api.Apps,
 	fake.getAppsForRouteArgsForCall = append(fake.getAppsForRouteArgsForCall, struct {
 		routeId string
 	}{routeId})
+	fake.guard("GetAppsForRoute")
+	fake.invocations["GetAppsForRoute"] = append(fake.invocations["GetAppsForRoute"], []interface{}{routeId})
 	fake.getAppsForRouteMutex.Unlock()
 	if fake.GetAppsForRouteStub != nil {
 		return fake.GetAppsForRouteStub(routeId)
@@ -122,6 +129,19 @@ func (fake *FakeRouteRepository) GetAppsForRouteReturns(result1 api.Apps, result
 		result1 api.Apps
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeRouteRepository) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeRouteRepository) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.RouteRepository = new(FakeRouteRepository)

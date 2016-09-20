@@ -52,6 +52,7 @@ type FakeKeyRepository struct {
 	deleteReturns struct {
 		result1 error
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeKeyRepository) Upload(user api.User, params api.KeyParams) (uploaded api.Key, apiErr error) {
@@ -60,6 +61,8 @@ func (fake *FakeKeyRepository) Upload(user api.User, params api.KeyParams) (uplo
 		user   api.User
 		params api.KeyParams
 	}{user, params})
+	fake.guard("Upload")
+	fake.invocations["Upload"] = append(fake.invocations["Upload"], []interface{}{user, params})
 	fake.uploadMutex.Unlock()
 	if fake.UploadStub != nil {
 		return fake.UploadStub(user, params)
@@ -93,6 +96,8 @@ func (fake *FakeKeyRepository) GetKey(id string) (key api.Key, apiErr error) {
 	fake.getKeyArgsForCall = append(fake.getKeyArgsForCall, struct {
 		id string
 	}{id})
+	fake.guard("GetKey")
+	fake.invocations["GetKey"] = append(fake.invocations["GetKey"], []interface{}{id})
 	fake.getKeyMutex.Unlock()
 	if fake.GetKeyStub != nil {
 		return fake.GetKeyStub(id)
@@ -124,6 +129,8 @@ func (fake *FakeKeyRepository) GetKeyReturns(result1 api.Key, result2 error) {
 func (fake *FakeKeyRepository) GetKeys() (keys api.Keys, apiErr error) {
 	fake.getKeysMutex.Lock()
 	fake.getKeysArgsForCall = append(fake.getKeysArgsForCall, struct{}{})
+	fake.guard("GetKeys")
+	fake.invocations["GetKeys"] = append(fake.invocations["GetKeys"], []interface{}{})
 	fake.getKeysMutex.Unlock()
 	if fake.GetKeysStub != nil {
 		return fake.GetKeysStub()
@@ -151,6 +158,8 @@ func (fake *FakeKeyRepository) GetKeysForUser(user api.User) (keys api.Keys, api
 	fake.getKeysForUserArgsForCall = append(fake.getKeysForUserArgsForCall, struct {
 		user api.User
 	}{user})
+	fake.guard("GetKeysForUser")
+	fake.invocations["GetKeysForUser"] = append(fake.invocations["GetKeysForUser"], []interface{}{user})
 	fake.getKeysForUserMutex.Unlock()
 	if fake.GetKeysForUserStub != nil {
 		return fake.GetKeysForUserStub(user)
@@ -185,6 +194,8 @@ func (fake *FakeKeyRepository) Delete(user api.User, id string) (apiErr error) {
 		user api.User
 		id   string
 	}{user, id})
+	fake.guard("Delete")
+	fake.invocations["Delete"] = append(fake.invocations["Delete"], []interface{}{user, id})
 	fake.deleteMutex.Unlock()
 	if fake.DeleteStub != nil {
 		return fake.DeleteStub(user, id)
@@ -210,6 +221,19 @@ func (fake *FakeKeyRepository) DeleteReturns(result1 error) {
 	fake.deleteReturns = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeKeyRepository) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeKeyRepository) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.KeyRepository = new(FakeKeyRepository)

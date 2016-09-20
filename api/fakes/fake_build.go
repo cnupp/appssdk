@@ -92,11 +92,14 @@ type FakeBuild struct {
 	isVerifyFailReturns     struct {
 		result1 bool
 	}
+	invocations map[string][][]interface{}
 }
 
 func (fake *FakeBuild) Id() string {
 	fake.idMutex.Lock()
 	fake.idArgsForCall = append(fake.idArgsForCall, struct{}{})
+	fake.guard("Id")
+	fake.invocations["Id"] = append(fake.invocations["Id"], []interface{}{})
 	fake.idMutex.Unlock()
 	if fake.IdStub != nil {
 		return fake.IdStub()
@@ -121,6 +124,8 @@ func (fake *FakeBuild) IdReturns(result1 string) {
 func (fake *FakeBuild) GitSha() string {
 	fake.gitShaMutex.Lock()
 	fake.gitShaArgsForCall = append(fake.gitShaArgsForCall, struct{}{})
+	fake.guard("GitSha")
+	fake.invocations["GitSha"] = append(fake.invocations["GitSha"], []interface{}{})
 	fake.gitShaMutex.Unlock()
 	if fake.GitShaStub != nil {
 		return fake.GitShaStub()
@@ -145,6 +150,8 @@ func (fake *FakeBuild) GitShaReturns(result1 string) {
 func (fake *FakeBuild) Status() string {
 	fake.statusMutex.Lock()
 	fake.statusArgsForCall = append(fake.statusArgsForCall, struct{}{})
+	fake.guard("Status")
+	fake.invocations["Status"] = append(fake.invocations["Status"], []interface{}{})
 	fake.statusMutex.Unlock()
 	if fake.StatusStub != nil {
 		return fake.StatusStub()
@@ -169,6 +176,8 @@ func (fake *FakeBuild) StatusReturns(result1 string) {
 func (fake *FakeBuild) Verify() api.Verify {
 	fake.verifyMutex.Lock()
 	fake.verifyArgsForCall = append(fake.verifyArgsForCall, struct{}{})
+	fake.guard("Verify")
+	fake.invocations["Verify"] = append(fake.invocations["Verify"], []interface{}{})
 	fake.verifyMutex.Unlock()
 	if fake.VerifyStub != nil {
 		return fake.VerifyStub()
@@ -193,6 +202,8 @@ func (fake *FakeBuild) VerifyReturns(result1 api.Verify) {
 func (fake *FakeBuild) Links() api.Links {
 	fake.linksMutex.Lock()
 	fake.linksArgsForCall = append(fake.linksArgsForCall, struct{}{})
+	fake.guard("Links")
+	fake.invocations["Links"] = append(fake.invocations["Links"], []interface{}{})
 	fake.linksMutex.Unlock()
 	if fake.LinksStub != nil {
 		return fake.LinksStub()
@@ -217,6 +228,8 @@ func (fake *FakeBuild) LinksReturns(result1 api.Links) {
 func (fake *FakeBuild) GetApp() api.App {
 	fake.getAppMutex.Lock()
 	fake.getAppArgsForCall = append(fake.getAppArgsForCall, struct{}{})
+	fake.guard("GetApp")
+	fake.invocations["GetApp"] = append(fake.invocations["GetApp"], []interface{}{})
 	fake.getAppMutex.Unlock()
 	if fake.GetAppStub != nil {
 		return fake.GetAppStub()
@@ -241,6 +254,8 @@ func (fake *FakeBuild) GetAppReturns(result1 api.App) {
 func (fake *FakeBuild) Success() error {
 	fake.successMutex.Lock()
 	fake.successArgsForCall = append(fake.successArgsForCall, struct{}{})
+	fake.guard("Success")
+	fake.invocations["Success"] = append(fake.invocations["Success"], []interface{}{})
 	fake.successMutex.Unlock()
 	if fake.SuccessStub != nil {
 		return fake.SuccessStub()
@@ -265,6 +280,8 @@ func (fake *FakeBuild) SuccessReturns(result1 error) {
 func (fake *FakeBuild) Fail() error {
 	fake.failMutex.Lock()
 	fake.failArgsForCall = append(fake.failArgsForCall, struct{}{})
+	fake.guard("Fail")
+	fake.invocations["Fail"] = append(fake.invocations["Fail"], []interface{}{})
 	fake.failMutex.Unlock()
 	if fake.FailStub != nil {
 		return fake.FailStub()
@@ -289,6 +306,8 @@ func (fake *FakeBuild) FailReturns(result1 error) {
 func (fake *FakeBuild) IsSuccess() bool {
 	fake.isSuccessMutex.Lock()
 	fake.isSuccessArgsForCall = append(fake.isSuccessArgsForCall, struct{}{})
+	fake.guard("IsSuccess")
+	fake.invocations["IsSuccess"] = append(fake.invocations["IsSuccess"], []interface{}{})
 	fake.isSuccessMutex.Unlock()
 	if fake.IsSuccessStub != nil {
 		return fake.IsSuccessStub()
@@ -313,6 +332,8 @@ func (fake *FakeBuild) IsSuccessReturns(result1 bool) {
 func (fake *FakeBuild) IsFail() bool {
 	fake.isFailMutex.Lock()
 	fake.isFailArgsForCall = append(fake.isFailArgsForCall, struct{}{})
+	fake.guard("IsFail")
+	fake.invocations["IsFail"] = append(fake.invocations["IsFail"], []interface{}{})
 	fake.isFailMutex.Unlock()
 	if fake.IsFailStub != nil {
 		return fake.IsFailStub()
@@ -337,6 +358,8 @@ func (fake *FakeBuild) IsFailReturns(result1 bool) {
 func (fake *FakeBuild) VerifySuccess() error {
 	fake.verifySuccessMutex.Lock()
 	fake.verifySuccessArgsForCall = append(fake.verifySuccessArgsForCall, struct{}{})
+	fake.guard("VerifySuccess")
+	fake.invocations["VerifySuccess"] = append(fake.invocations["VerifySuccess"], []interface{}{})
 	fake.verifySuccessMutex.Unlock()
 	if fake.VerifySuccessStub != nil {
 		return fake.VerifySuccessStub()
@@ -361,6 +384,8 @@ func (fake *FakeBuild) VerifySuccessReturns(result1 error) {
 func (fake *FakeBuild) IsVerifySuccess() bool {
 	fake.isVerifySuccessMutex.Lock()
 	fake.isVerifySuccessArgsForCall = append(fake.isVerifySuccessArgsForCall, struct{}{})
+	fake.guard("IsVerifySuccess")
+	fake.invocations["IsVerifySuccess"] = append(fake.invocations["IsVerifySuccess"], []interface{}{})
 	fake.isVerifySuccessMutex.Unlock()
 	if fake.IsVerifySuccessStub != nil {
 		return fake.IsVerifySuccessStub()
@@ -385,6 +410,8 @@ func (fake *FakeBuild) IsVerifySuccessReturns(result1 bool) {
 func (fake *FakeBuild) VerifyFail() error {
 	fake.verifyFailMutex.Lock()
 	fake.verifyFailArgsForCall = append(fake.verifyFailArgsForCall, struct{}{})
+	fake.guard("VerifyFail")
+	fake.invocations["VerifyFail"] = append(fake.invocations["VerifyFail"], []interface{}{})
 	fake.verifyFailMutex.Unlock()
 	if fake.VerifyFailStub != nil {
 		return fake.VerifyFailStub()
@@ -409,6 +436,8 @@ func (fake *FakeBuild) VerifyFailReturns(result1 error) {
 func (fake *FakeBuild) IsVerifyFail() bool {
 	fake.isVerifyFailMutex.Lock()
 	fake.isVerifyFailArgsForCall = append(fake.isVerifyFailArgsForCall, struct{}{})
+	fake.guard("IsVerifyFail")
+	fake.invocations["IsVerifyFail"] = append(fake.invocations["IsVerifyFail"], []interface{}{})
 	fake.isVerifyFailMutex.Unlock()
 	if fake.IsVerifyFailStub != nil {
 		return fake.IsVerifyFailStub()
@@ -428,6 +457,19 @@ func (fake *FakeBuild) IsVerifyFailReturns(result1 bool) {
 	fake.isVerifyFailReturns = struct {
 		result1 bool
 	}{result1}
+}
+
+func (fake *FakeBuild) Invocations() map[string][][]interface{} {
+	return fake.invocations
+}
+
+func (fake *FakeBuild) guard(key string) {
+	if fake.invocations == nil {
+		fake.invocations = map[string][][]interface{}{}
+	}
+	if fake.invocations[key] == nil {
+		fake.invocations[key] = [][]interface{}{}
+	}
 }
 
 var _ api.Build = new(FakeBuild)
