@@ -22,9 +22,42 @@ type CreateCollaboratorParams struct {
 	Email string `json:"email"`
 }
 
+type Cluster interface {
+	Links() Links
+	Name() string
+	Endpoint() string
+	Type() string
+}
+
+type ClusterModel struct {
+	EndpointField string `json:"uri"`
+	NameField     string `json:"name"`
+	TypeField     string `json:"type"`
+	LinksArray    []Link `json:"links"`
+}
+
+func (cm ClusterModel) Name() string {
+	return cm.NameField
+}
+
+func (cm ClusterModel) Type() string {
+	return cm.TypeField
+}
+
+func (cm ClusterModel) Endpoint() string {
+	return cm.EndpointField
+}
+
+func (cm ClusterModel) Links() Links {
+	return LinksModel{
+		Links: cm.LinksArray,
+	}
+}
+
 type App interface {
 	Id() string
 	Links() Links
+	GetCluster() (Cluster, error)
 	GetBuilds() (Builds, error)
 	GetRoutes() (AppRoutes, error)
 	GetBuild(id string) (Build, error)
@@ -139,6 +172,12 @@ func (a AppModel) SwitchStack(params UpdateStackParams) (error) {
 
 func (a AppModel) GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error) {
 	return a.AppMapper.GetLog(a.ID, buildId, logType, lines, offset)
+}
+
+func (a AppModel) GetCluster() (Cluster, error) {
+	return ClusterModel{
+		EndpointField: "http://launcher.tzion.me/clusters/1",
+	},nil
 }
 
 type AppRef interface {
