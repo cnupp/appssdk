@@ -176,7 +176,7 @@ func (a AppModel) GetLogForTests(buildId, logType string, lines int64, offset in
 
 func (a AppModel) GetCluster() (Cluster, error) {
 	return ClusterModel{
-		EndpointField: "http://launcher.tzion.me/clusters/1",
+		EndpointField: "/clusters/1",
 	},nil
 }
 
