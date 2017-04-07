@@ -67,6 +67,3 @@ func EmptyCollaborators() testnet.TestRequest {
 		},
 	}
 }
-
-
-

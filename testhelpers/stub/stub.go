@@ -1,10 +1,10 @@
 package stub
 
 import (
+	"fmt"
+	"github.com/onsi/ginkgo"
 	"net/http"
 	"net/http/httptest"
-	"github.com/onsi/ginkgo"
-	"fmt"
 )
 
 type TestRequest struct {
@@ -31,17 +31,17 @@ func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer ginkgo.GinkgoRecover()
 
 	request := Filter(h.Requests, func(tq TestRequest) bool {
-		return tq.Method == r.Method && tq.Path == r.RequestURI;
+		return tq.Method == r.Method && tq.Path == r.RequestURI
 	})
 
-	if(len(request) == 0) {
+	if len(request) == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	matched := request[0]
 
-	if (matched.Matcher != nil) {
+	if matched.Matcher != nil {
 		matched.Matcher(r)
 	}
 

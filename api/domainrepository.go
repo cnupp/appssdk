@@ -1,10 +1,10 @@
 package api
 
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
 	"encoding/json"
 	"fmt"
+	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/sjkyspa/stacks/controller/api/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_domain_repository.go . DomainRepository
@@ -12,7 +12,7 @@ type DomainRepository interface {
 	Create(params DomainParams) (createdDomain Domain, apiErr error)
 	GetDomain(name string) (Domain, error)
 	GetDomains() (Domains, error)
-	AttachCert(Domain, CertParams) (error)
+	AttachCert(Domain, CertParams) error
 	Delete(id string) (apiErr error)
 }
 

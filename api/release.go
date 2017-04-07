@@ -7,10 +7,10 @@ type Release interface {
 	Status() string
 	Links() Links
 	GetApp() App
-	Success() (error)
-	Fail() (error)
-	IsSuccess() (bool)
-	IsFail() (bool)
+	Success() error
+	Fail() error
+	IsSuccess() bool
+	IsFail() bool
 }
 
 type ReleaseParams struct {
@@ -18,13 +18,13 @@ type ReleaseParams struct {
 }
 
 type ReleaseModel struct {
-	IDField       string    `json:"id"`
-	VersionField  int    `json:"version"`
-	EnvsField     map[string]string    `json:"envs"`
-	StatusField   string    `json:"status"`
-	AppField      App          `json:"-"`
-	LinksField    []Link     `json:"links"`
-	ReleaseMapper ReleaseMapper `json:"-"`
+	IDField       string            `json:"id"`
+	VersionField  int               `json:"version"`
+	EnvsField     map[string]string `json:"envs"`
+	StatusField   string            `json:"status"`
+	AppField      App               `json:"-"`
+	LinksField    []Link            `json:"links"`
+	ReleaseMapper ReleaseMapper     `json:"-"`
 }
 
 func (bm ReleaseModel) Id() string {
@@ -57,15 +57,15 @@ func (bm ReleaseModel) GetApp() App {
 	return bm.AppField.(App)
 }
 
-func (bm ReleaseModel) Fail() (error) {
+func (bm ReleaseModel) Fail() error {
 	return bm.ReleaseMapper.Fail(bm)
 }
 
-func (bm ReleaseModel) IsFail() (bool) {
+func (bm ReleaseModel) IsFail() bool {
 	return bm.StatusField == "FAIL"
 }
 
-func (bm ReleaseModel) IsSuccess() (bool) {
+func (bm ReleaseModel) IsSuccess() bool {
 	return bm.StatusField == "SUCCESS"
 }
 
@@ -86,7 +86,7 @@ type ReleasesModel struct {
 	LastField     string         `json:"last"`
 	PrevField     string         `json:"prev"`
 	NextField     string         `json:"next"`
-	ItemsField    []ReleaseModel  `json:"items"`
+	ItemsField    []ReleaseModel `json:"items"`
 	ReleaseMapper ReleaseMapper
 }
 

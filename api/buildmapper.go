@@ -1,9 +1,10 @@
 package api
+
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
-	"fmt"
-	"encoding/json"
 )
 
 //go:generate counterfeiter -o fakes/fake_build_mapper.go . BuildMapper
@@ -25,7 +26,7 @@ type DefaultBuildMapper struct {
 
 func NewBuildMapper(reader config.Reader, gateway net.Gateway) BuildMapper {
 	return DefaultBuildMapper{
-		config: reader,
+		config:  reader,
 		gateway: gateway,
 	}
 }
@@ -69,7 +70,6 @@ func (bm DefaultBuildMapper) GetBuilds(app App) (builds Builds, apiErr error) {
 	return
 }
 
-
 func (bm DefaultBuildMapper) GetBuild(app App, id string) (build Build, apiErr error) {
 	var buildModel BuildModel
 	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds/%s", app.Id(), id), &buildModel)
@@ -98,6 +98,6 @@ func (bm DefaultBuildMapper) VerifySuccess(build Build) (apiErr error) {
 	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/verify/success", build.GetApp().Id(), build.Id()), nil)
 }
 
-func (bm DefaultBuildMapper) VerifyFail(build Build) (apiErr error)  {
+func (bm DefaultBuildMapper) VerifyFail(build Build) (apiErr error) {
 	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/verify/fail", build.GetApp().Id(), build.Id()), nil)
 }

@@ -13,14 +13,14 @@ import (
 var _ = Describe("Stacks", func() {
 	var unPublishStackRequest = testnet.TestRequest{
 		Method: "PUT",
-		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/unpublished",
+		Path:   "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/unpublished",
 		Response: testnet.TestResponse{
 			Status: 200,
 		},
 	}
 	var publishStackRequest = testnet.TestRequest{
 		Method: "PUT",
-		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/published",
+		Path:   "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6/published",
 		Response: testnet.TestResponse{
 			Status: 200,
 		},
@@ -39,7 +39,7 @@ var _ = Describe("Stacks", func() {
 
 	var updateStackRequest = testnet.TestRequest{
 		Method: "PUT",
-		Path: "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6",
+		Path:   "/stacks/74a052c9-76b3-44a1-ac0b-666faa1223b6",
 		Response: testnet.TestResponse{
 			Status: 200,
 		},

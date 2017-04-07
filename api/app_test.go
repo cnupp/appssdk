@@ -4,11 +4,11 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/sjkyspa/stacks/controller/api/api"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http/httptest"
-	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("App", func() {
@@ -26,7 +26,6 @@ var _ = Describe("App", func() {
 	var createEnvRequest = fixtures.KetsuEnvCreate()
 	var deleteEnvRequest = fixtures.KetsuEnvUpdate()
 
-
 	var createAppRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo AppRepository) {
 		ts, handler = testnet.NewServer(requests)
 		configRepo := testconfig.NewRepositoryWithDefaults()
@@ -40,8 +39,8 @@ var _ = Describe("App", func() {
 		name := "ketsu"
 
 		return AppParams{
-			Name:      name,
-			Stack:     "/stacks/stackid",
+			Name:  name,
+			Stack: "/stacks/stackid",
 		}
 	}
 

@@ -60,14 +60,13 @@ type Keys interface {
 }
 
 type KeysModel struct {
-	CountField int            `json:"count"`
-	SelfField  string         `json:"self"`
-	FirstField string         `json:"first"`
-	LastField  string         `json:"last"`
-	PrevField  string         `json:"prev"`
-	NextField  string         `json:"next"`
-	ItemsField []KeyModel  `json:"items"`
-
+	CountField int        `json:"count"`
+	SelfField  string     `json:"self"`
+	FirstField string     `json:"first"`
+	LastField  string     `json:"last"`
+	PrevField  string     `json:"prev"`
+	NextField  string     `json:"next"`
+	ItemsField []KeyModel `json:"items"`
 }
 
 func (keys KeysModel) Count() int {

@@ -1,16 +1,16 @@
 package fixtures
 
 import (
+	"fmt"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http"
-	"fmt"
 	"net/url"
 )
 
 func KetsuBuild() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "GET",
-		Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8",
+		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -71,7 +71,7 @@ func KetsuCreate() testnet.TestRequest {
 func KetsuBuilds() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "GET",
-		Path: "/apps/ketsu/builds",
+		Path:   "/apps/ketsu/builds",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
@@ -113,8 +113,8 @@ func KetsuBuilds() testnet.TestRequest {
 
 func SuccessKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
-		Method: "PUT",
-		Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/success",
+		Method:  "PUT",
+		Path:    "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/success",
 		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
@@ -127,8 +127,8 @@ func SuccessKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 
 func FailKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
-		Method: "PUT",
-		Path: "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/fail",
+		Method:  "PUT",
+		Path:    "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/fail",
 		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
@@ -141,8 +141,8 @@ func FailKetsuBuild(matcher func(r *http.Request)) testnet.TestRequest {
 
 func SuccessKetsuVerify(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
-		Method: "PUT",
-		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/success",
+		Method:  "PUT",
+		Path:    "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/success",
 		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
@@ -155,8 +155,8 @@ func SuccessKetsuVerify(matcher func(r *http.Request)) testnet.TestRequest {
 
 func FailKetsuVerify(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
-		Method: "PUT",
-		Path:   "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/fail",
+		Method:  "PUT",
+		Path:    "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verify/fail",
 		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
@@ -473,7 +473,7 @@ func KetsuBuildLog() testnet.TestRequest {
 func KaylaPermissionOnKetsu() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "GET",
-		Path: "/apps/ketsu/permissions?user=abcd",
+		Path:   "/apps/ketsu/permissions?user=abcd",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Body: `
@@ -559,8 +559,8 @@ func DomainDetail() testnet.TestRequest {
 
 func DomainAttachCert(matcher func(r *http.Request)) testnet.TestRequest {
 	return testnet.TestRequest{
-		Method: "PUT",
-		Path:   "/domains/tw.com/cert",
+		Method:  "PUT",
+		Path:    "/domains/tw.com/cert",
 		Matcher: matcher,
 		Response: testnet.TestResponse{
 			Status: 200,
@@ -592,7 +592,7 @@ func Events(eventType string) testnet.TestRequest {
 		Path:   fmt.Sprintf("/events?type=%s", eventType),
 		Response: testnet.TestResponse{
 			Status: 200,
-			Body:   Render(`
+			Body: Render(`
 			{
 			    "self": "/events?page=2&per-page=1&type={{.Type}}",
 			    "first": "/events?page=1&per-page=1&type={{.Type}}",
@@ -645,7 +645,7 @@ func EventsOnPage(eventType string, total, page, perPage int) testnet.TestReques
 		Path:   fmt.Sprintf("/events?page=%d&per-page=%d&type=%s", page, perPage, eventType),
 		Response: testnet.TestResponse{
 			Status: 200,
-			Body:   Render(`
+			Body: Render(`
 			{
 			    "self": "{{.Self}}",
 			    "first": "{{.First}}",
@@ -688,12 +688,12 @@ func EventsOnPage(eventType string, total, page, perPage int) testnet.TestReques
 			    ]
 			    }
 			`, map[string]string{
-				"Type": eventType,
-				"Self": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Self,
+				"Type":  eventType,
+				"Self":  PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Self,
 				"First": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).First,
-				"Last": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Last,
-				"Prev": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Prev,
-				"Next": PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Next,
+				"Last":  PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Last,
+				"Prev":  PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Prev,
+				"Next":  PageGenerator(fmt.Sprintf("/events?type=%s", eventType), total, page, perPage).Next,
 				"Total": fmt.Sprintf("%d", total),
 			}),
 		},
@@ -758,7 +758,7 @@ func KetsuDestroy() testnet.TestRequest {
 func KetsuTransferToUser() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
-		Path: "/apps/ketsu/transferred",
+		Path:   "/apps/ketsu/transferred",
 		Response: testnet.TestResponse{
 			Status: 204,
 		},
@@ -768,11 +768,12 @@ func KetsuTransferToUser() testnet.TestRequest {
 func KetsuTransferToOrg() testnet.TestRequest {
 	return testnet.TestRequest{
 		Method: "PUT",
-		Path: "/apps/ketsu/transferred",
+		Path:   "/apps/ketsu/transferred",
 		Response: testnet.TestResponse{
 			Status: 204,
 		},
-	}}
+	}
+}
 
 type Page struct {
 	First string
@@ -809,7 +810,7 @@ func PageGenerator(prefix string, total, page, perPage int) Page {
 	var next = func() string {
 		last := (total / perPage) + 1
 		next := page + 1
-		if (next >= last) {
+		if next >= last {
 			return ""
 		} else {
 			return uri(next, perPage)
@@ -818,7 +819,7 @@ func PageGenerator(prefix string, total, page, perPage int) Page {
 
 	var prev = func() string {
 		prev := page - 1
-		if (prev <= 1) {
+		if prev <= 1 {
 			return ""
 		} else {
 			return uri(prev, perPage)
@@ -826,13 +827,10 @@ func PageGenerator(prefix string, total, page, perPage int) Page {
 	}
 
 	return Page{
-		Self: self(),
+		Self:  self(),
 		First: first(),
-		Last: last(),
-		Prev: prev(),
-		Next: next(),
+		Last:  last(),
+		Prev:  prev(),
+		Next:  next(),
 	}
 }
-
-
-

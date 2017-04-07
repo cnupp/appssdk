@@ -1,15 +1,16 @@
 package net
+
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"io"
-	"net/http"
-	"fmt"
 	"io/ioutil"
-	"encoding/json"
+	"net/http"
 	"net/url"
-	"bytes"
 	"reflect"
-	"errors"
 )
 
 type Gateway struct {
@@ -72,7 +73,6 @@ func (g *Gateway) PUT(path string, value interface{}) (apiErr error) {
 	_, apiErr = g.Request("PUT", path, data)
 	return
 }
-
 
 func (g *Gateway) Request(method string, path string, body []byte) (*http.Response, error) {
 	return g.request(method, path, body, contentType)

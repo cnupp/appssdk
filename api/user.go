@@ -58,13 +58,13 @@ type Users interface {
 }
 
 type UsersModel struct {
-	CountField int            `json:"count"`
-	SelfField  string         `json:"self"`
-	FirstField string         `json:"first"`
-	LastField  string         `json:"last"`
-	PrevField  string         `json:"prev"`
-	NextField  string         `json:"next"`
-	ItemsField []UserModel   `json:"items"`
+	CountField int         `json:"count"`
+	SelfField  string      `json:"self"`
+	FirstField string      `json:"first"`
+	LastField  string      `json:"last"`
+	PrevField  string      `json:"prev"`
+	NextField  string      `json:"next"`
+	ItemsField []UserModel `json:"items"`
 }
 
 func (users UsersModel) Count() int {

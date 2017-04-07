@@ -1,12 +1,12 @@
 package api
+
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
 	"io/ioutil"
 )
-
 
 //go:generate counterfeiter -o fakes/fake_stack_repository.go . StackRepository
 type StackRepository interface {
@@ -96,7 +96,7 @@ func (cc DefaultStackRepository) GetStacks() (Stacks, error) {
 	return stacks, apiErr
 }
 
-func (cc DefaultStackRepository) GetStackByName(name string) (Stacks, error){
+func (cc DefaultStackRepository) GetStackByName(name string) (Stacks, error) {
 	var stacks StacksModel
 	apiErr := cc.gateway.Get(fmt.Sprintf("/stacks?name=%s", name), &stacks)
 	if apiErr != nil {

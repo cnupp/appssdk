@@ -1,18 +1,18 @@
 package api
+
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
 	"encoding/json"
 	"fmt"
+	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/sjkyspa/stacks/controller/api/net"
 	"strings"
 )
-
 
 //go:generate counterfeiter -o fakes/fake_auth_repository.go . AuthRepository
 type AuthRepository interface {
 	Create(params UserParams) (auth Auth, apiErr error)
 	Get() (user User, apiErr error)
-	Delete(id string) (error)
+	Delete(id string) error
 }
 
 type DefaultAuthRepository struct {
@@ -42,7 +42,7 @@ func (authRepository DefaultAuthRepository) Create(params UserParams) (createdAu
 
 	return AuthModel{
 		UserEmailField: params.Email,
-		IdField: splits[len(splits) - 1],
+		IdField:        splits[len(splits)-1],
 	}, nil
 }
 

@@ -10,14 +10,14 @@ type Build interface {
 	Verify() Verify
 	Links() Links
 	GetApp() App
-	Success() (error)
-	Fail() (error)
-	IsSuccess() (bool)
-	IsFail() (bool)
-	VerifySuccess() (error)
-	IsVerifySuccess() (bool)
-	VerifyFail() (error)
-	IsVerifyFail() (bool)
+	Success() error
+	Fail() error
+	IsSuccess() bool
+	IsFail() bool
+	VerifySuccess() error
+	IsVerifySuccess() bool
+	VerifyFail() error
+	IsVerifyFail() bool
 }
 
 type BuildParams struct {
@@ -30,21 +30,21 @@ type Verify struct {
 }
 
 type BuildModel struct {
-	GitShaField string    `json:"git_sha"`
-	IDField     string    `json:"id"`
-	StatusField string    `json:"status"`
-	VerifyField Verify    `json:"verify"`
-	LinksField  []Link    `json:"links"`
-	AppField    App          `json:"-"`
+	GitShaField string      `json:"git_sha"`
+	IDField     string      `json:"id"`
+	StatusField string      `json:"status"`
+	VerifyField Verify      `json:"verify"`
+	LinksField  []Link      `json:"links"`
+	AppField    App         `json:"-"`
 	BuildMapper BuildMapper `json:"-"`
-	Resource    Resource `json:"-"`
+	Resource    Resource    `json:"-"`
 }
 
 type BuildRef struct {
-	GitSha string    `json:"git_sha"`
-	ID     string    `json:"id"`
-	Status string    `json:"status"`
-	Links  []Link    `json:"links"`
+	GitSha string `json:"git_sha"`
+	ID     string `json:"id"`
+	Status string `json:"status"`
+	Links  []Link `json:"links"`
 }
 
 type Links interface {
@@ -76,7 +76,7 @@ func (lm LinksModel) Self() (link Link) {
 		return l.Relation == "self"
 	})
 
-	if (len(results) == 1) {
+	if len(results) == 1 {
 		link = results[0]
 		return
 	}
@@ -87,7 +87,7 @@ func (lm LinksModel) Link(rel string) (link Link, apiErr error) {
 	results := lm.filter(lm.Links, func(l Link) bool {
 		return l.Relation == rel
 	})
-	if (len(results) == 1) {
+	if len(results) == 1 {
 		link = results[0]
 		return
 	}
@@ -133,31 +133,31 @@ func (bm BuildModel) GetApp() App {
 	return model.(App)
 }
 
-func (bm BuildModel) Fail() (error) {
+func (bm BuildModel) Fail() error {
 	return bm.BuildMapper.Fail(bm)
 }
 
-func (bm BuildModel) IsFail() (bool) {
+func (bm BuildModel) IsFail() bool {
 	return bm.StatusField == "FAIL"
 }
 
-func (bm BuildModel) IsSuccess() (bool) {
+func (bm BuildModel) IsSuccess() bool {
 	return bm.StatusField == "SUCCESS"
 }
 
-func (bm BuildModel) VerifySuccess() (error) {
+func (bm BuildModel) VerifySuccess() error {
 	return bm.BuildMapper.VerifySuccess(bm)
 }
 
-func (bm BuildModel) IsVerifySuccess() (bool) {
+func (bm BuildModel) IsVerifySuccess() bool {
 	return bm.VerifyField.StatusField == "SUCCESS"
 }
 
-func (bm BuildModel) VerifyFail() (error) {
+func (bm BuildModel) VerifyFail() error {
 	return bm.BuildMapper.VerifyFail(bm)
 }
 
-func (bm BuildModel) IsVerifyFail() (bool) {
+func (bm BuildModel) IsVerifyFail() bool {
 	return bm.VerifyField.StatusField == "FAIL"
 }
 
@@ -172,13 +172,13 @@ type Builds interface {
 }
 
 type BuildsModel struct {
-	CountField  int            `json:"count"`
-	SelfField   string         `json:"self"`
-	FirstField  string         `json:"first"`
-	LastField   string         `json:"last"`
-	PrevField   string         `json:"prev"`
-	NextField   string         `json:"next"`
-	ItemsField  []BuildRef  `json:"items"`
+	CountField  int        `json:"count"`
+	SelfField   string     `json:"self"`
+	FirstField  string     `json:"first"`
+	LastField   string     `json:"last"`
+	PrevField   string     `json:"prev"`
+	NextField   string     `json:"next"`
+	ItemsField  []BuildRef `json:"items"`
 	BuildMapper BuildMapper
 }
 

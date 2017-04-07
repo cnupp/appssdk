@@ -5,12 +5,12 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	. "github.com/sjkyspa/stacks/controller/api/testhelpers/matchers"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http/httptest"
-	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("Eventsrepository", func() {

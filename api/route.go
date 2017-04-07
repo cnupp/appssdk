@@ -18,11 +18,11 @@ type Route interface {
 }
 
 type RouteModel struct {
-	IDField      string     `json:"id"`
-	PathField    string        `json:"path"`
-	DomainField  SimpleDomain        `json:"domain"`
-	CreatedField string        `json:"created"`
-	LinksArray   []Link     `json:"links"`
+	IDField      string       `json:"id"`
+	PathField    string       `json:"path"`
+	DomainField  SimpleDomain `json:"domain"`
+	CreatedField string       `json:"created"`
+	LinksArray   []Link       `json:"links"`
 }
 
 func (route RouteModel) ID() string {
@@ -57,13 +57,13 @@ type Routes interface {
 }
 
 type RoutesModel struct {
-	CountField int            `json:"count"`
-	SelfField  string         `json:"self"`
-	FirstField string         `json:"first"`
-	LastField  string         `json:"last"`
-	PrevField  string         `json:"prev"`
-	NextField  string         `json:"next"`
-	ItemsField []RouteModel  `json:"items"`
+	CountField int          `json:"count"`
+	SelfField  string       `json:"self"`
+	FirstField string       `json:"first"`
+	LastField  string       `json:"last"`
+	PrevField  string       `json:"prev"`
+	NextField  string       `json:"next"`
+	ItemsField []RouteModel `json:"items"`
 }
 
 func (routes RoutesModel) Count() int {

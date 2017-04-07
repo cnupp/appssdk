@@ -1,8 +1,9 @@
 package api
+
 import (
+	"fmt"
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
-	"fmt"
 )
 
 type ReleaseMapper interface {
@@ -20,7 +21,7 @@ type DefaultReleaseMapper struct {
 
 func NewReleaseMapper(reader config.Reader, gateway net.Gateway) ReleaseMapper {
 	return DefaultReleaseMapper{
-		config: reader,
+		config:  reader,
 		gateway: gateway,
 	}
 }
@@ -57,7 +58,6 @@ func (bm DefaultReleaseMapper) GetReleases(app App) (releases Releases, apiErr e
 	releases = releasesModel
 	return
 }
-
 
 func (bm DefaultReleaseMapper) GetRelease(app App, id string) (release Release, apiErr error) {
 	var releaseModel ReleaseModel

@@ -6,7 +6,7 @@ type Auth interface {
 }
 
 type AuthModel struct {
-	IdField string
+	IdField        string
 	UserEmailField string
 }
 

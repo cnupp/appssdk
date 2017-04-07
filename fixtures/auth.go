@@ -40,7 +40,8 @@ func Logout() testnet.TestRequest {
 		Response: testnet.TestResponse{
 			Status: 200,
 		},
-	}}
+	}
+}
 
 func Auths() testnet.TestRequest {
 	return testnet.TestRequest{

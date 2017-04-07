@@ -16,8 +16,8 @@ type Domain interface {
 }
 
 type DomainModel struct {
-	IdField      string     `json:"id"`
-	NameField    string     `json:"name"`
+	IdField      string           `json:"id"`
+	NameField    string           `json:"name"`
 	DomainMapper DomainRepository `json:"-"`
 }
 
@@ -69,13 +69,13 @@ type Domains interface {
 }
 
 type DomainsModel struct {
-	CountField   int            `json:"count"`
-	SelfField    string         `json:"self"`
-	FirstField   string         `json:"first"`
-	LastField    string         `json:"last"`
-	PrevField    string         `json:"prev"`
-	NextField    string         `json:"next"`
-	ItemsField   []DomainRefModel  `json:"items"`
+	CountField   int              `json:"count"`
+	SelfField    string           `json:"self"`
+	FirstField   string           `json:"first"`
+	LastField    string           `json:"last"`
+	PrevField    string           `json:"prev"`
+	NextField    string           `json:"next"`
+	ItemsField   []DomainRefModel `json:"items"`
 	DomainMapper DomainRepository
 }
 

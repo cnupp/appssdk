@@ -16,7 +16,7 @@ type ResourceModel struct {
 }
 
 func (rm ResourceModel) GetResourceByURI(uri string) (interface{}, error) {
-	types := make(map[string]func()(interface{}, error))
+	types := make(map[string]func() (interface{}, error))
 
 	types["/apps[?]?[^/]*?$"] = func() (interface{}, error) {
 		var apps AppsModel
@@ -34,14 +34,14 @@ func (rm ResourceModel) GetResourceByURI(uri string) (interface{}, error) {
 	}
 
 	types["/apps/[^/]*?/builds[?]?[^/]*?$"] = func() (interface{}, error) {
-		var model BuildsModel;
+		var model BuildsModel
 		err := rm.gateway.Get(uri, &model)
 		model.BuildMapper = NewBuildMapper(rm.config, rm.gateway)
 		return model, err
 	}
 
 	types["/apps/[^/]*?/builds/[^/]*?$"] = func() (interface{}, error) {
-		var model BuildModel;
+		var model BuildModel
 		err := rm.gateway.Get(uri, &model)
 		model.BuildMapper = NewBuildMapper(rm.config, rm.gateway)
 		model.Resource = NewResource(rm.config, rm.gateway)
@@ -50,7 +50,7 @@ func (rm ResourceModel) GetResourceByURI(uri string) (interface{}, error) {
 
 	for reg, ty := range types {
 		matched, err := regexp.MatchString(reg, uri)
-		if (matched && err == nil) {
+		if matched && err == nil {
 			return ty()
 		}
 	}
@@ -59,7 +59,7 @@ func (rm ResourceModel) GetResourceByURI(uri string) (interface{}, error) {
 
 func NewResource(cf config.Reader, gw net.Gateway) Resource {
 	return ResourceModel{
-		config: cf,
+		config:  cf,
 		gateway: gw,
 	}
 }

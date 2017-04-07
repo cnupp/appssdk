@@ -5,11 +5,11 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http/httptest"
-	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("Domains", func() {

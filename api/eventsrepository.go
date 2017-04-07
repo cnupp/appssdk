@@ -1,8 +1,9 @@
 package api
+
 import (
-"github.com/sjkyspa/stacks/controller/api/config"
-"github.com/sjkyspa/stacks/controller/api/net"
 	"fmt"
+	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/sjkyspa/stacks/controller/api/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_event_repository.go . EventRepository
@@ -18,7 +19,7 @@ type DefaultEventRepository struct {
 
 func NewEventRepository(config config.Reader, gateway net.Gateway) EventRepository {
 	return DefaultEventRepository{
-		config: config,
+		config:  config,
 		gateway: gateway,
 	}
 }

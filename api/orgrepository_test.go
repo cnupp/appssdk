@@ -15,11 +15,11 @@ import (
 var _ = Describe("Apps", func() {
 	var getOrgMembersRequest = testnet.TestRequest{
 		Method: "GET",
-		Path: "/orgs/tw-test/members",
+		Path:   "/orgs/tw-test/members",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
-				"accept":   {"application/json"},
+				"accept": {"application/json"},
 			},
 			Body: `
 			[]
@@ -28,11 +28,11 @@ var _ = Describe("Apps", func() {
 	}
 	var listOrgAppsRequest = testnet.TestRequest{
 		Method: "GET",
-		Path: "/orgs/tw-test/apps",
+		Path:   "/orgs/tw-test/apps",
 		Response: testnet.TestResponse{
 			Status: 200,
 			Header: http.Header{
-				"accept":   {"application/json"},
+				"accept": {"application/json"},
 			},
 			Body: `
 			[]
@@ -73,7 +73,7 @@ var _ = Describe("Apps", func() {
 
 	var addOrgMemberRequest = testnet.TestRequest{
 		Method: "POST",
-		Path: "/orgs/tw/members",
+		Path:   "/orgs/tw/members",
 		Response: testnet.TestResponse{
 			Status: 201,
 		},
@@ -111,7 +111,6 @@ var _ = Describe("Apps", func() {
 		},
 	}
 
-
 	var destroyOrgRequest = testnet.TestRequest{
 		Method: "DELETE",
 		Path:   "/orgs/tw-test",
@@ -136,7 +135,7 @@ var _ = Describe("Apps", func() {
 		name := "tw-test"
 
 		return OrgParams{
-			Name:      name,
+			Name: name,
 		}
 	}
 

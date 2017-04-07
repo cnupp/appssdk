@@ -72,8 +72,8 @@ func (em EventsModel) Prev() (e Events, apiError error) {
 		e = EventsModel{
 			CountField: 0,
 			ItemsField: []EventRefModel{},
-			NextField: "",
-			PrevField: "",
+			NextField:  "",
+			PrevField:  "",
 		}
 		apiError = nil
 		return

@@ -1,9 +1,10 @@
 package api
+
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
 	"encoding/json"
 	"fmt"
+	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/sjkyspa/stacks/controller/api/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_app_repository.go . AppRepository
@@ -17,7 +18,6 @@ type OrgRepository interface {
 	AddApp(orgName string, appName string) (apiErr error)
 	Delete(orgName string) (apiErr error)
 }
-
 
 type CloudControllerOrgRepository struct {
 	config  config.Reader
@@ -114,5 +114,5 @@ func (cc CloudControllerOrgRepository) AddApp(orgName string, appName string) (a
 }
 
 func (cc CloudControllerOrgRepository) Delete(orgName string) (apiErr error) {
-	return cc.gateway.Delete("/orgs/" + orgName, nil)
+	return cc.gateway.Delete("/orgs/"+orgName, nil)
 }

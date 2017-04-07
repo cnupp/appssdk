@@ -1,10 +1,9 @@
 package api
 
-import (
-)
+import ()
 
 type OrgParams struct {
-	Name       string `json:"name"`
+	Name string `json:"name"`
 }
 
 type Org interface {
@@ -13,9 +12,9 @@ type Org interface {
 }
 
 type OrgModel struct {
-	NAME            string     `json:"name"`
-	LinksArray      []Link     `json:"links"`
-	OrgMapper       OrgRepository
+	NAME       string `json:"name"`
+	LinksArray []Link `json:"links"`
+	OrgMapper  OrgRepository
 }
 
 func (o OrgModel) Name() string {

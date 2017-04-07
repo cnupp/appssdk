@@ -5,10 +5,10 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/sjkyspa/stacks/controller/api/net"
-	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
-	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	"github.com/sjkyspa/stacks/controller/api/fixtures"
+	"github.com/sjkyspa/stacks/controller/api/net"
+	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
+	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http"
 )
 
@@ -16,7 +16,7 @@ var _ = Describe("Resource", func() {
 	Context("Authorized User", func() {
 		It("should able to get the build by the uri", func(done Done) {
 			ts, _ := testnet.NewServer([]testnet.TestRequest{
-				fixtures.KetsuBuild(), fixtures.KetsuDetail(), fixtures.SuccessKetsuBuild(func(r *http.Request) {  }),
+				fixtures.KetsuBuild(), fixtures.KetsuDetail(), fixtures.SuccessKetsuBuild(func(r *http.Request) {}),
 			})
 			defer ts.Close()
 

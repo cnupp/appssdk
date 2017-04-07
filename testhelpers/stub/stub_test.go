@@ -3,11 +3,11 @@ package stub_test
 import (
 	. "github.com/sjkyspa/stacks/controller/api/testhelpers/stub"
 
+	"bytes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"net/http"
-	"bytes"
 	"io/ioutil"
+	"net/http"
 )
 
 var _ = Describe("Stub", func() {
@@ -15,20 +15,20 @@ var _ = Describe("Stub", func() {
 		server, _ := NewStub([]TestRequest{
 			TestRequest{
 				Method: "GET",
-				Path: "/path",
+				Path:   "/path",
 				Response: TestResponse{
 					Status: 200,
 					Header: http.Header{
 						"Content-Type": {"application/json"},
-						"Set-Cookie": {"cookie=cookie"},
+						"Set-Cookie":   {"cookie=cookie"},
 					},
 					Body: "content",
 				},
 			},
 		})
 
-		var body []byte;
-		req, err := http.NewRequest("GET", server.URL + "/path", bytes.NewBuffer(body))
+		var body []byte
+		req, err := http.NewRequest("GET", server.URL+"/path", bytes.NewBuffer(body))
 		Expect(err).To(BeNil())
 
 		client := http.Client{}
@@ -45,37 +45,36 @@ var _ = Describe("Stub", func() {
 		Expect(string(bodyInBytes)).To(Equal("content"))
 	})
 
-
 	It("should able to get the second request reponse when to stub defined", func() {
 		server, _ := NewStub([]TestRequest{
 			TestRequest{
 				Method: "GET",
-				Path: "/path",
+				Path:   "/path",
 				Response: TestResponse{
 					Status: 200,
 					Header: http.Header{
 						"Content-Type": {"application/json"},
-						"Set-Cookie": {"cookie=cookie"},
+						"Set-Cookie":   {"cookie=cookie"},
 					},
 					Body: "content",
 				},
 			},
 			TestRequest{
 				Method: "GET",
-				Path: "/another-path",
+				Path:   "/another-path",
 				Response: TestResponse{
 					Status: 200,
 					Header: http.Header{
 						"Content-Type": {"application/json"},
-						"Set-Cookie": {"cookie=newcookie"},
+						"Set-Cookie":   {"cookie=newcookie"},
 					},
 					Body: "anothercontent",
 				},
 			},
 		})
 
-		var body []byte;
-		req, err := http.NewRequest("GET", server.URL + "/another-path", bytes.NewBuffer(body))
+		var body []byte
+		req, err := http.NewRequest("GET", server.URL+"/another-path", bytes.NewBuffer(body))
 		Expect(err).To(BeNil())
 
 		client := http.Client{}
@@ -93,11 +92,10 @@ var _ = Describe("Stub", func() {
 	})
 
 	It("should able to 404 when no request stub defined", func() {
-		server, _ := NewStub([]TestRequest{
-		})
+		server, _ := NewStub([]TestRequest{})
 
-		var body []byte;
-		req, err := http.NewRequest("GET", server.URL + "/not-exists-path", bytes.NewBuffer(body))
+		var body []byte
+		req, err := http.NewRequest("GET", server.URL+"/not-exists-path", bytes.NewBuffer(body))
 		Expect(err).To(BeNil())
 
 		client := http.Client{}
@@ -112,7 +110,7 @@ var _ = Describe("Stub", func() {
 		server, _ := NewStub([]TestRequest{
 			TestRequest{
 				Method: "PUT",
-				Path: "/path",
+				Path:   "/path",
 				Matcher: func(r *http.Request) {
 					Expect(r.Header.Get("csrf")).To(Equal("csrf"))
 				},
@@ -120,15 +118,15 @@ var _ = Describe("Stub", func() {
 					Status: 200,
 					Header: http.Header{
 						"Content-Type": {"application/json"},
-						"Set-Cookie": {"cookie=cookie"},
+						"Set-Cookie":   {"cookie=cookie"},
 					},
 					Body: "content",
 				},
 			},
 		})
 
-		var body []byte;
-		req, err := http.NewRequest("PUT", server.URL + "/path", bytes.NewBuffer(body))
+		var body []byte
+		req, err := http.NewRequest("PUT", server.URL+"/path", bytes.NewBuffer(body))
 		req.Header.Add("csrf", "csrf")
 		Expect(err).To(BeNil())
 

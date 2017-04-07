@@ -1,24 +1,24 @@
 package api
 
 type Image struct {
-	Name string `json:"image"`
-	Mem  int `json:"mem"`
+	Name string  `json:"image"`
+	Mem  int     `json:"mem"`
 	Cpus float64 `json:"cpus"`
 }
 
 type ServiceDefinition struct {
-	Build     Image `json:"build"`
-	Verify    Image `json:"verify"`
+	Build     Image             `json:"build"`
+	Verify    Image             `json:"verify"`
 	Env       map[string]string `json:"environment"`
-	Links     []string `json:"links"`
-	Health    []HealthCheck `json:"health"`
-	Volumes   []Volume `json:"volumes"`
-	Exposes   int `json:"expose"`
-	Image     string `json:"image"`
-	cpu       float64 `json:"cpus"`
-	mem       float64 `json:"mem"`
-	instances int `json:"instances"`
-	name      string `json:"name"`
+	Links     []string          `json:"links"`
+	Health    []HealthCheck     `json:"health"`
+	Volumes   []Volume          `json:"volumes"`
+	Exposes   int               `json:"expose"`
+	Image     string            `json:"image"`
+	cpu       float64           `json:"cpus"`
+	mem       float64           `json:"mem"`
+	instances int               `json:"instances"`
+	name      string            `json:"name"`
 }
 
 func (sd ServiceDefinition) GetLinks() []string {
@@ -87,7 +87,6 @@ type Volume struct {
 }
 
 type HealthCheck struct {
-
 }
 
 type Service interface {
@@ -121,12 +120,12 @@ type Stack interface {
 }
 
 type StackModel struct {
-	IDField     string `json:"id"`
-	NameField   string `json:"name"`
-	LinksField  []Link `json:"links"`
-	TypeField   string `json:"type"`
+	IDField     string                       `json:"id"`
+	NameField   string                       `json:"name"`
+	LinksField  []Link                       `json:"links"`
+	TypeField   string                       `json:"type"`
 	Services    map[string]ServiceDefinition `json:"services"`
-	Template    Template `json:"template"`
+	Template    Template                     `json:"template"`
 	StackMapper StackRepository
 }
 
@@ -204,13 +203,13 @@ type Stacks interface {
 }
 
 type StacksModel struct {
-	CountField int            `json:"count"`
-	SelfField  string         `json:"self"`
-	FirstField string         `json:"first"`
-	LastField  string         `json:"last"`
-	PrevField  string         `json:"prev"`
-	NextField  string         `json:"next"`
-	ItemsField []StackModel   `json:"items"`
+	CountField int          `json:"count"`
+	SelfField  string       `json:"self"`
+	FirstField string       `json:"first"`
+	LastField  string       `json:"last"`
+	PrevField  string       `json:"prev"`
+	NextField  string       `json:"next"`
+	ItemsField []StackModel `json:"items"`
 }
 
 func (stacks StacksModel) Count() int {

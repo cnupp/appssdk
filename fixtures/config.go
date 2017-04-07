@@ -1,11 +1,11 @@
 package fixtures
 
 import (
-	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"bytes"
 	"encoding/base64"
-	"text/template"
 	"fmt"
+	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
+	"text/template"
 )
 
 func BuildAuth() testnet.TestRequest {
@@ -14,7 +14,7 @@ func BuildAuth() testnet.TestRequest {
 		Path:   "/v1/kv/cde/builder/token",
 		Response: testnet.TestResponse{
 			Status: 200,
-			Body:   Render(
+			Body: Render(
 				`[
 				  {
 					"CreateIndex": 100,

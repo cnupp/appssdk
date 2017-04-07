@@ -1,9 +1,10 @@
 package api
+
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
 	"encoding/json"
 	"fmt"
+	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/sjkyspa/stacks/controller/api/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_user_repository.go . UserRepository
@@ -78,4 +79,3 @@ func (cc DefaultUserRepository) GetUserByFingerprint(fingerprint string) (users 
 	users = usersModel
 	return
 }
-

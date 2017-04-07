@@ -7,7 +7,7 @@ import (
 type AppParams struct {
 	Stack      string `json:"stackId"`
 	Name       string `json:"name"`
-	NeedDeploy bool `json:"needDeploy"`
+	NeedDeploy bool   `json:"needDeploy"`
 }
 
 type AppRouteParams struct {
@@ -63,28 +63,28 @@ type App interface {
 	GetBuild(id string) (Build, error)
 	GetBuildByURI(uri string) (Build, error)
 	GetStack() (Stack, error)
-	GetEnvs() (map[string]string)
-	SetEnv(envs map[string]interface{}) (error)
-	UnsetEnv(keys []string) (error)
+	GetEnvs() map[string]string
+	SetEnv(envs map[string]interface{}) error
+	UnsetEnv(keys []string) error
 	CreateBuild(buildParams BuildParams) (Build, error)
-	BindWithRoute(params AppRouteParams) (error)
-	UnbindRoute(routeId string) (error)
-	SwitchStack(params UpdateStackParams) (error)
+	BindWithRoute(params AppRouteParams) error
+	UnbindRoute(routeId string) error
+	SwitchStack(params UpdateStackParams) error
 	GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermissions(userId string) (AppPermission, error)
 	GetCollaborators() ([]UserModel, error)
-	AddCollaborator(param CreateCollaboratorParams) (error)
-	RemoveCollaborator(userId string) (error)
-	TransferToOrg(orgName string) (error)
-	TransferToUser(userEmail string) (error)
-	NeedDeploy() (bool)
+	AddCollaborator(param CreateCollaboratorParams) error
+	RemoveCollaborator(userId string) error
+	TransferToOrg(orgName string) error
+	TransferToUser(userEmail string) error
+	NeedDeploy() bool
 }
 
 type AppModel struct {
-	ID              string     `json:"name"`
-	NeedDeployField bool `json:"needDeploy"`
+	ID              string            `json:"name"`
+	NeedDeployField bool              `json:"needDeploy"`
 	Envs            map[string]string `json:"envs"`
-	LinksArray      []Link     `json:"links"`
+	LinksArray      []Link            `json:"links"`
 	BuildMapper     BuildMapper
 	AppMapper       AppRepository
 	StackRepository StackRepository
@@ -154,11 +154,11 @@ func (a AppModel) GetStack() (stack Stack, apiErr error) {
 	return a.StackRepository.GetStackByURI(stackLink.URI)
 }
 
-func (a AppModel) BindWithRoute(params AppRouteParams) (error) {
+func (a AppModel) BindWithRoute(params AppRouteParams) error {
 	return a.AppMapper.BindWithRoute(a, params)
 }
 
-func (a AppModel) UnbindRoute(routeId string) (error) {
+func (a AppModel) UnbindRoute(routeId string) error {
 	return a.AppMapper.UnbindRoute(a, routeId)
 }
 
@@ -166,7 +166,7 @@ func (a AppModel) GetRoutes() (AppRoutes, error) {
 	return a.AppMapper.GetRoutes(a)
 }
 
-func (a AppModel) SwitchStack(params UpdateStackParams) (error) {
+func (a AppModel) SwitchStack(params UpdateStackParams) error {
 	return a.AppMapper.SwitchStack(a.ID, params)
 }
 
@@ -177,7 +177,7 @@ func (a AppModel) GetLogForTests(buildId, logType string, lines int64, offset in
 func (a AppModel) GetCluster() (Cluster, error) {
 	return ClusterModel{
 		EndpointField: "/clusters/1",
-	},nil
+	}, nil
 }
 
 type AppRef interface {
@@ -186,8 +186,8 @@ type AppRef interface {
 }
 
 type AppRefModel struct {
-	IDField     string     `json:"name"`
-	LinksField  []Link     `json:"links"`
+	IDField     string `json:"name"`
+	LinksField  []Link `json:"links"`
 	BuildMapper BuildMapper
 }
 
@@ -211,13 +211,13 @@ type Apps interface {
 }
 
 type AppsModel struct {
-	CountField int            `json:"count"`
-	SelfField  string         `json:"self"`
-	FirstField string         `json:"first"`
-	LastField  string         `json:"last"`
-	PrevField  string         `json:"prev"`
-	NextField  string         `json:"next"`
-	ItemsField []AppRefModel  `json:"items"`
+	CountField int           `json:"count"`
+	SelfField  string        `json:"self"`
+	FirstField string        `json:"first"`
+	LastField  string        `json:"last"`
+	PrevField  string        `json:"prev"`
+	NextField  string        `json:"next"`
+	ItemsField []AppRefModel `json:"items"`
 	AppMapper  AppRepository
 }
 
@@ -249,11 +249,11 @@ func (apps AppsModel) Items() []AppRef {
 }
 
 type AppRouteModel struct {
-	IDField      string     `json:"id"`
-	PathField    string        `json:"path"`
-	DomainField  SimpleDomain        `json:"domain"`
-	CreatedField string        `json:"created"`
-	LinksArray   []Link     `json:"links"`
+	IDField      string       `json:"id"`
+	PathField    string       `json:"path"`
+	DomainField  SimpleDomain `json:"domain"`
+	CreatedField string       `json:"created"`
+	LinksArray   []Link       `json:"links"`
 }
 
 type AppRoutes interface {
@@ -266,25 +266,25 @@ type AppRoutes interface {
 }
 
 type AppRoutesModel struct {
-	CountField int            `json:"count"`
-	SelfField  string         `json:"self"`
-	FirstField string         `json:"first"`
-	LastField  string         `json:"last"`
-	PrevField  string         `json:"prev"`
-	NextField  string         `json:"next"`
-	ItemsField []AppRouteModel  `json:"items"`
+	CountField int             `json:"count"`
+	SelfField  string          `json:"self"`
+	FirstField string          `json:"first"`
+	LastField  string          `json:"last"`
+	PrevField  string          `json:"prev"`
+	NextField  string          `json:"next"`
+	ItemsField []AppRouteModel `json:"items"`
 	AppRepo    AppRepository
 }
 
 type LogItemsModel struct {
-	MessageField string        `json:"message"`
+	MessageField string `json:"message"`
 }
 
 type LogsModel struct {
-	ErrorField string        `json:"error"`
-	TotalField int64         `json:"total"`
+	ErrorField string          `json:"error"`
+	TotalField int64           `json:"total"`
 	SizeField  int64           `json:"size"`
-	ItemsField []LogItemsModel  `json:"items"`
+	ItemsField []LogItemsModel `json:"items"`
 }
 
 func (appRoutes AppRoutesModel) Count() int {
@@ -340,7 +340,7 @@ func (appRoutes AppRoutesModel) Items() []AppRouteModel {
 }
 
 func (app AppModel) GetPermissions(userId string) (AppPermission, error) {
-	appPermission, err := app.AppMapper.GetPermission(app, userId);
+	appPermission, err := app.AppMapper.GetPermission(app, userId)
 	return appPermission, err
 }
 
@@ -349,18 +349,18 @@ func (app AppModel) GetCollaborators() ([]UserModel, error) {
 	return users, err
 }
 
-func (app AppModel) AddCollaborator(param CreateCollaboratorParams) (error) {
+func (app AppModel) AddCollaborator(param CreateCollaboratorParams) error {
 	return app.AppMapper.AddCollaborator(app.Id(), param)
 }
 
-func (app AppModel) RemoveCollaborator(userId string) (error) {
+func (app AppModel) RemoveCollaborator(userId string) error {
 	return app.AppMapper.RemoveCollaborator(app.Id(), userId)
 }
 
-func (app AppModel) TransferToOrg(orgName string) (error) {
+func (app AppModel) TransferToOrg(orgName string) error {
 	return app.AppMapper.TransferToOrg(app.Id(), orgName)
 }
 
-func (app AppModel) TransferToUser(userEmail string) (error) {
+func (app AppModel) TransferToUser(userEmail string) error {
 	return app.AppMapper.TransferToUser(app.Id(), userEmail)
 }

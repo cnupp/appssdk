@@ -5,11 +5,11 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/sjkyspa/stacks/controller/api/fixtures"
 	"github.com/sjkyspa/stacks/controller/api/net"
 	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
 	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http/httptest"
-	"github.com/sjkyspa/stacks/controller/api/fixtures"
 )
 
 var _ = Describe("Apps", func() {
@@ -26,8 +26,8 @@ var _ = Describe("Apps", func() {
 		name := "ketsu"
 
 		return AppParams{
-			Name:      name,
-			Stack:     "/stacks/stackid",
+			Name:  name,
+			Stack: "/stacks/stackid",
 		}
 	}
 
@@ -122,7 +122,6 @@ var _ = Describe("Apps", func() {
 		err := repo.TransferToUser(appId, userEmail)
 		Expect(err).To(BeNil())
 	})
-
 
 	It("should able to transfer to org", func() {
 		orgName := "tw-test"

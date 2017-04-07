@@ -1,9 +1,10 @@
 package api
+
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
 	"encoding/json"
 	"fmt"
+	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/sjkyspa/stacks/controller/api/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_app_repository.go . AppRepository
@@ -16,18 +17,17 @@ type AppRepository interface {
 	UnbindRoute(app App, routeId string) error
 	GetRoutes(app App) (routes AppRoutes, apiErr error)
 	GetRoutesByURI(uri string) (routes AppRoutes, apiErr error)
-	SetEnv(app App, kvs map[string]interface{}) (error)
-	UnsetEnv(app App, keys []string) (error)
+	SetEnv(app App, kvs map[string]interface{}) error
+	UnsetEnv(app App, keys []string) error
 	SwitchStack(id string, params UpdateStackParams) (apiErr error)
 	GetLog(appId, buildId, logType string, lines int64, offset int64) (LogsModel, error)
 	GetPermission(app App, userId string) (AppPermission, error)
 	GetCollaborators(appId string) ([]UserModel, error)
-	AddCollaborator(appId string, param CreateCollaboratorParams) (error)
-	RemoveCollaborator(appId string, userId string) (error)
-	TransferToUser(appId string, email string) (error)
-	TransferToOrg(appId string, orgName string) (error)
+	AddCollaborator(appId string, param CreateCollaboratorParams) error
+	RemoveCollaborator(appId string, userId string) error
+	TransferToUser(appId string, email string) error
+	TransferToOrg(appId string, orgName string) error
 }
-
 
 type AppPermission struct {
 	Write bool `json:"write"`
@@ -107,7 +107,6 @@ func (cc CloudControllerAppRepository) GetApp(id string) (app App, apiErr error)
 	return
 }
 
-
 func (cc CloudControllerAppRepository) GetApps() (apps Apps, apiErr error) {
 	var remoteApps AppsModel
 	apiErr = cc.gateway.Get(fmt.Sprintf("/apps"), &remoteApps)
@@ -147,7 +146,6 @@ func (cc CloudControllerAppRepository) SwitchStack(id string, params UpdateStack
 	return
 }
 
-
 func (cc CloudControllerAppRepository) Delete(id string) (apiErr error) {
 	_, apiErr = cc.gateway.Request("DELETE", fmt.Sprintf("/apps/%s", id), nil)
 	return
@@ -155,7 +153,7 @@ func (cc CloudControllerAppRepository) Delete(id string) (apiErr error) {
 
 func (cc CloudControllerAppRepository) GetRoutes(app App) (routes AppRoutes, apiErr error) {
 	var routesModel AppRoutesModel
-	apiErr = cc.gateway.Get(fmt.Sprintf("/apps/" + app.Id() + "/routes"), &routesModel)
+	apiErr = cc.gateway.Get(fmt.Sprintf("/apps/"+app.Id()+"/routes"), &routesModel)
 	routesModel.AppRepo = cc
 	routes = routesModel
 	return
@@ -210,7 +208,7 @@ func (cc CloudControllerAppRepository) RemoveCollaborator(appId string, userId s
 
 func (cc CloudControllerAppRepository) TransferToUser(appId string, userEmail string) (err error) {
 	params := TransferAppParams{
-		Owner: userEmail,
+		Owner:     userEmail,
 		OwnerType: "User",
 	}
 	data, err := json.Marshal(params)
@@ -224,7 +222,7 @@ func (cc CloudControllerAppRepository) TransferToUser(appId string, userEmail st
 
 func (cc CloudControllerAppRepository) TransferToOrg(appId string, orgName string) (err error) {
 	params := TransferAppParams{
-		Owner: orgName,
+		Owner:     orgName,
 		OwnerType: "Organization",
 	}
 	data, err := json.Marshal(params)

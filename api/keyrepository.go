@@ -1,9 +1,10 @@
 package api
+
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
-	"fmt"
-	"encoding/json"
 )
 
 //go:generate counterfeiter -o fakes/fake_key_repository.go . KeyRepository
