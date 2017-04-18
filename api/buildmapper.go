@@ -82,7 +82,7 @@ func (bm DefaultBuildMapper) GetBuild(app App, id string) (build Build, apiErr e
 	return
 }
 
-func (bm DefaultBuildMapper) Success(build Build) (apiErr error) {
+func (bm DefaultBuildMapper) Success(build Build) (error) {
 	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/success", build.GetApp().Id(), build.Id()), nil)
 }
 

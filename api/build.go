@@ -117,7 +117,7 @@ func (bm BuildModel) Links() Links {
 	}
 }
 
-func (bm BuildModel) Success() (apiErr error) {
+func (bm BuildModel) Success() (error) {
 	return bm.BuildMapper.Success(bm)
 }
 

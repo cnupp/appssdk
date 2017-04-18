@@ -27,7 +27,7 @@ func NewAuthRepository(config config.Reader, gateway net.Gateway) AuthRepository
 func (authRepository DefaultAuthRepository) Create(params UserParams) (createdAuth Auth, apiErr error) {
 	data, err := json.Marshal(params)
 	if err != nil {
-		apiErr = fmt.Errorf("Can not serialize the data")
+		apiErr = fmt.Errorf("%s", "Can not serialize the data")
 		return
 	}
 
@@ -42,7 +42,7 @@ func (authRepository DefaultAuthRepository) Create(params UserParams) (createdAu
 
 	return AuthModel{
 		UserEmailField: params.Email,
-		IdField:        splits[len(splits)-1],
+		IdField:        splits[len(splits) - 1],
 	}, nil
 }
 
