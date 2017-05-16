@@ -15,10 +15,10 @@ type ServiceDefinition struct {
 	Volumes   []Volume          `json:"volumes"`
 	Exposes   int               `json:"expose"`
 	Image     string            `json:"image"`
-	cpu       float64           `json:"cpus"`
-	mem       float64           `json:"mem"`
-	instances int               `json:"instances"`
-	name      string            `json:"name"`
+	Cpu       float64           `json:"cpus"`
+	Mem       float64           `json:"mem"`
+	Instances int               `json:"instances"`
+	Name      string            `json:"name"`
 }
 
 func (sd ServiceDefinition) GetLinks() []string {
@@ -47,20 +47,20 @@ func (sd ServiceDefinition) GetImage() string {
 	return sd.Image
 }
 
-func (sd ServiceDefinition) CPU() float64 {
-	return sd.cpu
+func (sd ServiceDefinition) GetCpu() float64 {
+	return sd.Cpu
 }
 
-func (sd ServiceDefinition) Mem() float64 {
-	return sd.mem
+func (sd ServiceDefinition) GetMem() float64 {
+	return sd.Mem
 }
 
-func (sd ServiceDefinition) Instances() int {
-	return sd.instances
+func (sd ServiceDefinition) GetInstances() int {
+	return sd.Instances
 }
 
-func (sd ServiceDefinition) Name() string {
-	return sd.name
+func (sd ServiceDefinition) GetName() string {
+	return sd.Name
 }
 
 func (sd ServiceDefinition) IsBuildable() bool {
@@ -80,6 +80,16 @@ type Template struct {
 	URI  string `json:"uri"`
 }
 
+type Language struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
+type Framework struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
 type Volume struct {
 	ContainerPath string `json:"container"`
 	HostPath      string `json:"host"`
@@ -87,15 +97,24 @@ type Volume struct {
 }
 
 type HealthCheck struct {
+	Protocol               string `json:"protocol"`
+	Command                string `json:"command"`
+	Path                   string `json:"path"`
+	Grace                  int `json:"grace"`
+	Timeout                int `json:"timeout"`
+	Interval               int `json:"interval"`
+	Port                   int `json:"port"`
+	PortIndex              int `json:"portIndex"`
+	MaxConsecutiveFailures int `json:"maxConsecutiveFailures"`
 }
 
 type Service interface {
 	GetEnv() map[string]string
 	GetImage() string
-	CPU() float64
-	Mem() float64
-	Instances() int
-	Name() string
+	GetCpu() float64
+	GetMem() float64
+	GetInstances() int
+	GetName() string
 	GetVolumes() []Volume
 	GetLinks() []string
 	GetHealthChecks() []HealthCheck
@@ -114,19 +133,28 @@ type Stack interface {
 	GetVerifyImage() Image
 	GetTemplateCode() string
 	GetServices() map[string]Service
+	GetStatus() string
+	GetDescription() string
+	GetLanguages() []Language
+	GetFrameworks() []Framework
+	GetTemplate() Template
 	Update(stackDefinition map[string]interface{}) error
 	Publish() error
 	UnPublish() error
 }
 
 type StackModel struct {
-	IDField     string                       `json:"id"`
-	NameField   string                       `json:"name"`
-	LinksField  []Link                       `json:"links"`
-	TypeField   string                       `json:"type"`
-	Services    map[string]ServiceDefinition `json:"services"`
-	Template    Template                     `json:"template"`
-	StackMapper StackRepository
+	IDField          string                       `json:"id"`
+	NameField        string                       `json:"name"`
+	LinksField       []Link                       `json:"links"`
+	TypeField        string                       `json:"type"`
+	Services         map[string]ServiceDefinition `json:"services"`
+	Template         Template                     `json:"template"`
+	StatusField      string                         `json:"status"`
+	DescriptionField string                 `json:"description"`
+	LanguagesField   []Language               `json:"languages"`
+	FrameworksField  []Framework                 `json:"frameworks"`
+	StackMapper      StackRepository
 }
 
 func (a StackModel) Id() string {
@@ -167,6 +195,26 @@ func (a StackModel) GetVerifyImage() Image {
 
 func (a StackModel) GetTemplateCode() string {
 	return a.Template.URI
+}
+
+func (a StackModel) GetStatus() string {
+	return a.StatusField
+}
+
+func (a StackModel) GetDescription() string {
+	return a.DescriptionField
+}
+
+func (a StackModel) GetLanguages() []Language {
+	return a.LanguagesField
+}
+
+func (a StackModel) GetFrameworks() []Framework {
+	return a.FrameworksField
+}
+
+func (a StackModel) GetTemplate() Template {
+	return a.Template
 }
 
 func (s StackModel) Update(stackDefinition map[string]interface{}) (err error) {
@@ -248,4 +296,8 @@ func Filter(vs []string, f func(string) bool) []string {
 		}
 	}
 	return vsf
+}
+
+func NotEmptyImage(image Image) (bool) {
+	return !(image == Image{})
 }
