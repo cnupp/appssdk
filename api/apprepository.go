@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/sjkyspa/stacks/controller/api/config"
 	"github.com/sjkyspa/stacks/controller/api/net"
+	"errors"
 )
 
 //go:generate counterfeiter -o fakes/fake_app_repository.go . AppRepository
@@ -95,6 +96,10 @@ func (cc CloudControllerAppRepository) Create(params AppParams) (createdApp App,
 }
 
 func (cc CloudControllerAppRepository) GetApp(id string) (app App, apiErr error) {
+	if id == "" {
+		return nil, errors.New("Application not found")
+	}
+
 	var remoteApp AppModel
 	apiErr = cc.gateway.Get(fmt.Sprintf("/apps/%s", id), &remoteApp)
 	if apiErr != nil {
