@@ -142,7 +142,7 @@ func (g *Gateway) request(method string, path string, body []byte, contentType s
 	if err != nil {
 		return nil, err
 	}
-
+	req.Close = true
 	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", contentType)
 	req.Header.Add("User-Agent", userAgent)
