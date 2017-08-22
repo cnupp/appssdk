@@ -111,6 +111,8 @@ func checkForErrors(res *http.Response, body string) error {
 				switch sv := subValue.(type) {
 				case string:
 					errorMessage += fmt.Sprintf("%s: %s\n", key, sv)
+				case map[string]interface{}:
+					errorMessage += fmt.Sprintf("%s\n", sv["detail"])
 				default:
 					fmt.Printf("Unexpected type in %s error message array. Contents: %v",
 						reflect.TypeOf(value), sv)
