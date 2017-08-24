@@ -23,6 +23,7 @@ type Build interface {
 type BuildParams struct {
 	GitSha string `json:"git_sha"`
 	User   string `json:"user"`
+	Source string `json:"source"`
 }
 
 type Verify struct {
