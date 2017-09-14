@@ -5,9 +5,10 @@ import (
 )
 
 type AppParams struct {
-	Stack      string `json:"stackId"`
-	Name       string `json:"name"`
-	NeedDeploy bool   `json:"needDeploy"`
+	Stack            string `json:"stackId"`
+	UnifiedProcedure string `json:"unified_procedure_id"`
+	Name             string `json:"name"`
+	NeedDeploy       bool   `json:"needDeploy"`
 }
 
 type AppRouteParams struct {
