@@ -7,6 +7,8 @@ import (
 type AppParams struct {
 	Stack            string `json:"stackId"`
 	UnifiedProcedure string `json:"unified_procedure_id"`
+	Provider         string `json:"provider_uri"`
+	Owner            string `json:"owner"`
 	Name             string `json:"name"`
 	NeedDeploy       bool   `json:"needDeploy"`
 }
