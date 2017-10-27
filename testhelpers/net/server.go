@@ -2,9 +2,11 @@ package net
 
 import (
 	"fmt"
-	"github.com/onsi/ginkgo"
 	"net/http"
 	"net/http/httptest"
+	"strings"
+
+	"github.com/onsi/ginkgo"
 )
 
 type TestRequest struct {
@@ -36,6 +38,12 @@ func (h *TestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if len(request) == 0 {
 		w.WriteHeader(http.StatusNotFound)
+		uris := make([]string, 0)
+		for _, v := range h.Requests {
+			uris = append(uris, fmt.Sprintf("%s %s", v.Method, v.Path))
+		}
+
+		w.Write([]byte(fmt.Sprintf("request %s %s can not find, current served uris: %s", r.Method, r.RequestURI, strings.Join(uris, "\n"))))
 		return
 	}
 

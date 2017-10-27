@@ -2,9 +2,10 @@ package fixtures
 
 import (
 	"fmt"
-	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 	"net/http"
 	"net/url"
+
+	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
 )
 
 func KetsuBuild() testnet.TestRequest {
@@ -35,6 +36,43 @@ func KetsuBuild() testnet.TestRequest {
 					}
 				],
 				"id": "86e03fc8b63941669a20dbae948bdfc8",
+				"status": "NEW"
+			}`,
+		},
+	}
+}
+
+func KetsuBuildVerifyCreate(matcher func(r *http.Request)) testnet.TestRequest {
+	return testnet.TestRequest{
+		Method:  "POST",
+		Path:    "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verifies",
+		Matcher: matcher,
+		Response: testnet.TestResponse{
+			Status: 201,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+				"Location":     {"/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verifies/9ca658f5a9254feda1ce0af92a43b2f6"},
+			},
+			Body: `
+			{
+			}`,
+		},
+	}
+}
+
+func KetsuBuildVerify(matcher func(r *http.Request)) testnet.TestRequest {
+	return testnet.TestRequest{
+		Method:  "GET",
+		Path:    "/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verifies/9ca658f5a9254feda1ce0af92a43b2f6",
+		Matcher: matcher,
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+				"Location":     {"/apps/ketsu/builds/86e03fc8b63941669a20dbae948bdfc8/verifies/9ca658f5a9254feda1ce0af92a43b2f6"},
+			},
+			Body: `
+			{
 				"status": "NEW"
 			}`,
 		},
