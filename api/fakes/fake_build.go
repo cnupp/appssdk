@@ -26,11 +26,11 @@ type FakeBuild struct {
 	statusReturns     struct {
 		result1 string
 	}
-	VerifyStub        func() api.Verify
+	VerifyStub        func() api.VerifyModel
 	verifyMutex       sync.RWMutex
 	verifyArgsForCall []struct{}
 	verifyReturns     struct {
-		result1 api.Verify
+		result1 api.VerifyModel
 	}
 	LinksStub        func() api.Links
 	linksMutex       sync.RWMutex
@@ -173,7 +173,7 @@ func (fake *FakeBuild) StatusReturns(result1 string) {
 	}{result1}
 }
 
-func (fake *FakeBuild) Verify() api.Verify {
+func (fake *FakeBuild) Verify() api.VerifyModel {
 	fake.verifyMutex.Lock()
 	fake.verifyArgsForCall = append(fake.verifyArgsForCall, struct{}{})
 	fake.guard("Verify")
@@ -192,10 +192,10 @@ func (fake *FakeBuild) VerifyCallCount() int {
 	return len(fake.verifyArgsForCall)
 }
 
-func (fake *FakeBuild) VerifyReturns(result1 api.Verify) {
+func (fake *FakeBuild) VerifyReturns(result1 api.VerifyModel) {
 	fake.VerifyStub = nil
 	fake.verifyReturns = struct {
-		result1 api.Verify
+		result1 api.VerifyModel
 	}{result1}
 }
 

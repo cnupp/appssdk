@@ -26,7 +26,7 @@ var _ = Describe("Builds", func() {
 
 		Expect(err).To(BeNil())
 		Expect(build.GitSha()).To(Equal("60bc43aa"))
-		Expect(build.Verify().StatusField).To(Equal("NEW"))
+		Expect(build.Verify().Status()).To(Equal("NEW"))
 	})
 
 	It("should able to get all builds for app", func() {
