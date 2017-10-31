@@ -1,15 +1,15 @@
 package api_test
 
 import (
-	. "github.com/sjkyspa/stacks/controller/api/api"
+	. "github.com/cnupp/cnup/controller/api/api"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/sjkyspa/stacks/controller/api/fixtures"
-	"github.com/sjkyspa/stacks/controller/api/net"
-	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
-	. "github.com/sjkyspa/stacks/controller/api/testhelpers/matchers"
-	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
+	"github.com/cnupp/cnup/controller/api/fixtures"
+	"github.com/cnupp/cnup/controller/api/net"
+	testconfig "github.com/cnupp/cnup/controller/api/testhelpers/config"
+	. "github.com/cnupp/cnup/controller/api/testhelpers/matchers"
+	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
 	"net/http/httptest"
 )
 

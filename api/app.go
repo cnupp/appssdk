@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/sjkyspa/stacks/controller/api/util"
+	"github.com/cnupp/cnup/controller/api/util"
 )
 
 type AppParams struct {

@@ -1,7 +1,7 @@
 package util_test
 
 import (
-	. "github.com/sjkyspa/stacks/controller/api/util"
+	. "github.com/cnupp/cnup/controller/api/util"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

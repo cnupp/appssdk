@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/cnupp/cnup/controller/api/config"
 	"io"
 	"io/ioutil"
 	"net/http"

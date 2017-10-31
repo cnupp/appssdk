@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
+	"github.com/cnupp/cnup/controller/api/config"
 )
 
 var conf_endpoint string

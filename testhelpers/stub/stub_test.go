@@ -1,7 +1,7 @@
 package stub_test
 
 import (
-	. "github.com/sjkyspa/stacks/controller/api/testhelpers/stub"
+	. "github.com/cnupp/cnup/controller/api/testhelpers/stub"
 
 	"bytes"
 	. "github.com/onsi/ginkgo"

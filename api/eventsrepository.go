@@ -2,8 +2,8 @@ package api
 
 import (
 	"fmt"
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
+	"github.com/cnupp/cnup/controller/api/config"
+	"github.com/cnupp/cnup/controller/api/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_event_repository.go . EventRepository

@@ -3,10 +3,10 @@ package api_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/sjkyspa/stacks/controller/api/api"
-	"github.com/sjkyspa/stacks/controller/api/net"
-	testconfig "github.com/sjkyspa/stacks/controller/api/testhelpers/config"
-	testnet "github.com/sjkyspa/stacks/controller/api/testhelpers/net"
+	. "github.com/cnupp/cnup/controller/api/api"
+	"github.com/cnupp/cnup/controller/api/net"
+	testconfig "github.com/cnupp/cnup/controller/api/testhelpers/config"
+	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
 	"net/http"
 	"net/http/httptest"
 )

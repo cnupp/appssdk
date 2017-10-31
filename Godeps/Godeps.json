@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/sjkyspa/stacks/controller/api",
+	"ImportPath": "github.com/cnupp/cnup/controller/api",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [

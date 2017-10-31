@@ -4,7 +4,7 @@ package fakes
 import (
 	"sync"
 
-	"github.com/sjkyspa/stacks/controller/api/api"
+	"github.com/cnupp/cnup/controller/api/api"
 )
 
 type FakeEventRepository struct {

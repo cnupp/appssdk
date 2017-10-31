@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/sjkyspa/stacks/controller/api/config"
-	"github.com/sjkyspa/stacks/controller/api/net"
+	"github.com/cnupp/cnup/controller/api/config"
+	"github.com/cnupp/cnup/controller/api/net"
 	"regexp"
 )
 
