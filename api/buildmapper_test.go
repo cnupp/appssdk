@@ -1,14 +1,14 @@
 package api_test
 
 import (
-	. "github.com/cnupp/cnup/controller/api/api"
-	"github.com/cnupp/cnup/controller/api/net"
+	. "github.com/cnupp/appssdk/api"
+	"github.com/cnupp/appssdk/net"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/cnupp/cnup/controller/api/fixtures"
-	testconfig "github.com/cnupp/cnup/controller/api/testhelpers/config"
-	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
+	"github.com/cnupp/appssdk/fixtures"
+	testconfig "github.com/cnupp/appssdk/testhelpers/config"
+	testnet "github.com/cnupp/appssdk/testhelpers/net"
 	"net/http/httptest"
 )
 

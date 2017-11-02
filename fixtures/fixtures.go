@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
+	testnet "github.com/cnupp/appssdk/testhelpers/net"
 )
 
 func KetsuBuild() testnet.TestRequest {

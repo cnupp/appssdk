@@ -3,8 +3,8 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cnupp/cnup/controller/api/config"
-	"github.com/cnupp/cnup/controller/api/net"
+	"github.com/cnupp/appssdk/config"
+	"github.com/cnupp/appssdk/net"
 )
 
 //go:generate counterfeiter -o fakes/fake_route_repository.go . RouteRepository

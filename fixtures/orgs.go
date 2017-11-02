@@ -1,7 +1,7 @@
 package fixtures
 
 import (
-	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
+	testnet "github.com/cnupp/appssdk/testhelpers/net"
 	"net/http"
 )
 

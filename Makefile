@@ -1,4 +1,4 @@
-include ../../includes.mk
+include ./includes.mk
 
 SOURCES := util api
 test: deps 

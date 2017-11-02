@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/cnupp/cnup/controller/api/config"
-	"github.com/cnupp/cnup/controller/api/net"
+	"github.com/cnupp/appssdk/config"
+	"github.com/cnupp/appssdk/net"
 	"regexp"
 )
 

@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/cnupp/cnup/controller/api/util"
+	"github.com/cnupp/appssdk/util"
 )
 
 type AppParams struct {

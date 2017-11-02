@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/cnupp/cnup/controller/api/config"
+	"github.com/cnupp/appssdk/config"
 	"io"
 	"io/ioutil"
 	"net/http"

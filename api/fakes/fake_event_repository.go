@@ -4,7 +4,7 @@ package fakes
 import (
 	"sync"
 
-	"github.com/cnupp/cnup/controller/api/api"
+	"github.com/cnupp/appssdk/api"
 )
 
 type FakeEventRepository struct {

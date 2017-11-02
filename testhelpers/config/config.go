@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/cnupp/cnup/controller/api/config"
+	"github.com/cnupp/appssdk/config"
 )
 
 var conf_endpoint string

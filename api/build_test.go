@@ -1,18 +1,18 @@
 package api_test
 
 import (
-	. "github.com/cnupp/cnup/controller/api/api"
+	. "github.com/cnupp/appssdk/api"
 
 	"net/http"
 	"net/http/httptest"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/cnupp/cnup/controller/api/fixtures"
-	"github.com/cnupp/cnup/controller/api/net"
-	testconfig "github.com/cnupp/cnup/controller/api/testhelpers/config"
-	. "github.com/cnupp/cnup/controller/api/testhelpers/matchers"
-	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
+	"github.com/cnupp/appssdk/fixtures"
+	"github.com/cnupp/appssdk/net"
+	testconfig "github.com/cnupp/appssdk/testhelpers/config"
+	. "github.com/cnupp/appssdk/testhelpers/matchers"
+	testnet "github.com/cnupp/appssdk/testhelpers/net"
 )
 
 var _ = Describe("Build", func() {

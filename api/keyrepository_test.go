@@ -3,10 +3,10 @@ package api
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/cnupp/cnup/controller/api/fixtures"
-	"github.com/cnupp/cnup/controller/api/net"
-	testconfig "github.com/cnupp/cnup/controller/api/testhelpers/config"
-	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
+	"github.com/cnupp/appssdk/fixtures"
+	"github.com/cnupp/appssdk/net"
+	testconfig "github.com/cnupp/appssdk/testhelpers/config"
+	testnet "github.com/cnupp/appssdk/testhelpers/net"
 	"net/http/httptest"
 )
 

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	testnet "github.com/cnupp/cnup/controller/api/testhelpers/net"
+	testnet "github.com/cnupp/appssdk/testhelpers/net"
 	"text/template"
 )
 
