@@ -36,7 +36,7 @@ var _ = Describe("releases", func() {
 		Expect(len(releases.Items())).To(Equal(1))
 		Expect(releases.Items()[0].Id()).To(Equal("1a5abd6c-49b6-4c6a-b47c-d75fedec0a45"))
 		Expect(releases.Items()[0].Envs()).To(Not(BeNil()))
-		Expect(releases.Items()[0].Version()).To(Equal(1))
+		Expect(releases.Items()[0].Version()).To(Equal("1"))
 		Expect(releases.Items()[0].Links()).To(Not(BeNil()))
 		Expect(releases.Items()[0].Status()).To(Equal("NEW"))
 	})
@@ -79,7 +79,7 @@ var getAppReleasesResponse = `
     {
       "created": "1451953908",
       "id": "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",
-      "version": 1,
+      "version": "1",
       "status": "NEW",
       "application": {
         "name": "ketsu"
@@ -122,7 +122,7 @@ var getAppReleaseResponse = `
 {
   "created": "1451953908",
   "id": "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45",
-  "version": 1,
+  "version": "1",
   "status": "NEW",
   "application": {
 	"name": "ketsu"

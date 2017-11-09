@@ -1,16 +1,17 @@
 package api
 
 type Release interface {
-	Id() string
-	Version() int
-	Envs() map[string]string
-	Status() string
-	Links() Links
-	GetApp() App
-	Success() error
-	Fail() error
-	IsSuccess() bool
-	IsFail() bool
+	Id() 		string
+	Version() 	string
+	ImageName() 	string
+	Envs() 		map[string]string
+	Status() 	string
+	Links() 	Links
+	GetApp() 	App
+	Success() 	error
+	Fail() 		error
+	IsSuccess() 	bool
+	IsFail() 	bool
 }
 
 type ReleaseParams struct {
@@ -18,13 +19,14 @@ type ReleaseParams struct {
 }
 
 type ReleaseModel struct {
-	IDField       string            `json:"id"`
-	VersionField  int               `json:"version"`
-	EnvsField     map[string]string `json:"envs"`
-	StatusField   string            `json:"status"`
-	AppField      App               `json:"-"`
-	LinksField    []Link            `json:"links"`
-	ReleaseMapper ReleaseMapper     `json:"-"`
+	IDField        string            `json:"id"`
+	ImageNameField string 		 `json:"imageName"`
+	VersionField   string            `json:"version"`
+	EnvsField      map[string]string `json:"envs"`
+	StatusField    string            `json:"status"`
+	AppField       App               `json:"-"`
+	LinksField     []Link            `json:"links"`
+	ReleaseMapper  ReleaseMapper     `json:"-"`
 }
 
 func (bm ReleaseModel) Id() string {
@@ -39,8 +41,12 @@ func (bm ReleaseModel) Envs() map[string]string {
 	return bm.EnvsField
 }
 
-func (bm ReleaseModel) Version() int {
+func (bm ReleaseModel) Version() string {
 	return bm.VersionField
+}
+
+func (bm ReleaseModel) ImageName() string {
+	return bm.ImageNameField
 }
 
 func (bm ReleaseModel) Links() Links {

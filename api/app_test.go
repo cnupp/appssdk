@@ -25,6 +25,7 @@ var _ = Describe("App", func() {
 	var unbindRouteWithAppRequest = fixtures.KetsuRoutesUnbind()
 	var createEnvRequest = fixtures.KetsuEnvCreate()
 	var deleteEnvRequest = fixtures.KetsuEnvUpdate()
+	var getAppReleaseRequest = fixtures.KetsuRelease()
 
 	var createAppRepository = func(requests []testnet.TestRequest) (ts *httptest.Server, handler *testnet.TestHandler, repo AppRepository) {
 		ts, handler = testnet.NewServer(requests)
@@ -86,6 +87,17 @@ var _ = Describe("App", func() {
 		build, err := createdApp.GetBuildByURI("/apps/ketsu/86e03fc8b63941669a20dbae948bdfc8")
 		Expect(err).To(BeNil())
 		Expect(build.GitSha()).To(Equal("60bc43aa"))
+	})
+
+	It("should able to get one release for app", func() {
+		ts, _, repo := createAppRepository([]testnet.TestRequest{createAppRequest, getAppRequest, getAppReleaseRequest})
+		defer ts.Close()
+
+		createdApp, err := repo.Create(defaultAppParams())
+		release, err := createdApp.GetRelease("1453274984822")
+		Expect(err).To(BeNil())
+		Expect(release.ImageName()).To(Equal("hub.notexisted.cn/ketsu"))
+		Expect(release.Version()).To(Equal("0"))
 	})
 
 	It("should able to create one build for app", func() {

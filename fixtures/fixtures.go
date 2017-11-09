@@ -666,7 +666,7 @@ func Events(eventType string) testnet.TestRequest {
 				      }
 				    ],
 				    "id": "1453274984822",
-				    "version": 0
+				    "version": "0"
 				  }
 				}
 			      }
@@ -719,7 +719,7 @@ func EventsOnPage(eventType string, total, page, perPage int) testnet.TestReques
 				      }
 				    ],
 				    "id": "1453274984822",
-				    "version": 0
+				    "version": "0"
 				  }
 				}
 			      }
@@ -775,6 +775,45 @@ func Keys() testnet.TestRequest {
 			      ]
 			    }
 			  ]
+			}`,
+		},
+	}
+}
+
+func KetsuRelease() testnet.TestRequest {
+	return testnet.TestRequest{
+		Method: "GET",
+		Path:  	"/apps/ketsu/releases/1453274984822",
+		Response: testnet.TestResponse{
+			Status: 200,
+			Header: http.Header{
+				"Content-Type": {"application/json"},
+			},
+			Body: `
+			{
+				"createdAt": 1453274984000,
+				"application": {
+				      "name": "ketsu",
+				      "id": "060113d0767946f090d7a3a21b3008d2"
+				 },
+				 "envs": {},
+				 "links": [
+				      {
+					"rel": "self",
+					"uri": "/apps/katsu/releases/1453274984822"
+				      },
+				      {
+					"rel": "app",
+					"uri": "/apps/katsu"
+				      },
+				      {
+					"rel": "build",
+					"uri": "/apps/katsu/builds/86e03fc8b63941669a20dbae948bdfc8"
+				      }
+				   ],
+				  "id": "1453274984822",
+				  "version": "0",
+				  "imageName": "hub.notexisted.cn/ketsu"
 			}`,
 		},
 	}

@@ -65,6 +65,7 @@ type App interface {
 	GetRoutes() (AppRoutes, error)
 	GetBuild(id string) (Build, error)
 	GetBuildByURI(uri string) (Build, error)
+	GetRelease(id string) (Release, error)
 	GetStack() (Stack, error)
 	GetEnvs() map[string]string
 	SetEnv(envs map[string]interface{}) error
@@ -89,6 +90,7 @@ type AppModel struct {
 	Envs            map[string]string `json:"envs"`
 	LinksArray      []Link            `json:"links"`
 	BuildMapper     BuildMapper
+	ReleaseMapper	ReleaseMapper
 	AppMapper       AppRepository
 	StackRepository StackRepository
 }
@@ -141,6 +143,10 @@ func (a AppModel) GetBuildByURI(uri string) (build Build, apiError error) {
 
 func (a AppModel) GetBuild(id string) (build Build, apiError error) {
 	return a.BuildMapper.GetBuild(a, id)
+}
+
+func (a AppModel) GetRelease(id string) (Release, error) {
+	return a.ReleaseMapper.GetRelease(a, id)
 }
 
 func (a AppModel) CreateBuild(buildParams BuildParams) (build Build, apiErr error) {

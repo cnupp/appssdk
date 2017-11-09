@@ -89,6 +89,7 @@ func (cc CloudControllerAppRepository) Create(params AppParams) (createdApp App,
 	}
 	appModel.BuildMapper = NewBuildMapper(cc.config, cc.gateway)
 	appModel.AppMapper = NewAppRepository(cc.config, cc.gateway)
+	appModel.ReleaseMapper = NewReleaseMapper(cc.config, cc.gateway)
 	appModel.StackRepository = NewStackRepository(cc.config, cc.gateway)
 	createdApp = appModel
 
@@ -106,6 +107,7 @@ func (cc CloudControllerAppRepository) GetApp(id string) (app App, apiErr error)
 		return
 	}
 	remoteApp.BuildMapper = NewBuildMapper(cc.config, cc.gateway)
+	remoteApp.ReleaseMapper = NewReleaseMapper(cc.config, cc.gateway)
 	remoteApp.AppMapper = NewAppRepository(cc.config, cc.gateway)
 	remoteApp.StackRepository = NewStackRepository(cc.config, cc.gateway)
 	app = remoteApp
