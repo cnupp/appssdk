@@ -41,7 +41,7 @@ func (bm DefaultBuildMapper) Create(app App, params BuildParams) (build Build, a
 		return
 	}
 
-	res, err := bm.gateway.Request("POST", fmt.Sprintf("/apps/%s/builds", app.Id()), data)
+	res, err := bm.gateway.Request("POST", fmt.Sprintf("/apps/%s/builds", app.Name()), data)
 	if err != nil {
 		apiErr = err
 		return
@@ -64,7 +64,7 @@ func (bm DefaultBuildMapper) Create(app App, params BuildParams) (build Build, a
 
 func (bm DefaultBuildMapper) GetBuilds(app App) (builds Builds, apiErr error) {
 	var buildsModel BuildsModel
-	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds", app.Id()), &buildsModel)
+	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds", app.Name()), &buildsModel)
 	if apiErr != nil {
 		return
 	}
@@ -75,7 +75,7 @@ func (bm DefaultBuildMapper) GetBuilds(app App) (builds Builds, apiErr error) {
 
 func (bm DefaultBuildMapper) GetBuild(app App, id string) (build Build, apiErr error) {
 	var buildModel BuildModel
-	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds/%s", app.Id(), id), &buildModel)
+	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds/%s", app.Name(), id), &buildModel)
 	if apiErr != nil {
 		return
 	}
@@ -88,7 +88,7 @@ func (bm DefaultBuildMapper) GetBuild(app App, id string) (build Build, apiErr e
 
 func (bm DefaultBuildMapper) GetVerify(app App, build Build, id string) (verify Verify, apiErr error) {
 	var verifyModel VerifyModel
-	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds/%s/verifies/%s", app.Id(), build.Id(), id), &verifyModel)
+	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/builds/%s/verifies/%s", app.Name(), build.Id(), id), &verifyModel)
 	if apiErr != nil {
 		return
 	}
@@ -100,11 +100,11 @@ func (bm DefaultBuildMapper) GetVerify(app App, build Build, id string) (verify 
 }
 
 func (bm DefaultBuildMapper) Success(build Build) error {
-	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/success", build.GetApp().Id(), build.Id()), nil)
+	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/success", build.GetApp().Name(), build.Id()), nil)
 }
 
 func (bm DefaultBuildMapper) Fail(build Build) (apiErr error) {
-	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/fail", build.GetApp().Id(), build.Id()), nil)
+	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/fail", build.GetApp().Name(), build.Id()), nil)
 }
 
 func (bm DefaultBuildMapper) Update(id string, params BuildParams) (updatedApp Build, apiErr error) {
@@ -112,11 +112,11 @@ func (bm DefaultBuildMapper) Update(id string, params BuildParams) (updatedApp B
 }
 
 func (bm DefaultBuildMapper) VerifySuccess(build Build) (apiErr error) {
-	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/verify/success", build.GetApp().Id(), build.Id()), nil)
+	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/verify/success", build.GetApp().Name(), build.Id()), nil)
 }
 
 func (bm DefaultBuildMapper) VerifyFail(build Build) (apiErr error) {
-	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/verify/fail", build.GetApp().Id(), build.Id()), nil)
+	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/builds/%s/verify/fail", build.GetApp().Name(), build.Id()), nil)
 }
 
 func (bm DefaultBuildMapper) CreateVerify(build Build, params VerifyParams) (verify Verify, apiErr error) {
@@ -125,7 +125,7 @@ func (bm DefaultBuildMapper) CreateVerify(build Build, params VerifyParams) (ver
 		apiErr = fmt.Errorf("Can not serilize the data")
 		return
 	}
-	url := fmt.Sprintf("/apps/%s/builds/%s/verifies", build.GetApp().Id(), build.Id())
+	url := fmt.Sprintf("/apps/%s/builds/%s/verifies", build.GetApp().Name(), build.Id())
 	res, err := bm.gateway.Request("POST", url, data)
 	if err != nil {
 		fmt.Println("error hanppend when request ", url, err)

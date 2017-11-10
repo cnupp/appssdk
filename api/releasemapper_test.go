@@ -17,7 +17,7 @@ var _ = Describe("releases", func() {
 		ts, _, mapper := createReleaseMapper([]testnet.TestRequest{createAppReleaseRequest, getAppReleaseRequest})
 		defer ts.Close()
 		_, err := mapper.Create(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		})
 
 		Expect(err).To(BeNil())
@@ -28,7 +28,7 @@ var _ = Describe("releases", func() {
 		defer ts.Close()
 
 		releases, err := mapper.GetReleases(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		})
 
 		Expect(err).To(BeNil())
@@ -46,7 +46,7 @@ var _ = Describe("releases", func() {
 		defer ts.Close()
 
 		release, err := mapper.GetRelease(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "1a5abd6c-49b6-4c6a-b47c-d75fedec0a45")
 
 		Expect(err).To(BeNil())

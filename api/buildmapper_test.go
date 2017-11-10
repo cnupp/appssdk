@@ -18,7 +18,7 @@ var _ = Describe("Builds", func() {
 		defer ts.Close()
 
 		build, err := mapper.Create(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, BuildParams{
 			GitSha: "60bc43aa",
 			User:   "user",
@@ -34,7 +34,7 @@ var _ = Describe("Builds", func() {
 		defer ts.Close()
 
 		builds, err := mapper.GetBuilds(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		})
 
 		Expect(err).To(BeNil())
@@ -51,7 +51,7 @@ var _ = Describe("Builds", func() {
 		defer ts.Close()
 
 		build, err := mapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 
 		Expect(err).To(BeNil())

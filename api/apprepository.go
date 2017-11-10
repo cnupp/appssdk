@@ -56,14 +56,14 @@ func (cc CloudControllerAppRepository) SetEnv(app App, kvs map[string]interface{
 		return
 	}
 
-	_, err = cc.gateway.Request("POST", fmt.Sprintf("/apps/%s/env", app.Id()), data)
+	_, err = cc.gateway.Request("POST", fmt.Sprintf("/apps/%s/env", app.Name()), data)
 	return err
 }
 
 func (cc CloudControllerAppRepository) UnsetEnv(app App, keys []string) (apiErr error) {
 	env := make(map[string]interface{})
 	env["envs"] = keys
-	apiErr = cc.gateway.PUT(fmt.Sprintf("/apps/%s/env", app.Id()), env)
+	apiErr = cc.gateway.PUT(fmt.Sprintf("/apps/%s/env", app.Name()), env)
 	return
 }
 
@@ -132,13 +132,13 @@ func (cc CloudControllerAppRepository) BindWithRoute(app App, params AppRoutePar
 		return err
 	}
 
-	_, err = cc.gateway.Request("POST", fmt.Sprintf("/apps/%s/routes", app.Id()), data)
+	_, err = cc.gateway.Request("POST", fmt.Sprintf("/apps/%s/routes", app.Name()), data)
 
 	return err
 }
 
 func (cc CloudControllerAppRepository) UnbindRoute(app App, routeId string) error {
-	_, err := cc.gateway.Request("DELETE", fmt.Sprintf("/apps/%s/routes/%s", app.Id(), routeId), nil)
+	_, err := cc.gateway.Request("DELETE", fmt.Sprintf("/apps/%s/routes/%s", app.Name(), routeId), nil)
 	return err
 }
 
@@ -160,7 +160,7 @@ func (cc CloudControllerAppRepository) Delete(id string) (apiErr error) {
 
 func (cc CloudControllerAppRepository) GetRoutes(app App) (routes AppRoutes, apiErr error) {
 	var routesModel AppRoutesModel
-	apiErr = cc.gateway.Get(fmt.Sprintf("/apps/"+app.Id()+"/routes"), &routesModel)
+	apiErr = cc.gateway.Get(fmt.Sprintf("/apps/"+app.Name()+"/routes"), &routesModel)
 	routesModel.AppRepo = cc
 	routes = routesModel
 	return
@@ -183,7 +183,7 @@ func (cc CloudControllerAppRepository) GetLog(appId, buildId, logType string, li
 
 func (cc CloudControllerAppRepository) GetPermission(app App, userId string) (permission AppPermission, err error) {
 	var appPermission AppPermission
-	err = cc.gateway.Get(fmt.Sprintf("/apps/%s/permissions?user=%s", app.Id(), userId), &appPermission)
+	err = cc.gateway.Get(fmt.Sprintf("/apps/%s/permissions?user=%s", app.Name(), userId), &appPermission)
 	permission = appPermission
 	return
 }

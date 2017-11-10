@@ -58,8 +58,8 @@ func (cm ClusterModel) Links() Links {
 }
 
 type App interface {
+	Name() string
 	Id() string
-	AppId() string
 	Links() Links
 	GetCluster() (Cluster, error)
 	GetBuilds() (Builds, error)
@@ -86,13 +86,13 @@ type App interface {
 }
 
 type AppModel struct {
-	ID              string            `json:"name"`
-	AppID		string		  `json:"id"`
+	NameField       string            `json:"name"`
+	IDField         string		  `json:"id"`
 	NeedDeployField bool              `json:"needDeploy"`
 	Envs            map[string]string `json:"envs"`
 	LinksArray      []Link            `json:"links"`
 	BuildMapper     BuildMapper
-	ReleaseMapper	ReleaseMapper
+	ReleaseMapper   ReleaseMapper
 	AppMapper       AppRepository
 	StackRepository StackRepository
 }
@@ -116,12 +116,12 @@ func (a AppModel) UnsetEnv(keys []string) (err error) {
 	return
 }
 
-func (a AppModel) Id() string {
-	return a.ID
+func (a AppModel) Name() string {
+	return a.NameField
 }
 
-func (a AppModel) AppId() string {
-	return a.AppID
+func (a AppModel) Id() string {
+	return a.IDField
 }
 
 func (a AppModel) NeedDeploy() bool {
@@ -182,11 +182,11 @@ func (a AppModel) GetRoutes() (AppRoutes, error) {
 }
 
 func (a AppModel) SwitchStack(params UpdateStackParams) error {
-	return a.AppMapper.SwitchStack(a.ID, params)
+	return a.AppMapper.SwitchStack(a.NameField, params)
 }
 
 func (a AppModel) GetLogForTests(buildId, logType string, lines int64, offset int64) (LogsModel, error) {
-	return a.AppMapper.GetLog(a.ID, buildId, logType, lines, offset)
+	return a.AppMapper.GetLog(a.NameField, buildId, logType, lines, offset)
 }
 
 func (a AppModel) GetCluster() (Cluster, error) {
@@ -196,18 +196,18 @@ func (a AppModel) GetCluster() (Cluster, error) {
 }
 
 type AppRef interface {
-	Id() string
+	Name() string
 	Links() Links
 }
 
 type AppRefModel struct {
-	IDField     string `json:"name"`
+	NameField   string `json:"name"`
 	LinksField  []Link `json:"links"`
 	BuildMapper BuildMapper
 }
 
-func (arm AppRefModel) Id() string {
-	return arm.IDField
+func (arm AppRefModel) Name() string {
+	return arm.NameField
 }
 
 func (arm AppRefModel) Links() Links {
@@ -360,22 +360,22 @@ func (app AppModel) GetPermissions(userId string) (AppPermission, error) {
 }
 
 func (app AppModel) GetCollaborators() ([]UserModel, error) {
-	users, err := app.AppMapper.GetCollaborators(app.Id())
+	users, err := app.AppMapper.GetCollaborators(app.Name())
 	return users, err
 }
 
 func (app AppModel) AddCollaborator(param CreateCollaboratorParams) error {
-	return app.AppMapper.AddCollaborator(app.Id(), param)
+	return app.AppMapper.AddCollaborator(app.Name(), param)
 }
 
 func (app AppModel) RemoveCollaborator(userId string) error {
-	return app.AppMapper.RemoveCollaborator(app.Id(), userId)
+	return app.AppMapper.RemoveCollaborator(app.Name(), userId)
 }
 
 func (app AppModel) TransferToOrg(orgName string) error {
-	return app.AppMapper.TransferToOrg(app.Id(), orgName)
+	return app.AppMapper.TransferToOrg(app.Name(), orgName)
 }
 
 func (app AppModel) TransferToUser(userEmail string) error {
-	return app.AppMapper.TransferToUser(app.Id(), userEmail)
+	return app.AppMapper.TransferToUser(app.Name(), userEmail)
 }

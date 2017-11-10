@@ -165,7 +165,7 @@ var _ = Describe("Routes", func() {
 		apps, err := repo.GetAppsForRoute("8399de76-eeef-418d-a567-75253b03c4ec")
 		Expect(err).To(BeNil())
 		Expect(apps.Count()).To(Equal(1))
-		Expect(apps.Items()[0].Id()).To(Equal("ketsu"))
+		Expect(apps.Items()[0].Name()).To(Equal("ketsu"))
 		Expect(apps.Items()[0].Links()).NotTo(BeNil())
 	})
 })

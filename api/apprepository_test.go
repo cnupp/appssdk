@@ -37,7 +37,7 @@ var _ = Describe("Apps", func() {
 
 		createdApp, err := repo.Create(defaultAppParams())
 		Expect(err).To(BeNil())
-		Expect(createdApp.Id()).To(Equal("ketsu"))
+		Expect(createdApp.Name()).To(Equal("ketsu"))
 		Expect(createdApp.Links()).NotTo(BeNil())
 	})
 
@@ -47,8 +47,8 @@ var _ = Describe("Apps", func() {
 
 		createdApp, err := repo.GetApp("ketsu")
 		Expect(err).To(BeNil())
-		Expect(createdApp.Id()).To(Equal("ketsu"))
-		Expect(createdApp.AppId()).To(Equal("b78dba518daf4fe99345c7ab582c3387"))
+		Expect(createdApp.Name()).To(Equal("ketsu"))
+		Expect(createdApp.Id()).To(Equal("b78dba518daf4fe99345c7ab582c3387"))
 		Expect(createdApp.GetEnvs()["ENV"]).To(Equal("PRODUCTION"))
 		Expect(createdApp.Links()).NotTo(BeNil())
 		Expect(createdApp.Links().Self()).NotTo(BeNil())
@@ -62,7 +62,7 @@ var _ = Describe("Apps", func() {
 		createdApps, err := repo.GetApps()
 		Expect(err).To(BeNil())
 		Expect(createdApps.Count()).To(Equal(2))
-		Expect(createdApps.Items()[0].Id()).To(Equal("ketsu"))
+		Expect(createdApps.Items()[0].Name()).To(Equal("ketsu"))
 		Expect(createdApps.Items()[0].Links()).NotTo(BeNil())
 	})
 

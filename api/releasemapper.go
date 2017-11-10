@@ -27,7 +27,7 @@ func NewReleaseMapper(reader config.Reader, gateway net.Gateway) ReleaseMapper {
 }
 
 func (bm DefaultReleaseMapper) Create(app App) (release Release, apiErr error) {
-	res, err := bm.gateway.Request("POST", fmt.Sprintf("/apps/%s/releases", app.Id()), []byte("{}"))
+	res, err := bm.gateway.Request("POST", fmt.Sprintf("/apps/%s/releases", app.Name()), []byte("{}"))
 	if err != nil {
 		apiErr = err
 		return
@@ -50,7 +50,7 @@ func (bm DefaultReleaseMapper) Create(app App) (release Release, apiErr error) {
 
 func (bm DefaultReleaseMapper) GetReleases(app App) (releases Releases, apiErr error) {
 	var releasesModel ReleasesModel
-	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/releases", app.Id()), &releasesModel)
+	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/releases", app.Name()), &releasesModel)
 	if apiErr != nil {
 		return
 	}
@@ -61,7 +61,7 @@ func (bm DefaultReleaseMapper) GetReleases(app App) (releases Releases, apiErr e
 
 func (bm DefaultReleaseMapper) GetRelease(app App, id string) (release Release, apiErr error) {
 	var releaseModel ReleaseModel
-	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/releases/%s", app.Id(), id), &releaseModel)
+	apiErr = bm.gateway.Get(fmt.Sprintf("/apps/%s/releases/%s", app.Name(), id), &releaseModel)
 	if apiErr != nil {
 		return
 	}
@@ -72,11 +72,11 @@ func (bm DefaultReleaseMapper) GetRelease(app App, id string) (release Release, 
 }
 
 func (bm DefaultReleaseMapper) Success(release Release) (apiErr error) {
-	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/releases/%s/success", release.GetApp().Id(), release.Id()), nil)
+	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/releases/%s/success", release.GetApp().Name(), release.Id()), nil)
 }
 
 func (bm DefaultReleaseMapper) Fail(release Release) (apiErr error) {
-	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/releases/%s/fail", release.GetApp().Id(), release.Id()), nil)
+	return bm.gateway.PUT(fmt.Sprintf("/apps/%s/releases/%s/fail", release.GetApp().Name(), release.Id()), nil)
 }
 
 func (bm DefaultReleaseMapper) Update(id string, params ReleaseParams) (updatedApp Release, apiErr error) {

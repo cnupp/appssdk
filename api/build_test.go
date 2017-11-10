@@ -30,7 +30,7 @@ var _ = Describe("Build", func() {
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 		Expect(build.IsSuccess()).To(BeFalse())
 
@@ -44,7 +44,7 @@ var _ = Describe("Build", func() {
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 
 		err := build.Fail()
@@ -57,7 +57,7 @@ var _ = Describe("Build", func() {
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 
 		err := build.Success()
@@ -74,7 +74,7 @@ var _ = Describe("Build", func() {
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 
 		err := build.Success()
@@ -92,7 +92,7 @@ var _ = Describe("Build", func() {
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 		Expect(build.IsVerifySuccess()).To(BeFalse())
 		err := build.Success()
@@ -106,7 +106,7 @@ var _ = Describe("Build", func() {
 		defer ts.Close()
 
 		build, _ := buildMapper.GetBuild(AppModel{
-			ID: "ketsu",
+			NameField: "ketsu",
 		}, "86e03fc8b63941669a20dbae948bdfc8")
 		Expect(build.IsVerifySuccess()).To(BeFalse())
 		err := build.Success()
