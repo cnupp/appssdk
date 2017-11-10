@@ -59,6 +59,7 @@ func (cm ClusterModel) Links() Links {
 
 type App interface {
 	Id() string
+	AppId() string
 	Links() Links
 	GetCluster() (Cluster, error)
 	GetBuilds() (Builds, error)
@@ -86,6 +87,7 @@ type App interface {
 
 type AppModel struct {
 	ID              string            `json:"name"`
+	AppID		string		  `json:"id"`
 	NeedDeployField bool              `json:"needDeploy"`
 	Envs            map[string]string `json:"envs"`
 	LinksArray      []Link            `json:"links"`
@@ -116,6 +118,10 @@ func (a AppModel) UnsetEnv(keys []string) (err error) {
 
 func (a AppModel) Id() string {
 	return a.ID
+}
+
+func (a AppModel) AppId() string {
+	return a.AppID
 }
 
 func (a AppModel) NeedDeploy() bool {

@@ -48,6 +48,7 @@ var _ = Describe("Apps", func() {
 		createdApp, err := repo.GetApp("ketsu")
 		Expect(err).To(BeNil())
 		Expect(createdApp.Id()).To(Equal("ketsu"))
+		Expect(createdApp.AppId()).To(Equal("b78dba518daf4fe99345c7ab582c3387"))
 		Expect(createdApp.GetEnvs()["ENV"]).To(Equal("PRODUCTION"))
 		Expect(createdApp.Links()).NotTo(BeNil())
 		Expect(createdApp.Links().Self()).NotTo(BeNil())
