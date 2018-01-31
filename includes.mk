@@ -21,3 +21,4 @@ endef
 
 setup-gotools:
 	@go get github.com/tools/godep
+	@go get github.com/maxbrunsfeld/counterfeiter

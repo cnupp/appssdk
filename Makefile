@@ -8,3 +8,4 @@ deps:
 	@go get github.com/onsi/ginkgo/ginkgo
  
 generate:
+	@cd $(dir $(realpath $(firstword $(MAKEFILE_LIST))))api ; go generate ;  cd -;
